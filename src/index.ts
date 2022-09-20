@@ -2,10 +2,11 @@ import express from 'express'
 // import {router} from "./routes/IndexRoutes";
 import {blogRouter} from "./routes/blogRouter";
 import {postRouter} from "./routes/postRouter";
+require('dotenv').config()
 
 const app = express()
 
-const PORT = process.env.PORT || 6000
+const PORT = process.env.PORT || 5000
 
 app.use(express.json());
 
