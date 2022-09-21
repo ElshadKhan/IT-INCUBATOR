@@ -2,7 +2,8 @@ import express from 'express'
 // import {router} from "./routes/IndexRoutes";
 import {blogRouter} from "./routes/blogRouter";
 import {postRouter} from "./routes/postRouter";
-require('dotenv').config()
+import {config} from 'dotenv'
+config()
 
 const app = express()
 
