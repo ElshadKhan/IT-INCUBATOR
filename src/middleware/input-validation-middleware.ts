@@ -4,7 +4,7 @@ export const inputBlogValidationMiddleware = (req: Request, res: Response, next:
     const authHeader = req.headers.authorization
 
     const loginPass = 'admin:qwerty'
-    const base64 = new Buffer(loginPass, 'base64')
+    // const base64 = new Buffer(loginPass, 'base64')
     const validAuthHeader = 'Basic YWRtaW46cXdlcnR5'
 
     if (authHeader !== validAuthHeader) {
