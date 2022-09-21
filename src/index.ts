@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json());
 app.delete("/testing/all-data", (req, res) => {
-    return []
+    res.send(204)
 })
 app.use("/blogs", blogRouter)
 app.use("/posts", postRouter)
