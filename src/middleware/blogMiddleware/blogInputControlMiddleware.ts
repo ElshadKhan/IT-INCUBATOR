@@ -20,7 +20,7 @@ export const blogInputControlMiddleware = (req: Request, res: Response, next: Ne
         errors.push({message: 'youtubeUrl is wrong', field: 'youtubeUrl'})
     }
     if (errors.length) {
-        return res.status(401).send({"errorsMessages": errors})
+        return res.status(400).send({"errorsMessages": errors})
     } else {
         next()
     }
