@@ -46,5 +46,9 @@ export const blogRepository = {
             }
         }
         return false
+    },
+    removeAllBlog() {
+        blogs = []
+        return
     }
 }

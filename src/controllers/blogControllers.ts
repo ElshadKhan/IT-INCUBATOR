@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {blogRepository} from "../repositories/blogRepository";
+import {postRepository} from "../repositories/postRepository";
 
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
@@ -34,5 +35,10 @@ export const blogControllers = {
         } else {
             res.send(404)
         }
+    },
+    async deleteBlogsAndPosts(req: Request, res: Response) {
+        const blog = await blogRepository.removeAllBlog();
+        const post = await postRepository.removeAllPost()
+        res.send(204)
     }
 }

@@ -8,8 +8,10 @@ export const inputBlogValidationMiddleware = (req: Request, res: Response, next:
     const validAuthHeader = 'Basic YWRtaW46cXdlcnR5'
 
     if (!authHeader || typeof authHeader !== "string" || authHeader !== validAuthHeader) {
+        console.log("401")
         res.sendStatus(401);
     } else {
+        console.log("next")
         next()
     }
 }

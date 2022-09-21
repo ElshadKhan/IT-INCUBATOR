@@ -7,6 +7,6 @@ export const postRouter = Router({})
 
 postRouter.get('/', postControllers.getPosts)
 postRouter.get('/:id', postControllers.getPostById)
-postRouter.post('/', postInputControlMiddleware, inputBlogValidationMiddleware, postControllers.createPost)
-postRouter.put('/:id', postInputControlMiddleware, inputBlogValidationMiddleware, postControllers.updatePost)
+postRouter.post('/', inputBlogValidationMiddleware, postInputControlMiddleware, postControllers.createPost)
+postRouter.put('/:id', inputBlogValidationMiddleware, postInputControlMiddleware, postControllers.updatePost)
 postRouter.delete('/:id', inputBlogValidationMiddleware, postControllers.deletePost)
