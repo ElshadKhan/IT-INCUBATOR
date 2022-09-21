@@ -5,8 +5,8 @@ import {inputBlogValidationMiddleware} from "../middleware/input-validation-midd
 
 export const postRouter = Router({})
 
-postRouter.get('/posts', postControllers.getPosts)
-postRouter.get('/posts:id', postControllers.getPostById)
-postRouter.post('/posts', postInputControlMiddleware, inputBlogValidationMiddleware, postControllers.createPost)
-postRouter.put('/posts:id', postInputControlMiddleware, inputBlogValidationMiddleware, postControllers.updatePost)
-postRouter.delete('/posts:id', inputBlogValidationMiddleware, postControllers.deletePost)
+postRouter.get('/', postControllers.getPosts)
+postRouter.get('/:id', postControllers.getPostById)
+postRouter.post('/', postInputControlMiddleware, inputBlogValidationMiddleware, postControllers.createPost)
+postRouter.put('/:id', postInputControlMiddleware, inputBlogValidationMiddleware, postControllers.updatePost)
+postRouter.delete('/:id', inputBlogValidationMiddleware, postControllers.deletePost)
