@@ -3,8 +3,10 @@ import {body} from "express-validator";
 
 const titleValidator = body("title").isString().trim().isLength({max: 30})
 const shortDescriptionValidator = body("shortDescription").isString().trim().isLength({max: 100})
-const content = body("content").isString().trim().isLength({max: 1000})
-export const blogIdValidator = body('blogId').custom((value, {req}) => {
+const contentValidator = body("content").isString().trim().isLength({max: 1000})
+const blogIdValidator = body("content").isString()
+
+export const blogIdControll = body('blogId').custom((value, {req}) => {
     const blog = blogs.find(b => b.id === req.body.blogId);
     if (!blog) {
         throw new Error('blogId is wrong');
@@ -12,7 +14,7 @@ export const blogIdValidator = body('blogId').custom((value, {req}) => {
     return true;
 })
 
-export const postRoutValidators = [titleValidator, shortDescriptionValidator, content]
+export const postRoutValidators = [titleValidator, shortDescriptionValidator, contentValidator, blogIdValidator]
 
 // export const postInputControlMiddleware = (req: Request, res: Response, next: NextFunction) => {
 //
