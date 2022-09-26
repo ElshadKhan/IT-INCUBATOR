@@ -17,7 +17,7 @@ export const postRepository = {
         let post = posts.find(v => v.id === id);
         return post
     },
-    makePost(
+    createPost(
         title: string,
         shortDescription: string,
         content: string,
@@ -35,7 +35,7 @@ export const postRepository = {
         posts.push(newPost)
         return newPost
     },
-    replacePost(
+    updatePost(
         id: string,
         title: string,
         shortDescription: string,
@@ -53,7 +53,7 @@ export const postRepository = {
             return false
         }
     },
-    removePost(id: string) {
+    deletePost(id: string) {
         for (let i = 0; i<posts.length; i++) {
             if (posts[i].id === id) {
                 posts.splice(i,1)
@@ -62,7 +62,7 @@ export const postRepository = {
         }
         return false
     },
-    removeAllPost() {
+    deleteAllPost() {
         posts = []
         return
     }

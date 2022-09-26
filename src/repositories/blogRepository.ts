@@ -12,7 +12,7 @@ export const blogRepository = {
         let blog = blogs.find(b => b.id === id);
         return blog
     },
-    makeBlog(
+    createBlog(
         name: string,
         youtubeUrl: string
     ) {
@@ -24,7 +24,7 @@ export const blogRepository = {
         blogs.push(newBlog)
         return newBlog
     },
-    replaceBlog(
+    updateBlog(
         id: string,
         name: string,
         youtubeUrl: string
@@ -38,7 +38,7 @@ export const blogRepository = {
             return false
         }
     },
-    removeBlog(id: string) {
+    deleteBlog(id: string) {
         for (let i = 0; i<blogs.length; i++) {
             if (blogs[i].id === id) {
                 blogs.splice(i,1)
@@ -47,7 +47,7 @@ export const blogRepository = {
         }
         return false
     },
-    removeAllBlog() {
+    deleteAllBlog() {
         blogs = []
         return
     }

@@ -16,12 +16,12 @@ export const blogControllers = {
         }
     },
     async createBlog(req: Request, res: Response) {
-        const newBlog = await blogRepository.makeBlog(req.body.name, req.body.youtubeUrl)
+        const newBlog = await blogRepository.createBlog(req.body.name, req.body.youtubeUrl)
         res.status(201).send(newBlog)
 
     },
     async updateBlog(req: Request, res: Response) {
-        const blog = await blogRepository.replaceBlog(req.params.id, req.body.name, req.body.youtubeUrl);
+        const blog = await blogRepository.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl);
         if (blog) {
             res.send(204)
         } else {
@@ -29,7 +29,7 @@ export const blogControllers = {
         }
     },
     async deleteBlog(req: Request, res: Response) {
-        const blog = await blogRepository.removeBlog(req.params.id);
+        const blog = await blogRepository.deleteBlog(req.params.id);
         if (blog) {
             res.send(204)
         } else {
@@ -37,8 +37,8 @@ export const blogControllers = {
         }
     },
     async deleteBlogsAndPosts(req: Request, res: Response) {
-        const blog = await blogRepository.removeAllBlog();
-        const post = await postRepository.removeAllPost()
+        const blog = await blogRepository.deleteAllBlog();
+        const post = await postRepository.deleteAllPost()
         res.send(204)
     }
 }

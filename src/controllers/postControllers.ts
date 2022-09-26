@@ -15,11 +15,11 @@ export const postControllers = {
         }
     },
     async createPost(req: Request, res: Response) {
-        const newPost = await postRepository.makePost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        const newPost = await postRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         res.status(201).send(newPost)
     },
     async updatePost(req: Request, res: Response) {
-        const post = await postRepository.replacePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+        const post = await postRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
         if (post) {
             res.send(204)
         } else {
@@ -27,7 +27,7 @@ export const postControllers = {
         }
     },
     async deletePost(req: Request, res: Response) {
-        const post = await postRepository.removePost(req.params.id);
+        const post = await postRepository.deletePost(req.params.id);
         if (post) {
             res.send(204)
         } else {
