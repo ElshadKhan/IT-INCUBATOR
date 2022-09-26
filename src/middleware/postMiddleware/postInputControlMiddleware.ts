@@ -1,9 +1,9 @@
 import {blogs} from "../../repositories/blogRepository";
 import {body} from "express-validator";
 
-const titleValidator = body("title", "title is wrong").isString().trim().isLength({max: 30})
-const shortDescriptionValidator = body("shortDescription", "shortDescription is wrong").isString().trim().isLength({max: 100})
-const content = body("content", "content is wrong").isString().trim().isLength({max: 1000})
+const titleValidator = body("title").isString().trim().isLength({max: 30})
+const shortDescriptionValidator = body("shortDescription").isString().trim().isLength({max: 100})
+const content = body("content").isString().trim().isLength({max: 1000})
 const blogIdValidator = body('blogId').custom((value, {req}) => {
     const blog = blogs.find(b => b.id === req.body.blogId);
     if (!blog) {

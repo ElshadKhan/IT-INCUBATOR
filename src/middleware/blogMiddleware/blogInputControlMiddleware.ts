@@ -1,7 +1,7 @@
 import {body} from "express-validator";
 
-const nameValidator = body("name", "name is wrong").isString().trim().isLength({max: 15})
-const youtubeUrlValidator = body("youtubeUrl", "youtubeUrl is wrong").isString().trim().isLength({max: 100}).isURL()
+const nameValidator = body("name").isString().trim().isLength({max: 15})
+const youtubeUrlValidator = body("youtubeUrl").isString().trim().isLength({max: 100}).isURL()
 
 export const blogRoutValidators = [nameValidator, youtubeUrlValidator]
 
