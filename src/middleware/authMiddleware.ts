@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from "express";
+
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const creds = 'admin:qwerty'
+    const template = 'admin:qwerty'
     const authHeader = req.headers.authorization
-    const base64Data = new Buffer(creds);
+    const base64Data = new Buffer(template);
     let base64String = base64Data.toString('base64');
     const validAuthHeader = `Basic ${base64String}`
 
