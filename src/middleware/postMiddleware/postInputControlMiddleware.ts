@@ -12,7 +12,7 @@ const blogIdValidator = body('blogId').custom((value, {req}) => {
     return true;
 })
 
-export const postRoutValidators = [blogIdValidator, titleValidator, shortDescriptionValidator, content]
+export const postRoutValidators = [titleValidator, shortDescriptionValidator, content, blogIdValidator]
 
 // export const postInputControlMiddleware = (req: Request, res: Response, next: NextFunction) => {
 //

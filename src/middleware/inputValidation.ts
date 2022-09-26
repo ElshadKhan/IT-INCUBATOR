@@ -5,7 +5,7 @@ export const inputValidation = (req: Request, res: Response, next: NextFunction)
     const errorsValid = validationResult(req)
 
     if (!errorsValid.isEmpty()) {
-        const errorsArray = errorsValid.array().map((error) => {
+        const errorsArray = errorsValid.array({onlyFirstError: true}).map((error) => {
             return {
                 message: error.msg,
                 field: error.param
