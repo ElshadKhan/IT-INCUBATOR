@@ -41,7 +41,7 @@ export const postRepository = {
             content: content,
             blogId: blogId,
             blogName: blog!.name,
-            createdAt: new Date().toString()
+            createdAt: new Date().toISOString()
         }
         const result = await postsCollection.insertOne(newPost)
         return newPost
@@ -62,6 +62,7 @@ export const postRepository = {
         return  result.deletedCount === 1
     },
     async deleteAllPost() {
+        console.log("hiii")
         const result = await postsCollection.deleteMany({})
         return
     }
