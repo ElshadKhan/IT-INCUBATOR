@@ -3,9 +3,8 @@ import {validationResult} from "express-validator";
 
 export const inputValidation = (req: Request, res: Response, next: NextFunction) => {
     const errorsValid = validationResult(req)
-    console.log("errorsValid", errorsValid)
     if (!errorsValid.isEmpty()) {
-        const errorsArray = errorsValid.array({onlyFirstError: true}).map((error) => {
+        const errorsArray = errorsValid.array({onlyFirstError: true}).map( error => {
             return {
                 message: error.msg,
                 field: error.param
