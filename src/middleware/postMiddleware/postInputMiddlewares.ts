@@ -1,6 +1,7 @@
 import {body} from "express-validator";
-import {blogs} from "../../repositories/blogRepository";
 import {inputValidation} from "../inputValidation";
+import {blogsCollection} from "../../db";
+import {ObjectId} from "mongodb";
 
 export const postValidations = [
     body("title")
@@ -17,8 +18,8 @@ export const postValidations = [
         .isLength({min: 1, max: 1000}).withMessage("Min length of field 'content' 1 max 1000."),
     body('blogId')
         .isString().withMessage("Field 'blogId' is not a string.")
-        .custom((value) => {
-        const blog = blogs.find(b => b.id === value)
+        .custom( async (value) => {
+        const blog   = await blogsCollection.findOne({_id: new ObjectId(value)});
         if (!blog) {
             throw new Error("Field 'blogId' is not correct.");
         }
