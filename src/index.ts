@@ -2,8 +2,8 @@ import express from 'express'
 import {router} from "./routes/IndexRoutes";
 import  cors from 'cors'
 import * as dotenv from "dotenv";
-import {runDb} from "./db";
 dotenv.config()
+import {runDb} from "./db";
 
 const app = express()
 

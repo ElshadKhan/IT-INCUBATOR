@@ -1,10 +1,12 @@
-import {MongoClient} from "mongodb"
+import {MongoClient, ServerApiVersion} from "mongodb"
 import {BlogDbType} from "./repositories/blogRepository";
 import {PostDbType} from "./repositories/postRepository";
+import * as dotenv from "dotenv";
+dotenv.config()
 
-const mongoUri = process.env.mongoURI || "mongodb://localhost:27017";
+const mongoUri = process.env.MONGODB_URL || "mongodb+srv://elshad:fvbh321321@cluster0.cx2tunx.mongodb.net/?retryWrites=true&w=majority"
+export const client = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-export const client = new MongoClient(mongoUri);
 const db = client.db("network")
 export const blogsCollection = db.collection<BlogDbType>("blogs")
 export const postsCollection = db.collection<PostDbType>("posts")
