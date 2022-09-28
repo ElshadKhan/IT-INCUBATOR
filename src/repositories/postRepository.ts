@@ -44,7 +44,7 @@ export const postRepository = {
         ))
     },
     async findPostById(id: string): Promise<PostDto | null> {
-        let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)});
+        let post: PostDbType | null = await postsCollection.findOne({id: id});
         const postDto: PostDto = {
             id: post!._id,
             title: post!.title,
@@ -94,7 +94,7 @@ export const postRepository = {
         content: string,
         blogId: string
     ): Promise<boolean> {
-        const result = await postsCollection.updateOne({_id: new ObjectId(id)}, { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
+        const result = await postsCollection.updateOne({id: id}, { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
 
         return  result.matchedCount === 1
     },
