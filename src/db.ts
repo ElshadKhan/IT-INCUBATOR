@@ -1,10 +1,13 @@
 import {MongoClient, ServerApiVersion} from "mongodb"
 import {BlogDbType} from "./repositories/blogRepository";
 import {PostDbType} from "./repositories/postRepository";
+import * as dotenv from "dotenv";
+dotenv.config()
 
-const mongoUri = process.env.MONGODB_URL
-// @ts-ignore
-export const client = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const mongoUri = process.env.MONGODB_URL || ""
+
+
+export const client = new MongoClient(mongoUri);
 
 const db = client.db("network")
 export const blogsCollection = db.collection<BlogDbType>("blogs")

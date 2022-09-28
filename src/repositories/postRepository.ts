@@ -62,7 +62,6 @@ export const postRepository = {
         return  result.deletedCount === 1
     },
     async deleteAllPost() {
-        console.log("hiii")
         const result = await postsCollection.deleteMany({})
         return
     }

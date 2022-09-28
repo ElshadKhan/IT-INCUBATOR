@@ -7,6 +7,14 @@ export type BlogDbType = {
     youtubeUrl: string
     createdAt: string
 }
+
+export type BlogDto = {
+    id: ObjectId
+    name: string
+    youtubeUrl: string
+    createdAt: string
+}
+
 export const blogRepository = {
     async findBlogs(): Promise<BlogDbType[]> {
         return await blogsCollection.find({}).toArray()
@@ -18,7 +26,7 @@ export const blogRepository = {
     async createBlog(
         name: string,
         youtubeUrl: string
-    ): Promise<BlogDbType> {
+    ): Promise<BlogDbType | BlogDto> {
         const newBlog = {
             _id: new ObjectId(),
             name: name,
@@ -26,7 +34,16 @@ export const blogRepository = {
             createdAt: new Date().toISOString()
         }
         const result = await blogsCollection.insertOne(newBlog)
-        return newBlog
+
+        const blogDto: BlogDto = {
+            id: newBlog._id,
+            name: newBlog.name,
+            youtubeUrl: newBlog.youtubeUrl,
+            createdAt: newBlog.createdAt
+        }
+
+        return blogDto
+
     },
     async updateBlog(
         id: string,
@@ -41,7 +58,6 @@ export const blogRepository = {
         return  result.deletedCount === 1
     },
     async deleteAllBlog() {
-        console.log("mama")
         const result = await blogsCollection.deleteMany({})
         return
     }
