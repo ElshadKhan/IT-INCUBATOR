@@ -99,7 +99,7 @@ export const postRepository = {
         return  result.matchedCount === 1
     },
     async deletePost(id: string) {
-        const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await postsCollection.deleteOne({id: id})
         return  result.deletedCount === 1
     },
     async deleteAllPost() {

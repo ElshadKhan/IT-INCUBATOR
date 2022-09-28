@@ -70,7 +70,7 @@ export const blogRepository = {
         return  result.matchedCount === 1
     },
     async deleteBlog(id: string): Promise<boolean> {
-        const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await blogsCollection.deleteOne({id: id})
         return  result.deletedCount === 1
     },
     async deleteAllBlog() {
