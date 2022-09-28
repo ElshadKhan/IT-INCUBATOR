@@ -7,7 +7,6 @@ type BlogDbType = {
     youtubeUrl: string
 }
 export type PostDbType = {
-    _id: ObjectId
     id: string
     title: string
     shortDescription: string
@@ -17,7 +16,7 @@ export type PostDbType = {
     createdAt: string
 }
 export type PostDto = {
-    id: ObjectId
+    id: string
     title: string
     shortDescription: string
     content: string
@@ -45,7 +44,6 @@ export const postRepository = {
         let blog: BlogDbType | null   = await blogsCollection.findOne({_id: new ObjectId(blogId)});
 
         const newPost = {
-            _id: new ObjectId,
             id: new Date().toISOString(),
             title: title,
             shortDescription: shortDescription,
@@ -57,7 +55,7 @@ export const postRepository = {
         const result = await postsCollection.insertOne(newPost)
 
         const postDto = {
-            id: newPost._id,
+            id: newPost.id,
             title: newPost.title,
             shortDescription: newPost.shortDescription,
             content: newPost.content,
