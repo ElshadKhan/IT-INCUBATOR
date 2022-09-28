@@ -29,12 +29,32 @@ export type PostDto = {
 
 
 export const postRepository = {
-    async findPosts(): Promise<PostDbType[]> {
-        return postsCollection.find({}).toArray()
+    async findPosts(): Promise<PostDto[]> {
+        const posts = await postsCollection.find().toArray()
+        return posts.map(p => (
+            {
+            id: p._id,
+            title: p.title,
+            shortDescription: p.shortDescription,
+            content: p.content,
+            blogId: p.blogId,
+            blogName: p.blogName,
+            createdAt: p.createdAt
+            }
+        ))
     },
-    async findPostById(id: string): Promise<PostDbType | null> {
+    async findPostById(id: string): Promise<PostDto | null> {
         let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)});
-        return post
+        const postDto: PostDto = {
+            id: post!._id,
+            title: post!.title,
+            shortDescription: post!.shortDescription,
+            content: post!.content,
+            blogId: post!.blogId,
+            blogName: post!.blogName,
+            createdAt: post!.createdAt
+        }
+        return postDto
     },
     async createPost(
         title: string,

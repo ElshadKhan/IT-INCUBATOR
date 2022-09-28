@@ -17,12 +17,26 @@ export type BlogDto = {
 }
 
 export const blogRepository = {
-    async findBlogs(): Promise<BlogDbType[]> {
-        return await blogsCollection.find({}).toArray()
+    async findBlogs(): Promise<BlogDto[]> {
+        const blogs = await blogsCollection.find().toArray()
+        return blogs.map(b => (
+            {
+            id: b._id,
+            name: b.name,
+            youtubeUrl: b.youtubeUrl,
+            createdAt: b.createdAt
+            }
+        ))
     },
-    async findBlogById(id: string): Promise<BlogDbType | null> {
+    async findBlogById(id: string): Promise<BlogDto | null> {
         let blog: BlogDbType | null = await blogsCollection.findOne({_id: new ObjectId(id)});
-        return blog
+        const blogDto: BlogDto = {
+            id: blog!._id,
+            name: blog!.name,
+            youtubeUrl: blog!.youtubeUrl,
+            createdAt: blog!.createdAt
+        }
+        return blogDto
     },
     async createBlog(
         name: string,
