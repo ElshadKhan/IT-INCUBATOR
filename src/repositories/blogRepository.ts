@@ -2,6 +2,7 @@ import {blogsCollection} from "../db";
 import {ObjectId} from "mongodb";
 
 export type BlogDbType = {
+    _id: ObjectId
     id: string
     name: string
     youtubeUrl: string
@@ -9,7 +10,7 @@ export type BlogDbType = {
 }
 
 export type BlogDto = {
-    id: string
+    id: ObjectId
     name: string
     youtubeUrl: string
     createdAt: string
@@ -28,6 +29,7 @@ export const blogRepository = {
         youtubeUrl: string
     ): Promise<BlogDbType | BlogDto> {
         const newBlog = {
+            _id: new ObjectId(),
             id: new Date().toISOString(),
             name: name,
             youtubeUrl: youtubeUrl,
@@ -36,7 +38,7 @@ export const blogRepository = {
         const result = await blogsCollection.insertOne(newBlog)
 
         const blogDto: BlogDto = {
-            id: newBlog.id,
+            id: newBlog._id,
             name: newBlog.name,
             youtubeUrl: newBlog.youtubeUrl,
             createdAt: newBlog.createdAt
