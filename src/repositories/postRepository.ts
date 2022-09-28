@@ -8,6 +8,16 @@ type BlogDbType = {
 }
 export type PostDbType = {
     _id: ObjectId
+    id: string
+    title: string
+    shortDescription: string
+    content: string
+    blogId: string
+    blogName: string | null
+    createdAt: string
+}
+export type PostDto = {
+    id: ObjectId
     title: string
     shortDescription: string
     content: string
@@ -23,7 +33,7 @@ export const postRepository = {
         return postsCollection.find({}).toArray()
     },
     async findPostById(id: string): Promise<PostDbType | null> {
-        let post: PostDbType | null = await postsCollection.findOne({id: new ObjectId(id), name});
+        let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)});
         return post
     },
     async createPost(
@@ -31,11 +41,12 @@ export const postRepository = {
         shortDescription: string,
         content: string,
         blogId: string
-    ): Promise<PostDbType> {
+    ): Promise<PostDbType | PostDto> {
         let blog: BlogDbType | null   = await blogsCollection.findOne({_id: new ObjectId(blogId)});
 
         const newPost = {
             _id: new ObjectId,
+            id: new Date().toISOString(),
             title: title,
             shortDescription: shortDescription,
             content: content,
@@ -44,7 +55,17 @@ export const postRepository = {
             createdAt: new Date().toISOString()
         }
         const result = await postsCollection.insertOne(newPost)
-        return newPost
+
+        const postDto = {
+            id: newPost._id,
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            blogId: newPost.blogId,
+            blogName: newPost.blogName,
+            createdAt: newPost.createdAt
+        }
+        return postDto
     },
     async updatePost(
         id: string,

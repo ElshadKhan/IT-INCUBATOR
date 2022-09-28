@@ -3,6 +3,7 @@ import {ObjectId} from "mongodb";
 
 export type BlogDbType = {
     _id: ObjectId
+    id: string
     name: string
     youtubeUrl: string
     createdAt: string
@@ -29,6 +30,7 @@ export const blogRepository = {
     ): Promise<BlogDbType | BlogDto> {
         const newBlog = {
             _id: new ObjectId(),
+            id: new Date().toISOString(),
             name: name,
             youtubeUrl: youtubeUrl,
             createdAt: new Date().toISOString()
