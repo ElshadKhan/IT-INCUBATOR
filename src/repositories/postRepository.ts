@@ -44,17 +44,20 @@ export const postRepository = {
         ))
     },
     async findPostById(id: string): Promise<PostDto | null> {
-        let post: PostDbType | null = await postsCollection.findOne({id: id});
-        const postDto: PostDto = {
-            id: post!._id,
-            title: post!.title,
-            shortDescription: post!.shortDescription,
-            content: post!.content,
-            blogId: post!.blogId,
-            blogName: post!.blogName,
-            createdAt: post!.createdAt
+        let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)});
+        if(post) {
+            const postDto: PostDto = {
+                id: post!._id,
+                title: post!.title,
+                shortDescription: post!.shortDescription,
+                content: post!.content,
+                blogId: post!.blogId,
+                blogName: post!.blogName,
+                createdAt: post!.createdAt
+            }
+            return postDto
         }
-        return postDto
+        return post
     },
     async createPost(
         title: string,
@@ -94,12 +97,12 @@ export const postRepository = {
         content: string,
         blogId: string
     ): Promise<boolean> {
-        const result = await postsCollection.updateOne({id: id}, { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
+        const result = await postsCollection.updateOne({_id: new ObjectId(id)}, { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
 
         return  result.matchedCount === 1
     },
     async deletePost(id: string) {
-        const result = await postsCollection.deleteOne({id: id})
+        const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
         return  result.deletedCount === 1
     },
     async deleteAllPost() {

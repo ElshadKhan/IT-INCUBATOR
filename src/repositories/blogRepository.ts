@@ -29,7 +29,8 @@ export const blogRepository = {
         ))
     },
     async findBlogById(id: string): Promise<BlogDto | null> {
-        let blog: BlogDbType | null = await blogsCollection.findOne({id: id});
+        let blog: BlogDbType | null = await blogsCollection.findOne({_id: new ObjectId(id)});
+        if (blog) {
         const blogDto: BlogDto = {
             id: blog!._id,
             name: blog!.name,
@@ -37,7 +38,9 @@ export const blogRepository = {
             createdAt: blog!.createdAt
         }
         return blogDto
-    },
+    }
+        return blog
+        },
     async createBlog(
         name: string,
         youtubeUrl: string
@@ -59,18 +62,17 @@ export const blogRepository = {
         }
 
         return blogDto
-
     },
     async updateBlog(
         id: string,
         name: string,
         youtubeUrl: string
     ): Promise<boolean> {
-        const result = await blogsCollection.updateOne({id: id}, { $set: {name: name, youtubeUrl: youtubeUrl}})
+        const result = await blogsCollection.updateOne({_id: new ObjectId(id)}, { $set: {name: name, youtubeUrl: youtubeUrl}})
         return  result.matchedCount === 1
     },
     async deleteBlog(id: string): Promise<boolean> {
-        const result = await blogsCollection.deleteOne({id: id})
+        const result = await blogsCollection.deleteOne({_id: new ObjectId(id)})
         return  result.deletedCount === 1
     },
     async deleteAllBlog() {

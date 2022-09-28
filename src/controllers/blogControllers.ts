@@ -9,6 +9,7 @@ export const blogControllers = {
     },
     async getBlogById(req: Request, res: Response) {
         const blog = await blogRepository.findBlogById(req.params.id)
+        console.log("get", blog)
         if (blog) {
             res.status(200).send(blog)
         } else {
@@ -30,6 +31,7 @@ export const blogControllers = {
     },
     async deleteBlog(req: Request, res: Response) {
         const blog = await blogRepository.deleteBlog(req.params.id);
+        console.log("delete", blog)
         if (blog) {
             res.send(204)
         } else {
