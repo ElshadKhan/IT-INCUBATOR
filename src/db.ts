@@ -4,7 +4,7 @@ import {PostDbType} from "./repositories/postRepository";
 import * as dotenv from "dotenv";
 dotenv.config()
 
-const mongoUri = process.env.MONGODB_URL || "mongodb+srv://elshad:fvbh321321@cluster0.cx2tunx.mongodb.net/?retryWrites=true&w=majority"
+const mongoUri = process.env.MONGODB_URL
 export const client = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 const db = client.db("network")
