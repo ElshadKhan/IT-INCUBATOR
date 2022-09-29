@@ -1,15 +1,14 @@
 import {Request, Response} from "express";
-import {blogRepository} from "../repositories/blogRepository";
-import {postRepository} from "../repositories/postRepository";
+import {blogService} from "../services/blogServises";
+import {postService} from "../services/postServices";
 
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
-        const blogs = await blogRepository.findBlogs()
+        const blogs = await blogService.findBlogs()
         res.status(200).send(blogs)
     },
     async getBlogById(req: Request, res: Response) {
-        const blog = await blogRepository.findBlogById(req.params.id)
-        console.log("get", blog)
+        const blog = await blogService.findBlogById(req.params.id)
         if (blog) {
             res.status(200).send(blog)
         } else {
@@ -17,12 +16,12 @@ export const blogControllers = {
         }
     },
     async createBlog(req: Request, res: Response) {
-        const newBlog = await blogRepository.createBlog(req.body.name, req.body.youtubeUrl)
+        const newBlog = await blogService.createBlog(req.body.name, req.body.youtubeUrl)
         res.status(201).send(newBlog)
 
     },
     async updateBlog(req: Request, res: Response) {
-        const blog = await blogRepository.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl);
+        const blog = await blogService.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl);
         if (blog) {
             res.send(204)
         } else {
@@ -30,8 +29,7 @@ export const blogControllers = {
         }
     },
     async deleteBlog(req: Request, res: Response) {
-        const blog = await blogRepository.deleteBlog(req.params.id);
-        console.log("delete", blog)
+        const blog = await blogService.deleteBlog(req.params.id);
         if (blog) {
             res.send(204)
         } else {
@@ -39,8 +37,8 @@ export const blogControllers = {
         }
     },
     async deleteBlogsAndPosts(req: Request, res: Response) {
-        const blog = await blogRepository.deleteAllBlog();
-        const post = await postRepository.deleteAllPost()
+        const blog = await blogService.deleteAllBlog();
+        const post = await postService.deleteAllPost()
         res.send(204)
     }
 }

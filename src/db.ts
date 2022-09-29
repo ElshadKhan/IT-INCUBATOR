@@ -1,4 +1,4 @@
-import {MongoClient, ServerApiVersion} from "mongodb"
+import {MongoClient} from "mongodb"
 import {BlogDbType} from "./repositories/blogRepository";
 import {PostDbType} from "./repositories/postRepository";
 import * as dotenv from "dotenv";

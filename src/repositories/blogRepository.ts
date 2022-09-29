@@ -17,58 +17,21 @@ export type BlogDto = {
 }
 
 export const blogRepository = {
-    async findBlogs(): Promise<BlogDto[]> {
+    async findBlogs(): Promise<BlogDbType[]> {
         const blogs = await blogsCollection.find().toArray()
-        return blogs.map(b => (
-            {
-            id: b._id,
-            name: b.name,
-            youtubeUrl: b.youtubeUrl,
-            createdAt: b.createdAt
-            }
-        ))
+        return blogs
     },
-    async findBlogById(id: string): Promise<BlogDto | null> {
-        let blog: BlogDbType | null = await blogsCollection.findOne({_id: new ObjectId(id)});
-        if (blog) {
-        const blogDto: BlogDto = {
-            id: blog!._id,
-            name: blog!.name,
-            youtubeUrl: blog!.youtubeUrl,
-            createdAt: blog!.createdAt
-        }
-        return blogDto
-    }
+    async findBlogById(id: string): Promise<BlogDbType | null> {
+        const blog: BlogDbType | null = await blogsCollection.findOne({_id: new ObjectId(id)});
         return blog
         },
-    async createBlog(
-        name: string,
-        youtubeUrl: string
-    ): Promise<BlogDbType | BlogDto> {
-        const newBlog = {
-            _id: new ObjectId(),
-            id: new Date().toISOString(),
-            name: name,
-            youtubeUrl: youtubeUrl,
-            createdAt: new Date().toISOString()
-        }
+    async createBlog(newBlog: BlogDbType): Promise<BlogDbType | BlogDto> {
         const result = await blogsCollection.insertOne(newBlog)
-
-        const blogDto: BlogDto = {
-            id: newBlog._id,
-            name: newBlog.name,
-            youtubeUrl: newBlog.youtubeUrl,
-            createdAt: newBlog.createdAt
-        }
-
-        return blogDto
+        return newBlog
     },
-    async updateBlog(
-        id: string,
-        name: string,
-        youtubeUrl: string
-    ): Promise<boolean> {
-        const result = await blogsCollection.updateOne({_id: new ObjectId(id)}, { $set: {name: name, youtubeUrl: youtubeUrl}})
+    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
+        const result = await blogsCollection.updateOne({
+            _id: new ObjectId(id)}, { $set: {name: name, youtubeUrl: youtubeUrl}})
         return  result.matchedCount === 1
     },
     async deleteBlog(id: string): Promise<boolean> {

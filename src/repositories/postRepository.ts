@@ -1,4 +1,4 @@
-import {blogsCollection, postsCollection} from "../db";
+import {postsCollection} from "../db";
 import {ObjectId} from "mongodb";
 
 type BlogDbType = {
@@ -26,69 +26,18 @@ export type PostDto = {
     createdAt: string
 }
 
-
-
 export const postRepository = {
-    async findPosts(): Promise<PostDto[]> {
+    async findPosts(): Promise<PostDbType[]> {
         const posts = await postsCollection.find().toArray()
-        return posts.map(p => (
-            {
-            id: p._id,
-            title: p.title,
-            shortDescription: p.shortDescription,
-            content: p.content,
-            blogId: p.blogId,
-            blogName: p.blogName,
-            createdAt: p.createdAt
-            }
-        ))
+        return posts
     },
-    async findPostById(id: string): Promise<PostDto | null> {
-        let post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)});
-        if(post) {
-            const postDto: PostDto = {
-                id: post!._id,
-                title: post!.title,
-                shortDescription: post!.shortDescription,
-                content: post!.content,
-                blogId: post!.blogId,
-                blogName: post!.blogName,
-                createdAt: post!.createdAt
-            }
-            return postDto
-        }
+    async findPostById(id: string): Promise<PostDbType | null> {
+        const post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)});
         return post
     },
-    async createPost(
-        title: string,
-        shortDescription: string,
-        content: string,
-        blogId: string
-    ): Promise<PostDbType | PostDto> {
-        let blog: BlogDbType | null   = await blogsCollection.findOne({_id: new ObjectId(blogId)});
-
-        const newPost = {
-            _id: new ObjectId,
-            id: new Date().toISOString(),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            blogId: blogId,
-            blogName: blog!.name,
-            createdAt: new Date().toISOString()
-        }
+    async createPost(newPost: PostDbType): Promise<PostDbType | PostDto> {
         const result = await postsCollection.insertOne(newPost)
-
-        const postDto = {
-            id: newPost._id,
-            title: newPost.title,
-            shortDescription: newPost.shortDescription,
-            content: newPost.content,
-            blogId: newPost.blogId,
-            blogName: newPost.blogName,
-            createdAt: newPost.createdAt
-        }
-        return postDto
+        return newPost
     },
     async updatePost(
         id: string,
@@ -97,8 +46,8 @@ export const postRepository = {
         content: string,
         blogId: string
     ): Promise<boolean> {
-        const result = await postsCollection.updateOne({_id: new ObjectId(id)}, { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
-
+        const result = await postsCollection.updateOne({_id: new ObjectId(id)},
+            { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
         return  result.matchedCount === 1
     },
     async deletePost(id: string) {

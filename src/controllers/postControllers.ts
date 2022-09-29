@@ -1,13 +1,13 @@
 import {Request, Response} from "express";
-import {postRepository} from "../repositories/postRepository";
+import {postService} from "../services/postServices";
 
 export const postControllers = {
     async getPosts(req: Request, res: Response) {
-        const posts = await postRepository.findPosts()
+        const posts = await postService.findPosts()
         res.status(200).send(posts)
     },
     async getPostById(req: Request, res: Response) {
-        const post = await postRepository.findPostById(req.params.id)
+        const post = await postService.findPostById(req.params.id)
         if (post) {
             res.status(200).send(post)
         } else {
@@ -15,11 +15,11 @@ export const postControllers = {
         }
     },
     async createPost(req: Request, res: Response) {
-        const newPost = await postRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
         res.status(201).send(newPost)
     },
     async updatePost(req: Request, res: Response) {
-        const post = await postRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+        const post = await postService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
         if (post) {
             res.send(204)
         } else {
@@ -27,7 +27,7 @@ export const postControllers = {
         }
     },
     async deletePost(req: Request, res: Response) {
-        const post = await postRepository.deletePost(req.params.id);
+        const post = await postService.deletePost(req.params.id);
         if (post) {
             res.send(204)
         } else {
