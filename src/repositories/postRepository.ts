@@ -1,30 +1,6 @@
 import {postsCollection} from "../db";
 import {ObjectId} from "mongodb";
-
-type BlogDbType = {
-    _id: ObjectId
-    name: string
-    youtubeUrl: string
-}
-export type PostDbType = {
-    _id: ObjectId
-    id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string | null
-    createdAt: string
-}
-export type PostDto = {
-    id: ObjectId
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string | null
-    createdAt: string
-}
+import {PostDbType, PostDto} from "../types/postTypes";
 
 export const postRepository = {
     async findPosts(): Promise<PostDbType[]> {

@@ -1,5 +1,6 @@
 import {ObjectId} from "mongodb";
-import {BlogDbType, BlogDto, blogRepository} from "../repositories/blogRepository";
+import {blogRepository} from "../repositories/blogRepository";
+import {BlogDbType, BlogDto} from "../types/blogTypes";
 
 export const blogService = {
     async findBlogs(): Promise<BlogDto[]> {
