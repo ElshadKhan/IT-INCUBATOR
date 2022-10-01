@@ -1,18 +1,20 @@
-import {blogsCollection} from "../db";
+import {blogsCollection, postsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {BlogDbType, BlogDto} from "../types/blogTypes";
+import {BlogDbType} from "../types/blogTypes";
+import {PostDbType} from "../types/postTypes";
 
 export const blogRepository = {
     async findBlogs(): Promise<BlogDbType[]> {
-        const blogs = await blogsCollection.find().toArray()
-        return blogs
+        return await blogsCollection.find().toArray()
     },
     async findBlogById(id: string): Promise<BlogDbType | null> {
-        const blog: BlogDbType | null = await blogsCollection.findOne({_id: new ObjectId(id)});
-        return blog
+        return await blogsCollection.findOne({_id: new ObjectId(id)});
         },
-    async createBlog(newBlog: BlogDbType): Promise<BlogDbType | BlogDto> {
-        const result = await blogsCollection.insertOne(newBlog)
+    async findPostsByBlogId(blogId: string): Promise<PostDbType[]> {
+        return postsCollection.find({blogId: blogId}).toArray()
+        },
+    async createBlog(newBlog: BlogDbType): Promise<BlogDbType> {
+        await blogsCollection.insertOne(newBlog)
         return newBlog
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
@@ -25,7 +27,7 @@ export const blogRepository = {
         return  result.deletedCount === 1
     },
     async deleteAllBlog() {
-        const result = await blogsCollection.deleteMany({})
+        await blogsCollection.deleteMany({})
         return
     }
 }

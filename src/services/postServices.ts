@@ -1,8 +1,8 @@
 import {ObjectId} from "mongodb";
 import {postRepository} from "../repositories/postRepository";
 import {PostDbType, PostDto} from "../types/postTypes";
-import {blogsCollection} from "../db";
 import {BlogDbType} from "../types/blogTypes";
+import {blogRepository} from "../repositories/blogRepository";
 
 export const postService = {
     async findPosts(): Promise<PostDto[]> {
@@ -37,10 +37,10 @@ export const postService = {
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDbType | PostDto> {
-        const blog: BlogDbType | null   = await blogsCollection.findOne({_id: new ObjectId(blogId)});
+        const blog: BlogDbType | null = await blogRepository.findBlogById(blogId);
         const newPost = {
             _id: new ObjectId,
-            id: new Date().toISOString(),
+            id: String(+new Date()),
             title: title,
             shortDescription: shortDescription,
             content: content,

@@ -1,26 +1,19 @@
 import {postsCollection} from "../db";
 import {ObjectId} from "mongodb";
-import {PostDbType, PostDto} from "../types/postTypes";
+import {PostDbType} from "../types/postTypes";
 
 export const postRepository = {
     async findPosts(): Promise<PostDbType[]> {
-        const posts = await postsCollection.find().toArray()
-        return posts
+        return postsCollection.find().toArray()
     },
     async findPostById(id: string): Promise<PostDbType | null> {
-        const post: PostDbType | null = await postsCollection.findOne({_id: new ObjectId(id)});
-        return post
+        return postsCollection.findOne({_id: new ObjectId(id)});
     },
-    async createPost(newPost: PostDbType): Promise<PostDbType | PostDto> {
-        const result = await postsCollection.insertOne(newPost)
+    async createPost(newPost: PostDbType): Promise<PostDbType> {
+        await postsCollection.insertOne(newPost)
         return newPost
     },
-    async updatePost(
-        id: string,
-        title: string,
-        shortDescription: string,
-        content: string,
-        blogId: string
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string
     ): Promise<boolean> {
         const result = await postsCollection.updateOne({_id: new ObjectId(id)},
             { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
@@ -31,7 +24,7 @@ export const postRepository = {
         return  result.deletedCount === 1
     },
     async deleteAllPost() {
-        const result = await postsCollection.deleteMany({})
+        await postsCollection.deleteMany({})
         return
     }
 }

@@ -12,8 +12,12 @@ export const blogControllers = {
         if (blog) {
             res.status(200).send(blog)
         } else {
-            res.send(404)
+            res.sendStatus(404)
         }
+    },
+    async getPostsByBlogId(req: Request, res: Response) {
+        const postsForSpecificBlog = await blogService.findPostsByBlogId(req.params.blogId)
+        return  res.send(postsForSpecificBlog)
     },
     async createBlog(req: Request, res: Response) {
         const newBlog = await blogService.createBlog(req.body.name, req.body.youtubeUrl)
