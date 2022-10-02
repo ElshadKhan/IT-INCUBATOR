@@ -1,14 +1,25 @@
 import {ObjectId} from "mongodb";
 import {postRepository} from "../repositories/postRepository";
-import {PostDbType, PostDto} from "../types/postTypes";
+import {PostDbType, PostDto, PostsBusinessType, QueryPostType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {blogRepository} from "../repositories/blogRepository";
 
 export const postService = {
-    async findPosts(): Promise<PostDto[]> {
-        const posts = await postRepository.findPosts()
-        return posts.map(p => (
-            {
+    async findPosts(postQueryParamsFilter: QueryPostType): Promise<PostsBusinessType> {
+        const skip = postQueryParamsFilter.pageSize * (postQueryParamsFilter.pageNumber - 1)
+        const sort = postQueryParamsFilter.sortBy
+        const limit = postQueryParamsFilter.pageSize
+        const sortDirection: any = postQueryParamsFilter.sortDirection
+        const posts = await postRepository.findPosts(skip, sort, sortDirection, limit)
+        const numberOfPosts = await postRepository.countPosts()
+        console.log("posts", posts)
+        const postDto: PostsBusinessType = {
+            pagesCount: (Math.ceil(numberOfPosts/limit)),
+            page: postQueryParamsFilter.pageNumber,
+            pageSize: limit,
+            totalCount: numberOfPosts,
+            items: posts.map(p => (
+                {
                 id: p._id,
                 title: p.title,
                 shortDescription: p.shortDescription,
@@ -16,8 +27,9 @@ export const postService = {
                 blogId: p.blogId,
                 blogName: p.blogName,
                 createdAt: p.createdAt
-            }
-        ))
+                }
+        ))}
+        return postDto
     },
     async findPostById(id: string): Promise<PostDto | null> {
         const post: PostDbType | null = await postRepository.findPostById(id);
@@ -35,6 +47,20 @@ export const postService = {
         }
         return post
     },
+    async findPostsByBlogId(blogId: string): Promise<PostDto[] | null> {
+        const findPosts = await postRepository.findPostsByBlogId(blogId)
+        return findPosts.map(p => (
+            {
+                id: p._id,
+                title: p.title,
+                shortDescription: p.shortDescription,
+                content: p.content,
+                blogId: p.blogId,
+                blogName: p.blogName,
+                createdAt: p.createdAt
+            }
+        ))
+    },
     async createPost(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDbType | PostDto> {
         const blog: BlogDbType | null = await blogRepository.findBlogById(blogId);
@@ -49,7 +75,6 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
         const result = await postRepository.createPost(newPost)
-
         const postDto = {
             id: newPost._id,
             title: newPost.title,

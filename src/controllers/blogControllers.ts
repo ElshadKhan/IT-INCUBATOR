@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 import {blogService} from "../services/blogServises";
-import {postService} from "../services/postServices";
 
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
@@ -14,10 +13,6 @@ export const blogControllers = {
         } else {
             res.sendStatus(404)
         }
-    },
-    async getPostsByBlogId(req: Request, res: Response) {
-        const postsForSpecificBlog = await blogService.findPostsByBlogId(req.params.blogId)
-        return  res.send(postsForSpecificBlog)
     },
     async createBlog(req: Request, res: Response) {
         const newBlog = await blogService.createBlog(req.body.name, req.body.youtubeUrl)
@@ -40,9 +35,8 @@ export const blogControllers = {
             res.send(404)
         }
     },
-    async deleteBlogsAndPosts(req: Request, res: Response) {
+    async deleteAllBlogs(req: Request, res: Response) {
         const blog = await blogService.deleteAllBlog();
-        const post = await postService.deleteAllPost()
         res.send(204)
     }
 }

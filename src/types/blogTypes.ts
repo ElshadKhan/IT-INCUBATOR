@@ -14,3 +14,11 @@ export type BlogDto = {
     youtubeUrl: string
     createdAt: string
 }
+
+export type QueryBlogType = {
+    searchNameTerm: string
+    pageNumber: number
+    pageSize: number
+    sortBy: string
+    sortDirection: string
+}

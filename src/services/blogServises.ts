@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 import {blogRepository} from "../repositories/blogRepository";
 import {BlogDbType, BlogDto} from "../types/blogTypes";
-import {PostDbType, PostDto} from "../types/postTypes";
 
 export const blogService = {
     async findBlogs(): Promise<BlogDto[]> {
@@ -27,19 +26,6 @@ export const blogService = {
             return blogDto
         }
         return findBlog
-    }, async findPostsByBlogId(blogId: string): Promise<PostDto[] | null> {
-        const findPosts = await blogRepository.findPostsByBlogId(blogId)
-        return findPosts.map(p => (
-            {
-                id: p._id,
-                title: p.title,
-                shortDescription: p.shortDescription,
-                content: p.content,
-                blogId: p.blogId,
-                blogName: p.blogName,
-                createdAt: p.createdAt
-            }
-        ))
     },
     async createBlog(name: string, youtubeUrl: string): Promise<BlogDbType | BlogDto> {
         const newBlog: BlogDbType = {

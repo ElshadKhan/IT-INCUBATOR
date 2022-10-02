@@ -1,7 +1,6 @@
-import {blogsCollection, postsCollection} from "../db";
+import {blogsCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {BlogDbType} from "../types/blogTypes";
-import {PostDbType} from "../types/postTypes";
 
 export const blogRepository = {
     async findBlogs(): Promise<BlogDbType[]> {
@@ -9,9 +8,6 @@ export const blogRepository = {
     },
     async findBlogById(id: string): Promise<BlogDbType | null> {
         return await blogsCollection.findOne({_id: new ObjectId(id)});
-        },
-    async findPostsByBlogId(blogId: string): Promise<PostDbType[]> {
-        return postsCollection.find({blogId: blogId}).toArray()
         },
     async createBlog(newBlog: BlogDbType): Promise<BlogDbType> {
         await blogsCollection.insertOne(newBlog)

@@ -1,6 +1,25 @@
-import {body} from "express-validator";
+import {body, param} from "express-validator";
 import {inputValidation} from "../inputValidation";
-import {blogsCollection} from "../../db";
+import {blogRepository} from "../../repositories/blogRepository";
+
+export const blogIdInputParamValidation = param('blogId')
+    .isString().withMessage("Field 'blogId' is not a string.")
+    .custom( async (value) => {
+        const blog   = await blogRepository.findBlogById(value);
+        if (!blog) {
+            throw new Error("Field 'blogId' is not correct.");
+        }
+        return true;
+    })
+export const blogIdInputBodyValidation = body('blogId')
+    .isString().withMessage("Field 'blogId' is not a string.")
+    .custom( async (value) => {
+        const blog = await blogRepository.findBlogById(value);
+        if (!blog) {
+            throw new Error("Field 'blogId' is not correct.");
+        }
+        return true;
+    })
 
 export const postValidations = [
     body("title")
@@ -15,14 +34,5 @@ export const postValidations = [
         .isString().withMessage("Field 'content' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'content' cannot be empty.")
         .isLength({min: 1, max: 1000}).withMessage("Min length of field 'content' 1 max 1000."),
-    body('blogId')
-        .isString().withMessage("Field 'blogId' is not a string.")
-        .custom( async (value) => {
-        const blog   = await blogsCollection.findOne({_id: value});
-        if (!blog) {
-            throw new Error("Field 'blogId' is not correct.");
-        }
-        return true;
-    }),
     inputValidation
 ]

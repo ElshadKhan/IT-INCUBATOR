@@ -1,9 +1,16 @@
 import {Request, Response} from "express";
 import {postService} from "../services/postServices";
+import {QueryPostType} from "../types/postTypes";
 
 export const postControllers = {
     async getPosts(req: Request, res: Response) {
-        const posts = await postService.findPosts()
+        const postQueryParamsFilter: any = {
+            pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+            pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+            sortBy: req.query.sortBy || "createdAt",
+            sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
+        }
+        const posts = await postService.findPosts(postQueryParamsFilter)
         res.status(200).send(posts)
     },
     async getPostById(req: Request, res: Response) {
@@ -14,8 +21,16 @@ export const postControllers = {
             res.send(404)
         }
     },
+    async getPostsByBlogId(req: Request, res: Response) {
+        const postsForSpecificBlog = await postService.findPostsByBlogId(req.params.blogId)
+        return  res.send(postsForSpecificBlog)
+    },
     async createPost(req: Request, res: Response) {
         const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        res.status(201).send(newPost)
+    },
+    async createPostByBlogId(req: Request, res: Response) {
+        const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
         res.status(201).send(newPost)
     },
     async updatePost(req: Request, res: Response) {
@@ -33,5 +48,9 @@ export const postControllers = {
         } else {
             res.send(404)
         }
+    },
+    async deleteAllPosts(req: Request, res: Response) {
+        const post = await postService.deleteAllPost()
+        res.send(204)
     }
 }
