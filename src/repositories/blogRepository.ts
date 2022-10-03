@@ -4,7 +4,7 @@ import {BlogDbType} from "../types/blogTypes";
 
 export const blogRepository = {
     async countBlogs(searchNameTerm: string, sort: string, sortDirection: any) {
-        return await postsCollection.find({name: {$regex: searchNameTerm}}).sort(sort, sortDirection).count()
+        return await postsCollection.find().sort(sort, sortDirection).count()
     },
     async findBlogs(searchNameTerm: string, skip: number, sort: string, sortDirection: any, limit: number): Promise<BlogDbType[]> {
 
