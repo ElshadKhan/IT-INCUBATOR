@@ -29,7 +29,11 @@ export const postControllers = {
             sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
         }
         const postsForSpecificBlog = await postService.findPostsByBlogId(req.params.blogId, postQueryParamsFilter)
-        res.status(200).send(postsForSpecificBlog)
+        if (postsForSpecificBlog) {
+            res.status(200).send(postsForSpecificBlog)
+        } else {
+            res.send(404)
+        }
     },
     async createPost(req: Request, res: Response) {
         const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)

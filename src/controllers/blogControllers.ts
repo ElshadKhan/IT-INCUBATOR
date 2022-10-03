@@ -4,7 +4,7 @@ import {blogService} from "../services/blogServises";
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
         const blogQueryParamsFilter: any = {
-            searchNameTerm: req.query.searchNameTerm ? req.query.searchNameTerm : null,
+            searchNameTerm: req.query.searchNameTerm,
             pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
             pageSize: req.query.pageSize ? +req.query.pageSize : 10,
             sortBy: req.query.sortBy || "createdAt",
