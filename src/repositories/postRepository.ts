@@ -3,6 +3,9 @@ import {ObjectId} from "mongodb";
 import {PostDbType} from "../types/postTypes";
 
 export const postRepository = {
+    async countPosts(sort: string, sortDirection: any) {
+        return await postsCollection.find().sort(sort, sortDirection).count()
+    },
     async findPosts(skip: number, sort: string, sortDirection: any, limit: number): Promise<PostDbType[]> {
         return postsCollection.find().sort(sort, sortDirection).skip(skip).limit(limit).toArray()
     },
