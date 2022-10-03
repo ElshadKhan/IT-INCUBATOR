@@ -1,13 +1,12 @@
-import {blogsCollection, postsCollection} from "../db";
+import {blogsCollection} from "../db";
 import {ObjectId} from "mongodb";
 import {BlogDbType} from "../types/blogTypes";
 
 export const blogRepository = {
     async countBlogs(searchNameTerm: string, sort: string, sortDirection: any) {
-        return await postsCollection.find().sort(sort, sortDirection).count()
+        return await blogsCollection.find({name: {$regex: searchNameTerm}}).sort(sort, sortDirection).count()
     },
     async findBlogs(searchNameTerm: string, skip: number, sort: string, sortDirection: any, limit: number): Promise<BlogDbType[]> {
-
         return await blogsCollection.find({name: {$regex: searchNameTerm}}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
     },
     async findBlogById(id: string): Promise<BlogDbType | null> {

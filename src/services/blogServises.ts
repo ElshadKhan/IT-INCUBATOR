@@ -9,8 +9,11 @@ export const blogService = {
         const limit = blogQueryParamsFilter.pageSize
         const sortDirection: any = blogQueryParamsFilter.sortDirection
         const searchNameTerm = blogQueryParamsFilter.searchNameTerm
+        console.log("searchNameTerm", searchNameTerm)
         const blogs = await blogRepository.findBlogs(searchNameTerm, skip, sort, sortDirection, limit)
+        console.log(blogs)
         const totalCountBlogs = await blogRepository.countBlogs(searchNameTerm, sort, sortDirection)
+        console.log(totalCountBlogs)
         const blogDto = {
             "pagesCount": (Math.ceil(totalCountBlogs/limit)),
             "page": blogQueryParamsFilter.pageNumber,
