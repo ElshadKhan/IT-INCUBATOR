@@ -11,12 +11,11 @@ export const postService = {
         const limit = postQueryParamsFilter.pageSize
         const sortDirection: any = postQueryParamsFilter.sortDirection
         const posts = await postRepository.findPosts(skip, sort, sortDirection, limit)
-        const numberOfPosts = await postRepository.countPosts()
         const postDto = {
-            "pagesCount": (Math.ceil(numberOfPosts/limit)),
+            "pagesCount": (Math.ceil(posts.length/limit)),
             "page": postQueryParamsFilter.pageNumber,
             "pageSize": limit,
-            "totalCount": numberOfPosts,
+            "totalCount": posts.length,
             "items": posts.map(p => (
                 {
                 id: p._id,
