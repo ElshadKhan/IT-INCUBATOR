@@ -41,7 +41,11 @@ export const postControllers = {
     },
     async createPostByBlogId(req: Request, res: Response) {
         const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
-        res.status(201).send(newPost)
+        if (newPost) {
+            res.status(200).send(newPost)
+        } else {
+            res.send(404)
+        }
     },
     async updatePost(req: Request, res: Response) {
         const post = await postService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
