@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import {PostDto} from "./postTypes";
 
 export type BlogDbType = {
     _id: ObjectId
@@ -21,4 +22,12 @@ export type QueryBlogType = {
     pageSize: number
     sortBy: string
     sortDirection: string
+}
+
+export type BlogsBusinessType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: Array<BlogDto>
 }

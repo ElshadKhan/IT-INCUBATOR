@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 
 export type PostDbType = {
-    //TODO: use normal id
     _id: ObjectId
     id: string
     title: string

@@ -6,14 +6,17 @@ export const postRepository = {
     async countPosts(sort: string, sortDirection: any) {
         return await postsCollection.find().sort(sort, sortDirection).count()
     },
+    async countPostsByBlogId(blogId: string, sort: string, sortDirection: any) {
+        return await postsCollection.find({blogId: blogId}).sort(sort, sortDirection).count()
+    },
     async findPosts(skip: number, sort: string, sortDirection: any, limit: number): Promise<PostDbType[]> {
         return postsCollection.find().sort(sort, sortDirection).skip(skip).limit(limit).toArray()
     },
     async findPostById(id: string): Promise<PostDbType | null> {
         return postsCollection.findOne({_id: new ObjectId(id)});
     },
-    async findPostsByBlogId(blogId: string): Promise<PostDbType[]> {
-        return postsCollection.find({blogId: blogId}).toArray()
+    async findPostsByBlogId(blogId: string, skip: number, sort: string, sortDirection: any, limit: number): Promise<PostDbType[]> {
+        return postsCollection.find({blogId: blogId}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
     },
     async createPost(newPost: PostDbType): Promise<PostDbType> {
         await postsCollection.insertOne(newPost)

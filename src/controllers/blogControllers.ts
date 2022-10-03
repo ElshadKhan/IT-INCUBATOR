@@ -3,7 +3,14 @@ import {blogService} from "../services/blogServises";
 
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
-        const blogs = await blogService.findBlogs()
+        const blogQueryParamsFilter: any = {
+            searchNameTerm: req.query.searchNameTerm ? req.query.searchNameTerm : null,
+            pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
+            pageSize: req.query.pageSize ? +req.query.pageSize : 10,
+            sortBy: req.query.sortBy || "createdAt",
+            sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
+        }
+        const blogs = await blogService.findBlogs(blogQueryParamsFilter)
         res.status(200).send(blogs)
     },
     async getBlogById(req: Request, res: Response) {
@@ -34,9 +41,5 @@ export const blogControllers = {
         } else {
             res.send(404)
         }
-    },
-    async deleteAllBlogs(req: Request, res: Response) {
-        const blog = await blogService.deleteAllBlog();
-        res.send(204)
     }
 }

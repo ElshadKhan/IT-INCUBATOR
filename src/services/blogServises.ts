@@ -1,18 +1,30 @@
 import {ObjectId} from "mongodb";
 import {blogRepository} from "../repositories/blogRepository";
-import {BlogDbType, BlogDto} from "../types/blogTypes";
+import {BlogDbType, BlogDto, BlogsBusinessType, QueryBlogType} from "../types/blogTypes";
 
 export const blogService = {
-    async findBlogs(): Promise<BlogDto[]> {
-        const blogs = await blogRepository.findBlogs()
-        return blogs.map(b => (
-            {
-                id: b._id,
-                name: b.name,
-                youtubeUrl: b.youtubeUrl,
-                createdAt: b.createdAt
-            }
-        ))
+    async findBlogs(blogQueryParamsFilter: QueryBlogType): Promise<BlogsBusinessType> {
+        const skip = blogQueryParamsFilter.pageSize * (blogQueryParamsFilter.pageNumber - 1)
+        const sort = blogQueryParamsFilter.sortBy
+        const limit = blogQueryParamsFilter.pageSize
+        const sortDirection: any = blogQueryParamsFilter.sortDirection
+        const searchNameTerm = blogQueryParamsFilter.searchNameTerm
+        const blogs = await blogRepository.findBlogs(searchNameTerm, skip, sort, sortDirection, limit)
+        const totalCountBlogs = await blogRepository.countBlogs(searchNameTerm, sort, sortDirection)
+        const blogDto = {
+            "pagesCount": (Math.ceil(totalCountBlogs/limit)),
+            "page": blogQueryParamsFilter.pageNumber,
+            "pageSize": limit,
+            "totalCount": totalCountBlogs,
+            "items": blogs.map(b => (
+                {
+                    id: b._id,
+                    name: b.name,
+                    youtubeUrl: b.youtubeUrl,
+                    createdAt: b.createdAt
+                }
+            ))}
+        return blogDto
     },
     async findBlogById(id: string): Promise<BlogDto | null> {
         const findBlog = await blogRepository.findBlogById(id)
