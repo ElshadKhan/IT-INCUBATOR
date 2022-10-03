@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 import {postService} from "../services/postServices";
-import {QueryPostType} from "../types/postTypes";
 
 export const postControllers = {
     async getPosts(req: Request, res: Response) {

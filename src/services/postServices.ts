@@ -12,7 +12,6 @@ export const postService = {
         const sortDirection: any = postQueryParamsFilter.sortDirection
         const posts = await postRepository.findPosts(skip, sort, sortDirection, limit)
         const numberOfPosts = await postRepository.countPosts()
-        console.log("posts", posts)
         const postDto: PostsBusinessType = {
             pagesCount: (Math.ceil(numberOfPosts/limit)),
             page: postQueryParamsFilter.pageNumber,
