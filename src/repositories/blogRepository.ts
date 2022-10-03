@@ -7,7 +7,7 @@ export const blogRepository = {
         return await postsCollection.find({name: {$regex: searchNameTerm}}).sort(sort, sortDirection).count()
     },
     async findBlogs(searchNameTerm: string, skip: number, sort: string, sortDirection: any, limit: number): Promise<BlogDbType[]> {
-        console.log()
+
         return await blogsCollection.find({name: {$regex: searchNameTerm}}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
     },
     async findBlogById(id: string): Promise<BlogDbType | null> {

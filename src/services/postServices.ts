@@ -51,7 +51,7 @@ export const postService = {
         const sort = postQueryParamsFilter.sortBy
         const limit = postQueryParamsFilter.pageSize
         const sortDirection: any = postQueryParamsFilter.sortDirection
-        const post: PostDbType | null = await postRepository.findPostById(blogId);
+        const post = await blogRepository.findBlogById(blogId);
         const findPosts = await postRepository.findPostsByBlogId(blogId, skip, sort, sortDirection, limit)
         const totalCountPosts = await postRepository.countPostsByBlogId(blogId, sort, sortDirection)
         if (post) {
