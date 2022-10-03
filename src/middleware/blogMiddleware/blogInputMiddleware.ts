@@ -1,6 +1,7 @@
 import {body} from "express-validator";
 import {inputValidation} from "../inputValidation";
 
+
 export const blogValidations = [
     body("name")
         .isString().withMessage("Field 'name' is not a string.")
@@ -13,3 +14,5 @@ export const blogValidations = [
         .isURL().withMessage("Field 'youtubeUrl' is invalid."),
     inputValidation
 ]
+
+

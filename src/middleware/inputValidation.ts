@@ -15,3 +15,17 @@ export const inputValidation = (req: Request, res: Response, next: NextFunction)
         next()
     }
 }
+export const inputBlogIdValidation = (req: Request, res: Response, next: NextFunction) => {
+    const errorsValid = validationResult(req)
+    if (!errorsValid.isEmpty()) {
+        const errorsArray = errorsValid.array({onlyFirstError: true}).map( error => {
+            return {
+                message: error.msg,
+                field: error.param
+            }
+        })
+        return res.status(404).send({"errorsMessages": errorsArray})
+    } else {
+        next()
+    }
+}
