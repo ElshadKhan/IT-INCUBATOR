@@ -46,30 +46,35 @@ export const postService = {
         }
         return post
     },
-    async findPostsByBlogId(blogId: string, postQueryParamsFilter: QueryPostType): Promise<PostsBusinessType> {
+    async findPostsByBlogId(blogId: string, postQueryParamsFilter: QueryPostType): Promise<PostsBusinessType | null> {
         const skip = postQueryParamsFilter.pageSize * (postQueryParamsFilter.pageNumber - 1)
         const sort = postQueryParamsFilter.sortBy
         const limit = postQueryParamsFilter.pageSize
         const sortDirection: any = postQueryParamsFilter.sortDirection
+        const post: PostDbType | null = await postRepository.findPostById(blogId);
         const findPosts = await postRepository.findPostsByBlogId(blogId, skip, sort, sortDirection, limit)
         const totalCountPosts = await postRepository.countPostsByBlogId(blogId, sort, sortDirection)
-        const postDto = {
-            "pagesCount": (Math.ceil(totalCountPosts/limit)),
-            "page": postQueryParamsFilter.pageNumber,
-            "pageSize": limit,
-            "totalCount": totalCountPosts,
-            "items": findPosts.map(p => (
-                {
-                    id: p._id,
-                    title: p.title,
-                    shortDescription: p.shortDescription,
-                    content: p.content,
-                    blogId: p.blogId,
-                    blogName: p.blogName,
-                    createdAt: p.createdAt
-                }
-            ))}
-        return postDto
+        if (post) {
+            const postDto = {
+                "pagesCount": (Math.ceil(totalCountPosts / limit)),
+                "page": postQueryParamsFilter.pageNumber,
+                "pageSize": limit,
+                "totalCount": totalCountPosts,
+                "items": findPosts.map(p => (
+                    {
+                        id: p._id,
+                        title: p.title,
+                        shortDescription: p.shortDescription,
+                        content: p.content,
+                        blogId: p.blogId,
+                        blogName: p.blogName,
+                        createdAt: p.createdAt
+                    }
+                ))
+            }
+            return postDto
+        }
+        return post
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDbType | PostDto> {
