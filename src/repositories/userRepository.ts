@@ -4,11 +4,11 @@ import {UserDbType} from "../types/userTypes";
 
 export const userRepository = {
     async countUsers(searchLoginTerm: string, searchEmailTerm: string) {
-        return await usersCollection.find( {$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}, email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).count()
+        return await usersCollection.find( {$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).count()
     },
 
     async findUsers(searchLoginTerm: string, searchEmailTerm: string, skip: number, sort: string, sortDirection: any, limit: number): Promise<UserDbType[]> {
-        return usersCollection.find({login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}, email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
+        return usersCollection.find({$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
     },
     // async findPostById(id: string): Promise<PostDbType | null> {
     //     return postsCollection.findOne({_id: new ObjectId(id)});
