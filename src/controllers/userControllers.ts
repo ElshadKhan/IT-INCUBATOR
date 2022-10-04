@@ -42,6 +42,14 @@ export const userControllers = {
         const newUser = await userService.createUser(req.body.login, req.body.password, req.body.email)
         res.status(201).send(newUser)
     },
+    async loginUser(req: Request, res: Response) {
+        const user = await userService.loginUser(req.body.login, req.body.password)
+        if (user) {
+            res.send(204)
+        } else {
+            res.send(401)
+        }
+    },
     // async createPostByBlogId(req: Request, res: Response) {
     //     const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
     //     res.status(201).send(newPost)

@@ -26,6 +26,10 @@ export const userRepository = {
     //         { $set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId}})
     //     return  result.matchedCount === 1
     // },
+    async loginUser(login: string, password: string): Promise<UserDbType | null> {
+        const result = await usersCollection.findOne({login:  login, password:  password})
+        return  result
+    },
     async deleteUser(id: string) {
         const result = await usersCollection.deleteOne({_id: new ObjectId(id)})
         return  result.deletedCount === 1

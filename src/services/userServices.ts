@@ -1,5 +1,5 @@
 import {userRepository} from "../repositories/userRepository";
-import {QueryUserType, UserDto, UsersBusinessType} from "../types/userTypes";
+import {QueryUserType, UserDbType, UserDto, UsersBusinessType} from "../types/userTypes";
 import {ObjectId} from "mongodb";
 
 export const userService = {
@@ -90,6 +90,9 @@ export const userService = {
             createdAt: newUser.createdAt
         }
         return userDto
+    },
+    async loginUser(login: string, password: string): Promise<UserDbType | null> {
+        return await userRepository.loginUser(login, password)
     },
     // async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string
     // ): Promise<boolean> {
