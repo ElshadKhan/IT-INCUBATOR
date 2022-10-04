@@ -3,8 +3,8 @@ import {ObjectId} from "mongodb";
 import {PostDbType} from "../types/postTypes";
 
 export const postRepository = {
-    async countPosts(sort: string, sortDirection: any) {
-        return await postsCollection.find().sort(sort, sortDirection).count()
+    async countPosts() {
+        return await postsCollection.find().count()
     },
     async countPostsByBlogId(blogId: string, sort: string, sortDirection: any) {
         return await postsCollection.find({blogId: blogId}).sort(sort, sortDirection).count()
@@ -32,7 +32,7 @@ export const postRepository = {
         const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
         return  result.deletedCount === 1
     },
-    async deleteAllPost() {
+    async deleteAllPosts() {
         await postsCollection.deleteMany({})
         return
     }

@@ -9,11 +9,8 @@ export const blogService = {
         const limit = blogQueryParamsFilter.pageSize
         const sortDirection: any = blogQueryParamsFilter.sortDirection
         const searchNameTerm = blogQueryParamsFilter.searchNameTerm
-        console.log("searchNameTerm", searchNameTerm)
         const blogs = await blogRepository.findBlogs(searchNameTerm, skip, sort, sortDirection, limit)
-        console.log(blogs)
-        const totalCountBlogs = await blogRepository.countBlogs(searchNameTerm, sort, sortDirection)
-        console.log(totalCountBlogs)
+        const totalCountBlogs = await blogRepository.countBlogs(searchNameTerm)
         const blogDto = {
             "pagesCount": (Math.ceil(totalCountBlogs/limit)),
             "page": blogQueryParamsFilter.pageNumber,
@@ -65,7 +62,7 @@ export const blogService = {
     async deleteBlog(id: string): Promise<boolean> {
         return await blogRepository.deleteBlog(id)
     },
-    async deleteAllBlog() {
-        return await blogRepository.deleteAllBlog()
+    async deleteAllBlogs() {
+        return await blogRepository.deleteAllBlogs()
     }
 }

@@ -11,7 +11,7 @@ export const postService = {
         const limit = postQueryParamsFilter.pageSize
         const sortDirection: any = postQueryParamsFilter.sortDirection
         const posts = await postRepository.findPosts(skip, sort, sortDirection, limit)
-        const totalCountPosts = await postRepository.countPosts(sort, sortDirection)
+        const totalCountPosts = await postRepository.countPosts()
         const postDto = {
             "pagesCount": (Math.ceil(totalCountPosts/limit)),
             "page": postQueryParamsFilter.pageNumber,
@@ -108,7 +108,7 @@ export const postService = {
     async deletePost(id: string) {
         return await postRepository.deletePost(id)
     },
-    async deleteAllPost() {
-        return await postRepository.deleteAllPost()
+    async deleteAllPosts() {
+        return await postRepository.deleteAllPosts()
     }
 }
