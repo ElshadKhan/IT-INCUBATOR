@@ -4,7 +4,7 @@ import {UserDbType} from "../types/userTypes";
 
 export const userRepository = {
     async countUsers(searchLoginTerm: string, searchEmailTerm: string) {
-        return await usersCollection.find({login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}, email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}).count()
+        return await usersCollection.find( {$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}, email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).count()
     },
 
     async findUsers(searchLoginTerm: string, searchEmailTerm: string, skip: number, sort: string, sortDirection: any, limit: number): Promise<UserDbType[]> {
