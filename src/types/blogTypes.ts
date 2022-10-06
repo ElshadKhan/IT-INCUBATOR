@@ -1,8 +1,4 @@
-import {ObjectId} from "mongodb";
-import {PostDto} from "./postTypes";
-
 export type BlogDbType = {
-    _id: ObjectId
     id: string
     name: string
     youtubeUrl: string
@@ -10,7 +6,7 @@ export type BlogDbType = {
 }
 
 export type BlogDto = {
-    id: ObjectId
+    id: string
     name: string
     youtubeUrl: string
     createdAt: string

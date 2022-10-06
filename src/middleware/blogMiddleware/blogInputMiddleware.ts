@@ -1,6 +1,19 @@
-import {body} from "express-validator";
+import {body, param} from "express-validator";
 import {inputValidation} from "../inputValidation";
+import {blogQueryRepository} from "../../repositories/queryRep/blogQueryRepository";
 
+export const blogIdQueryValidation = param('blogId')
+    .isString().withMessage("Field 'blogId' is not a string.")
+
+export const blogIdInputValidation = body('blogId')
+    .isString().withMessage("Field 'blogId' is not a string.")
+    .custom( async (value) => {
+        const blog = await blogQueryRepository.findBlogById(value);
+        if (!blog) {
+            throw new Error("Field 'blogId' is not correct.");
+        }
+        return true;
+    })
 
 export const blogValidations = [
     body("name")

@@ -1,20 +1,22 @@
 import {Request, Response} from "express";
 import {blogService} from "../services/blogServises";
+import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
+import {QueryBlogType} from "../types/blogTypes";
 
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
-        const blogQueryParamsFilter: any = {
-            searchNameTerm: req.query.searchNameTerm ? req.query.searchNameTerm : "",
+        const blogQueryParamsFilter: QueryBlogType = {
+            searchNameTerm:  typeof req.query.searchNameTerm === 'string' ? req.query.searchNameTerm : "",
             pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
             pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-            sortBy: req.query.sortBy || "createdAt",
+            sortBy: typeof req.query.sortBy === 'string' ? req.query.sortBy : "createdAt",
             sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
         }
-        const blogs = await blogService.findBlogs(blogQueryParamsFilter)
+        const blogs = await blogQueryRepository.findBlogs(blogQueryParamsFilter)
         res.status(200).send(blogs)
     },
     async getBlogById(req: Request, res: Response) {
-        const blog = await blogService.findBlogById(req.params.id)
+        const blog = await blogQueryRepository.findBlogById(req.params.id)
         if (blog) {
             res.status(200).send(blog)
         } else {

@@ -1,7 +1,4 @@
-import {ObjectId} from "mongodb";
-
 export type PostDbType = {
-    _id: ObjectId
     id: string
     title: string
     shortDescription: string
@@ -11,7 +8,7 @@ export type PostDbType = {
     createdAt: string
 }
 export type PostDto = {
-    id: ObjectId
+    id: string
     title: string
     shortDescription: string
     content: string

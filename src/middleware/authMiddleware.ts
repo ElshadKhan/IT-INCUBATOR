@@ -12,11 +12,4 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     } else {
         next()
     }
-
-    // const auth = req.headers.authorization
-    // if (!auth) return res.sendStatus(401)
-    // const authMethod = auth.split(' ')[0]
-    // const authPayload = auth.split(' ')[1]
-    // if (authMethod !== 'Basic' || authPayload !== 'YWRtaW46cXdlcnR5') return res.sendStatus(401)
-    // return next()
 }

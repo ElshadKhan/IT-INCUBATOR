@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {postService} from "../services/postServices";
-
+import {postQueryRepository} from "../repositories/queryRep/postQueryRepository";
 
 export const postControllers = {
     async getPosts(req: Request, res: Response) {
@@ -10,11 +10,11 @@ export const postControllers = {
             sortBy: req.query.sortBy || "createdAt",
             sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
         }
-        const posts = await postService.findPosts(postQueryParamsFilter)
+        const posts = await postQueryRepository.findPosts(postQueryParamsFilter)
         res.status(200).send(posts)
     },
     async getPostById(req: Request, res: Response) {
-        const post = await postService.findPostById(req.params.id)
+        const post = await postQueryRepository.findPostById(req.params.id)
         if (post) {
             res.status(200).send(post)
         } else {
@@ -28,13 +28,12 @@ export const postControllers = {
             sortBy: req.query.sortBy || "createdAt",
             sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
         }
-        const postsForSpecificBlog = await postService.findPostsByBlogId(req.params.blogId, postQueryParamsFilter)
+        const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, postQueryParamsFilter)
         if (postsForSpecificBlog) {
             res.status(200).send(postsForSpecificBlog)
         } else {
             res.send(404)
         }
-
     },
     async createPost(req: Request, res: Response) {
         const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
@@ -42,7 +41,11 @@ export const postControllers = {
     },
     async createPostByBlogId(req: Request, res: Response) {
         const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
-        res.status(201).send(newPost)
+        if (newPost) {
+            res.status(201).send(newPost)
+        } else {
+            res.send(404)
+        }
     },
     async updatePost(req: Request, res: Response) {
         const post = await postService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
