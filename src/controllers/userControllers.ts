@@ -23,7 +23,7 @@ export const userControllers = {
         res.status(201).send(newUser)
     },
     async loginUser(req: Request, res: Response) {
-        const user = await userService.loginUser(req.body.login, req.body.password)
+        const user = await userService.checkCredentials(req.body.login, req.body.password)
         if (user) {
             res.send(204)
         } else {
@@ -39,13 +39,9 @@ export const userControllers = {
         }
     },
     async deleteAllCollections(req: Request, res: Response) {
-        console.log("1")
         const users = await userService.deleteAllUsers()
-        console.log("2")
         const posts = await postService.deleteAllPosts()
-        console.log("3")
         const blogs = await blogService.deleteAllBlogs();
-        console.log("4")
         res.send(204)
     }
 }

@@ -10,6 +10,10 @@ export const userRepository = {
         const result = await usersCollection.findOne({login:  login, password:  password})
         return  result
     },
+    async findUserByLogin(login: string): Promise<UserDbType | null> {
+        const result = await usersCollection.findOne({login:  login})
+        return  result
+    },
     async deleteUser(id: string) {
         const result = await usersCollection.deleteOne({id:id})
         return  result.deletedCount === 1
