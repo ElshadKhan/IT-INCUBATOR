@@ -7,16 +7,6 @@ export type PostDbType = {
     blogName: string | null
     createdAt: string
 }
-export type PostDto = {
-    id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string | null
-    createdAt: string
-}
-
 export type QueryPostType = {
     pageNumber: number
     pageSize: number
@@ -29,5 +19,5 @@ export type PostsBusinessType = {
     page: number
     pageSize: number
     totalCount: number
-    items: Array<PostDto>
+    items: Array<PostDbType>
 }

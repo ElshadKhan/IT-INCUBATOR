@@ -1,11 +1,11 @@
 import {postRepository} from "../repositories/postRepository";
-import {PostDto} from "../types/postTypes";
+import {PostDbType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
 
 export const postService = {
     async createPost(title: string, shortDescription: string, content: string, blogId: string
-    ): Promise<PostDto | null> {
+    ): Promise<PostDbType | null> {
         const blog: BlogDbType | null = await blogQueryRepository.findBlogById(blogId);
         if (!blog) return null
         const newPost = {

@@ -1,4 +1,4 @@
-import {PostDbType, PostDto, PostsBusinessType, QueryPostType} from "../../types/postTypes";
+import {PostDbType, PostsBusinessType, QueryPostType} from "../../types/postTypes";
 import {blogQueryRepository} from "./blogQueryRepository";
 import {postsCollection} from "../../db";
 
@@ -29,10 +29,10 @@ export const postQueryRepository = {
         }
         return postDto
     },
-    async findPostById(id: string): Promise<PostDto | null> {
+    async findPostById(id: string): Promise<PostDbType | null> {
         const post: PostDbType | null = await postsCollection.findOne({id: id});
         if (post) {
-            const postDto: PostDto = {
+            const postDto: PostDbType = {
                 id: post!.id,
                 title: post!.title,
                 shortDescription: post!.shortDescription,

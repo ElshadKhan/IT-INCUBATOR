@@ -1,22 +1,21 @@
-export type BlogDbType = {
+export type CommentDbType = {
     id: string
-    name: string
-    youtubeUrl: string
+    content: string
+    userId: string
+    userLogin: string
     createdAt: string
 }
-
-export type QueryBlogType = {
-    searchNameTerm: string
+export type QueryCommentType = {
     pageNumber: number
     pageSize: number
     sortBy: string
     sortDirection: string
 }
 
-export type BlogsBusinessType = {
+export type CommentsBusinessType = {
     pagesCount: number
     page: number
     pageSize: number
     totalCount: number
-    items: Array<BlogDbType>
+    items: Array<CommentDbType>
 }

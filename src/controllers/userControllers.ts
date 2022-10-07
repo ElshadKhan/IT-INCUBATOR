@@ -4,6 +4,7 @@ import {postService} from "../services/postServices";
 import {blogService} from "../services/blogServises";
 import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {QueryUserType} from "../types/userTypes";
+import {commentService} from "../services/commentServices";
 
 export const userControllers = {
     async getUsers(req: Request, res: Response) {
@@ -40,8 +41,9 @@ export const userControllers = {
     },
     async deleteAllCollections(req: Request, res: Response) {
         const users = await userService.deleteAllUsers()
-        const posts = await postService.deleteAllPosts()
         const blogs = await blogService.deleteAllBlogs();
+        const posts = await postService.deleteAllPosts()
+        const comments = await commentService.deleteAllComments()
         res.send(204)
     }
 }

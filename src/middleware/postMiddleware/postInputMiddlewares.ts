@@ -1,6 +1,10 @@
-import {body, query} from "express-validator";
+import {body, param} from "express-validator";
 import {inputValidation} from "../inputValidation";
 import {blogIdInputValidation, blogIdQueryValidation} from "../blogMiddleware/blogInputMiddleware";
+
+export const postIdParamValidation = param('postId')
+    .isString().withMessage("Field 'postId' is not a string.")
+
 
 const bodyTitleValidation = body("title")
     .isString().withMessage("Field 'title' is not a string.")
@@ -17,14 +21,9 @@ const bodyContentValidation = body("content")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'content' cannot be empty.")
     .isLength({min: 1, max: 1000}).withMessage("Min length of field 'content' 1 max 1000.")
 
-export const postInputValidations = [bodyTitleValidation,
-    bodyShortDescriptionValidation, bodyContentValidation,inputValidation
-]
 export const postQueryValidationsBlogId = [bodyTitleValidation,
     bodyShortDescriptionValidation, bodyContentValidation, blogIdQueryValidation, inputValidation
 ]
 export const postBodyValidationsBlogId = [bodyTitleValidation,
     bodyShortDescriptionValidation, bodyContentValidation, blogIdInputValidation, inputValidation
 ]
-
-const queryValidator = query('pageNumber').isString().toInt().default(1)
