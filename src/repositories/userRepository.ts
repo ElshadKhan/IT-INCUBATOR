@@ -6,8 +6,8 @@ export const userRepository = {
         await usersCollection.insertOne(newUser)
         return newUser
     },
-    async loginUser(login: string, password: string): Promise<UserDbType | null> {
-        const result = await usersCollection.findOne({login:  login, password:  password})
+    async findUserById(id: string): Promise<UserDbType | null> {
+        const result = await usersCollection.findOne({id: id})
         return  result
     },
     async findUserByLogin(login: string): Promise<UserDbType | null> {

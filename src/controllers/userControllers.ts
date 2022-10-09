@@ -5,6 +5,7 @@ import {blogService} from "../services/blogServises";
 import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {QueryUserType} from "../types/userTypes";
 import {commentService} from "../services/commentServices";
+import {jwtService} from "../application/jwt-service";
 
 export const userControllers = {
     async getUsers(req: Request, res: Response) {
@@ -19,6 +20,14 @@ export const userControllers = {
         const users = await userQueryRepository.findUsers(userQueryParamsFilter)
         res.status(200).send(users)
     },
+    async getAuthUser(req: any, res: Response) {
+        const user = {
+            email: req.user.email,
+            login: req.user.login,
+            userId: req.user.id
+        }
+        res.status(200).send(user)
+    },
     async createUser(req: Request, res: Response) {
         const newUser = await userService.createUser(req.body.login, req.body.password, req.body.email)
         res.status(201).send(newUser)
@@ -26,7 +35,8 @@ export const userControllers = {
     async loginUser(req: Request, res: Response) {
         const user = await userService.checkCredentials(req.body.login, req.body.password)
         if (user) {
-            res.send(204)
+            const token = await jwtService.createJWT(user)
+            res.status(200).send(token)
         } else {
             res.send(401)
         }

@@ -1,8 +1,8 @@
 import {blogRepository} from "../repositories/blogRepository";
-import {BlogDbType, BlogDto} from "../types/blogTypes";
+import {BlogDbType} from "../types/blogTypes";
 
 export const blogService = {
-    async createBlog(name: string, youtubeUrl: string): Promise<BlogDbType | BlogDto> {
+    async createBlog(name: string, youtubeUrl: string): Promise<BlogDbType> {
         const newBlog: BlogDbType = {
             id: String(+new Date()),
             name: name,
@@ -10,7 +10,7 @@ export const blogService = {
             createdAt: new Date().toISOString()
         }
         const createdBlog = await blogRepository.createBlog(newBlog)
-        const blogDto: BlogDto = {
+        const blogDto: BlogDbType = {
             id: newBlog.id,
             name: newBlog.name,
             youtubeUrl: newBlog.youtubeUrl,

@@ -1,5 +1,5 @@
 import {userRepository} from "../repositories/userRepository";
-import {UserDbType, UserDto} from "../types/userTypes";
+import { UserDto} from "../types/userTypes";
 import  bcrypt from "bcrypt"
 
 export const userService = {
@@ -12,7 +12,7 @@ export const userService = {
         if(!user) return false
         const passwordHash = await this._generateHash(password, user.passwordSalt)
         if(user.passwordHash !== passwordHash) {return false}
-        return true
+        return user
     },
     async createUser(login: string, password: string, email: string): Promise<UserDto> {
         const passwordSalt = await bcrypt.genSalt(4)
@@ -34,9 +34,6 @@ export const userService = {
             createdAt: newUser.createdAt
         }
         return userDto
-    },
-    async loginUser(login: string, password: string): Promise<UserDbType | null> {
-        return await userRepository.loginUser(login, password)
     },
     async deleteUser(id: string) {
         return await userRepository.deleteUser(id)

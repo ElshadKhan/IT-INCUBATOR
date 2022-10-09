@@ -1,3 +1,4 @@
+
 export type UserDbType = {
     id: string
     login: string
@@ -7,6 +8,7 @@ export type UserDbType = {
     email: string
     createdAt: string
 }
+
 export type UserDto = {
     id: string
     login: string
