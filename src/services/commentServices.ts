@@ -31,8 +31,8 @@ export const commentService = {
     ): Promise<boolean> {
         return await commentRepository.updateComment(commentId, content)
     },
-    async deleteComment(id: string) {
-        return await commentRepository.deleteComment(id)
+    async deleteComment(commentId: string) {
+        return await commentRepository.deleteComment(commentId)
     },
     async deleteAllComments() {
         return await commentRepository.deleteAllComments()

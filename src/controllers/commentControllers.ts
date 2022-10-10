@@ -27,8 +27,9 @@ export const commentControllers = {
         }
     },
     async createCommentByPostId(req: any, res: Response) {
-
+        console.log("2", req.body.content, req.params.postId, req.user)
         const newComment = await commentService.createComment(req.body.content, req.params.postId, req.user)
+        console.log("3",newComment)
         if (newComment) {
             res.status(201).send(newComment)
         } else {
@@ -41,7 +42,7 @@ export const commentControllers = {
         // if(req.user.id !== req.params.commentId) {
         //     res.send(403)
         // }
-        const comment = await commentService.updateComment(req.body.content, req.body.commentId);
+        const comment = await commentService.updateComment(req.body.content, req.params.commentId);
         if (comment) {
             res.send(204)
         } else {

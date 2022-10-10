@@ -10,6 +10,8 @@ export const commentRepository = {
     ): Promise<boolean> {
         const result = await commentsCollection.updateOne({id: commentId},
             { $set: {content: content}})
+        console.log("hiii", result)
+
         return  result.matchedCount === 1
     },
     async deleteComment(id: string) {
