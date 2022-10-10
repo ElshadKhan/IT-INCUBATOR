@@ -34,6 +34,7 @@ async getUsers(req: Request, res: Response) {
     },
     async loginUser(req: Request, res: Response) {
         const user = await userService.checkCredentials(req.body.login, req.body.password)
+        console.log("user", user)
         if (user) {
             const token = await jwtService.createJWT(user)
             res.status(200).send(token)

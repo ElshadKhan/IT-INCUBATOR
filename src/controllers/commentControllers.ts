@@ -35,7 +35,10 @@ export const commentControllers = {
             res.send(404)
         }
     },
-    async updateComment(req: Request, res: Response) {
+    async updateComment(req: any, res: Response) {
+        if(req.user.id !== req.params.commentId) {
+            res.send(403)
+        }
         const comment = await commentService.updateComment(req.body.content, req.body.commentId);
         if (comment) {
             res.send(204)
@@ -43,7 +46,10 @@ export const commentControllers = {
             res.send(404)
         }
     },
-    async deleteComment(req: Request, res: Response) {
+    async deleteComment(req: any, res: Response) {
+        if(req.user.id !== req.params.commentId) {
+            res.send(403)
+        }
         const comment = await commentService.deleteComment(req.params.commentId);
         if (comment) {
             res.send(204)
