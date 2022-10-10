@@ -25,7 +25,7 @@ export const inputAuthValidation = (req: Request, res: Response, next: NextFunct
                 field: error.param
             }
         })
-        return res.status(401).send({"errorsMessages": errorsArray})
+        return res.status(400).send({"errorsMessages": errorsArray})
     } else {
         next()
     }
