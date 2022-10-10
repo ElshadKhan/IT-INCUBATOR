@@ -25,5 +25,5 @@ export const userAuthValidations = [
         .isString().withMessage("Field 'password' is not a string.")
         .notEmpty({ignore_whitespace: true}).withMessage("Field 'password' cannot be empty.")
         .isLength({min: 6, max: 20}).withMessage("Min length of field 'password' 6 max 20."),
-    inputAuthValidation
+    inputValidation
 ]
