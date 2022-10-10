@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {blogService} from "../services/blogServises";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
-import {QueryBlogType} from "../types/blogTypes";
+import {BlogDbType, QueryBlogType} from "../types/blogTypes";
 
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
@@ -16,8 +16,14 @@ export const blogControllers = {
         res.status(200).send(blogs)
     },
     async getBlogById(req: Request, res: Response) {
-        const blog = await blogQueryRepository.findBlogById(req.params.id)
-        if (blog) {
+        const blogDto = await blogQueryRepository.findBlogById(req.params.id)
+        if (blogDto) {
+            const blog: BlogDbType = {
+                id: blogDto.id,
+                name: blogDto.name,
+                youtubeUrl: blogDto.youtubeUrl,
+                createdAt: blogDto.createdAt
+            }
             res.status(200).send(blog)
         } else {
             res.sendStatus(404)
