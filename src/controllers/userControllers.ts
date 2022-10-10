@@ -39,6 +39,7 @@ async getUsers(req: Request, res: Response) {
             const token = await jwtService.createJWT(user)
             res.status(200).send(token)
         } else {
+            console.log("user", 401)
             res.send(401)
         }
     },
