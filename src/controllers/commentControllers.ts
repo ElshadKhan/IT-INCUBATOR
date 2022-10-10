@@ -37,7 +37,7 @@ export const commentControllers = {
     },
     async updateComment(req: Request, res: Response) {
         // console.log("1", req.user.id)
-        console.log("2", req.params.id)
+        console.log("2", req.params.commentId)
         // if(req.user.id !== req.params.commentId) {
         //     res.send(403)
         // }
