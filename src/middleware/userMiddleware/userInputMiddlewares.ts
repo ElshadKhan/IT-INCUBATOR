@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {inputAuthValidation, inputValidation} from "../inputValidation";
+import {inputValidation} from "../inputValidation";
 
 export const userValidations = [
     body("login")
