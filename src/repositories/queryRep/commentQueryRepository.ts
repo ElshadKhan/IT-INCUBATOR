@@ -1,10 +1,10 @@
 import {commentsCollection} from "../../db";
 import {CommentDbType, CommentsBusinessType, QueryCommentType} from "../../types/commentTypes";
-import {postQueryRepository} from "./postQueryRepository";
 
 export const commentQueryRepository = {
     async findCommentById(id: string): Promise<CommentDbType | null> {
-        const comment: CommentDbType | null = await commentsCollection.findOne({id: id});
+        const comment = await commentsCollection.findOne({id: id});
+        console.log("1")
         if (comment) {
             const commentDto: CommentDbType = {
                 id: comment.id,
