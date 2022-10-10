@@ -16,16 +16,17 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     }
 }
 export const authBearerMiddleware = async (req: any, res: Response, next: NextFunction) => {
-    if(!req.headers.authorization) {
-        res.sendStatus(401)
-        return
-    }
-    const token  = req.headers.authorization.split(" ")[1]
+       if (!req.headers.authorization) {
+           res.sendStatus(401)
+           return
+       }
+       const token = req.headers.authorization.split(" ")[1]
 
-    const userId = await jwtService.getUserIdByToken(token)
-    if(userId) {
-        req.user = await userRepository.findUserById(userId)
-        next()
-    }
-    res.sendStatus(401)
+       const userId = await jwtService.getUserIdByToken(token)
+       if (userId) {
+           req.user = await userRepository.findUserById(userId)
+           return  next()
+       }
+       res.sendStatus(401)
+
 }

@@ -22,27 +22,27 @@ export const commentQueryRepository = {
         const sort = commentQueryParamsFilter.sortBy
         const limit = commentQueryParamsFilter.pageSize
         const sortDirection: any = commentQueryParamsFilter.sortDirection
-        const post = await postQueryRepository.findPostById(postId);
+        const comment = await commentsCollection.findOne({postId: postId})
         const findComments = await commentsCollection.find({postId: postId}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
-        const totalCountPosts = await commentsCollection.find({postId: postId}).sort(sort, sortDirection).count()
-        // if (post) {
-        //     const commentDto = {
-        //         "pagesCount": (Math.ceil(totalCountPosts / limit)),
-        //         "page": commentQueryParamsFilter.pageNumber,
-        //         "pageSize": limit,
-        //         "totalCount": totalCountPosts,
-        //         "items": findComments.map(c => (
-        //             {
-        //                 id: c.id,
-        //                 content: c.content,
-        //                 userId: c.userId,0
-        //                 userLogin: c.userLogin,
-        //                 createdAt: c.createdAt
-        //             }
-        //         ))
-        //     }
-        //     return commentDto
-        // }
-        return null
+        const totalCountComments = await commentsCollection.find({postId: postId}).sort(sort, sortDirection).count()
+        if (comment) {
+            const commentDto = {
+                "pagesCount": (Math.ceil(totalCountComments / limit)),
+                "page": commentQueryParamsFilter.pageNumber,
+                "pageSize": limit,
+                "totalCount": totalCountComments,
+                "items": findComments.map(c => (
+                    {
+                        id: c.id,
+                        content: c.content,
+                        userId: c.userId,
+                        userLogin: c.userLogin,
+                        createdAt: c.createdAt
+                    }
+                ))
+            }
+            return commentDto
+        }
+        return comment
     }
 }

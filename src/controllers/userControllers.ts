@@ -8,7 +8,7 @@ import {commentService} from "../services/commentServices";
 import {jwtService} from "../application/jwt-service";
 
 export const userControllers = {
-    async getUsers(req: Request, res: Response) {
+async getUsers(req: Request, res: Response) {
         const userQueryParamsFilter: QueryUserType = {
             searchLoginTerm: typeof req.query.searchLoginTerm === "string" ? req.query.searchLoginTerm : "",
             searchEmailTerm: typeof req.query.searchEmailTerm === "string" ? req.query.searchEmailTerm : "",

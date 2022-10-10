@@ -26,8 +26,9 @@ export const commentControllers = {
             res.send(404)
         }
     },
-    async createCommentByPostId(req: Request, res: Response) {
-        const newComment = await commentService.createComment(req.body.content, req.params.postId)
+    async createCommentByPostId(req: any, res: Response) {
+
+        const newComment = await commentService.createComment(req.body.content, req.params.postId, req.user)
         if (newComment) {
             res.status(201).send(newComment)
         } else {
