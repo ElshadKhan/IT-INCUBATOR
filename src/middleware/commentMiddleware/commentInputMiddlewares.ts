@@ -14,5 +14,5 @@ export const commentIdParamValidation = param('commentId')
 
 
 
-export const commentValidations = [bodyCommentValidation, inputValidation]
+export const commentValidations = [postIdParamValidation, bodyCommentValidation, inputValidation]
 export const commentIdValidations = [bodyCommentValidation,inputValidation]
