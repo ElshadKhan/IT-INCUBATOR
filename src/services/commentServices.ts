@@ -27,9 +27,9 @@ export const commentService = {
         }
         return commentDto
     },
-    async updateComment(id: string, content: string
+    async updateComment(commentId: string, content: string
     ): Promise<boolean> {
-        return await commentRepository.updateComment(id, content)
+        return await commentRepository.updateComment(commentId, content)
     },
     async deleteComment(id: string) {
         return await commentRepository.deleteComment(id)

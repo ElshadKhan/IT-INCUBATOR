@@ -6,9 +6,9 @@ export const commentRepository = {
         await commentsCollection.insertOne(newComment)
         return newComment
     },
-    async updateComment(id: string, content: string
+    async updateComment(commentId: string, content: string
     ): Promise<boolean> {
-        const result = await commentsCollection.updateOne({id: id},
+        const result = await commentsCollection.updateOne({id: commentId},
             { $set: {content: content}})
         return  result.matchedCount === 1
     },

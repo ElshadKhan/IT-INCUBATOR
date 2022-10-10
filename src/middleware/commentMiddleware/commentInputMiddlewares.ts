@@ -1,5 +1,5 @@
 import {body, param} from "express-validator";
-import {inputValidation} from "../inputValidation";
+import {inputAuthValidation, inputValidation} from "../inputValidation";
 import {postIdParamValidation} from "../postMiddleware/postInputMiddlewares";
 
 const bodyCommentValidation = body("content")
@@ -14,5 +14,5 @@ export const commentIdParamValidation = param('commentId')
 
 
 
-export const commentValidations = [postIdParamValidation, bodyCommentValidation, inputValidation]
-export const commentIdValidations = [postIdParamValidation, bodyCommentValidation, commentIdParamValidation,inputValidation]
+export const commentValidations = [postIdParamValidation, bodyCommentValidation, inputAuthValidation]
+export const commentIdValidations = [bodyCommentValidation, commentIdParamValidation,inputAuthValidation]
