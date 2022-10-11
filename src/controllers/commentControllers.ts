@@ -27,21 +27,14 @@ export const commentControllers = {
         }
     },
     async createCommentByPostId(req: any, res: Response) {
-        console.log("2", req.body.content, req.params.postId, req.user)
         const newComment = await commentService.createComment(req.body.content, req.params.postId, req.user)
-        console.log("3",newComment)
         if (newComment) {
             res.status(201).send(newComment)
         } else {
             res.send(404)
         }
     },
-    async updateComment(req: Request, res: Response) {
-        // console.log("1", req.user.id)
-        console.log("2", req.params.commentId)
-        // if(req.user.id !== req.params.commentId) {
-        //     res.send(403)
-        // }
+    async updateComment(req: any, res: Response) {
         const comment = await commentService.updateComment(req.body.content, req.params.commentId);
         if (comment) {
             res.send(204)
@@ -50,11 +43,6 @@ export const commentControllers = {
         }
     },
     async deleteComment(req: Request, res: Response) {
-        // console.log("1", req.user.id)
-        console.log("2", req.params.commentId)
-        // if(req.user.id !== req.params.commentId) {
-        //     res.send(403)
-        // }
         const comment = await commentService.deleteComment(req.params.commentId);
         if (comment) {
             res.send(204)

@@ -6,12 +6,10 @@ export const commentRepository = {
         await commentsCollection.insertOne(newComment)
         return newComment
     },
-    async updateComment(commentId: string, content: string
+    async updateComment(content: string, id: string
     ): Promise<boolean> {
-        const result = await commentsCollection.updateOne({id: commentId},
+        const result = await commentsCollection.updateOne({id: id},
             { $set: {content: content}})
-        console.log("hiii", result)
-
         return  result.matchedCount === 1
     },
     async deleteComment(id: string) {
