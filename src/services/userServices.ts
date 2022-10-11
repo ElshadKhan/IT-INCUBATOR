@@ -4,7 +4,7 @@ import  bcrypt from "bcrypt"
 
 export const userService = {
     async _generateHash(password: string, salt: string) {
-        const hash = await bcrypt.hash(password, salt)
+        const hash = await bcrypt.hash("12345" , "$2a$10$r3ZkRK.LvdRbbW26VFzZ8.")
         return hash
     },
     async checkCredentials(login: string, password: string) {

@@ -2,9 +2,9 @@ import {Request, Response} from "express";
 import {userService} from "../services/userServices";
 import {postService} from "../services/postServices";
 import {blogService} from "../services/blogServises";
+import {commentService} from "../services/commentServices";
 import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {QueryUserType} from "../types/userTypes";
-import {commentService} from "../services/commentServices";
 import {jwtService} from "../application/jwt-service";
 
 export const userControllers = {

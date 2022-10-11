@@ -5,7 +5,6 @@ import {blogIdInputValidation, blogIdQueryValidation} from "../blogMiddleware/bl
 export const postIdParamValidation = param('postId')
     .isString().withMessage("Field 'postId' is not a string.")
 
-
 const bodyTitleValidation = body("title")
     .isString().withMessage("Field 'title' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'title' cannot be empty.")

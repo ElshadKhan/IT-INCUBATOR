@@ -1,11 +1,8 @@
-import {body, param} from "express-validator";
+import {body} from "express-validator";
 import {inputValidation} from "../inputValidation";
 import {postIdParamValidation} from "../postMiddleware/postInputMiddlewares";
-import {blogQueryRepository} from "../../repositories/queryRep/blogQueryRepository";
 import {commentQueryRepository} from "../../repositories/queryRep/commentQueryRepository";
 import {NextFunction, Response} from "express";
-import {jwtService} from "../../application/jwt-service";
-import {userRepository} from "../../repositories/userRepository";
 
 const bodyCommentValidation = body("content")
     .isString().withMessage("Field 'content' is not a string.")
@@ -21,12 +18,6 @@ export const commentIdInputValidation = async (req: any, res: Response, next: Ne
     }
     return  next()
 }
-// export const commentIdParamValidation = param('commentId')
-//     .isString().withMessage("Field 'commentId' is not a string.")
-
-
-
-
 
 export const commentValidations = [postIdParamValidation, bodyCommentValidation, inputValidation]
 export const commentIdValidations = [bodyCommentValidation, inputValidation]

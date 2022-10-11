@@ -16,6 +16,7 @@ export const userValidations = [
         .isEmail().withMessage("Field 'email' is invalid."),
     inputValidation
 ]
+
 export const userAuthValidations = [
     body("login")
         .isString().withMessage("Field 'login' is not a string."),
