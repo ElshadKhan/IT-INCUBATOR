@@ -1,19 +1,16 @@
 import {PostDbType, PostsBusinessType, QueryPostType} from "../../types/postTypes";
 import {blogQueryRepository} from "./blogQueryRepository";
 import {postsCollection} from "../../db";
+import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 
 export const postQueryRepository = {
-    async findPosts(postQueryParamsFilter: QueryPostType): Promise<PostsBusinessType> {
-        const skip = postQueryParamsFilter.pageSize * (postQueryParamsFilter.pageNumber - 1)
-        const sort = postQueryParamsFilter.sortBy
-        const limit = postQueryParamsFilter.pageSize
-        const sortDirection: any = postQueryParamsFilter.sortDirection
-        const posts = await postsCollection.find().sort(sort, sortDirection).skip(skip).limit(limit).toArray()
+    async findPosts({pageNumber, pageSize, sortBy, sortDirection}: QueryPostType): Promise<PostsBusinessType> {
+        const posts = await postsCollection.find().sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
         const totalCountPosts = await postsCollection.find().count()
         const postDto = {
-            "pagesCount": (Math.ceil(totalCountPosts / limit)),
-            "page": postQueryParamsFilter.pageNumber,
-            "pageSize": limit,
+            "pagesCount": getPagesCounts(totalCountPosts, pageSize),
+            "page": pageNumber,
+            "pageSize": pageSize,
             "totalCount": totalCountPosts,
             "items": posts.map(p => (
                 {
@@ -45,19 +42,15 @@ export const postQueryRepository = {
         }
         return post
     },
-    async findPostsByBlogId(blogId: string, postQueryParamsFilter: QueryPostType): Promise<PostsBusinessType | null> {
-        const skip = postQueryParamsFilter.pageSize * (postQueryParamsFilter.pageNumber - 1)
-        const sort = postQueryParamsFilter.sortBy
-        const limit = postQueryParamsFilter.pageSize
-        const sortDirection: any = postQueryParamsFilter.sortDirection
+    async findPostsByBlogId(blogId: string, {pageNumber, pageSize, sortBy, sortDirection}: QueryPostType): Promise<PostsBusinessType | null> {
         const post = await blogQueryRepository.findBlogById(blogId);
-        const findPosts = await postsCollection.find({blogId: blogId}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
-        const totalCountPosts = await postsCollection.find({blogId: blogId}).sort(sort, sortDirection).count()
+        const findPosts = await postsCollection.find({blogId: blogId}).sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
+        const totalCountPosts = await postsCollection.find({blogId: blogId}).sort(sortBy, sortDirection).count()
         if (post) {
             const postDto = {
-                "pagesCount": (Math.ceil(totalCountPosts / limit)),
-                "page": postQueryParamsFilter.pageNumber,
-                "pageSize": limit,
+                "pagesCount": getPagesCounts(totalCountPosts, pageSize),
+                "page": pageNumber,
+                "pageSize": pageSize,
                 "totalCount": totalCountPosts,
                 "items": findPosts.map(p => (
                     {

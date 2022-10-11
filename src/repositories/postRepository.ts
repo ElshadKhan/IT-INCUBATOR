@@ -4,7 +4,16 @@ import {PostDbType} from "../types/postTypes";
 export const postRepository = {
     async createPost(newPost: PostDbType): Promise<PostDbType> {
         await postsCollection.insertOne(newPost)
-        return newPost
+        const postDto = {
+            id: newPost.id,
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            blogId: newPost.blogId,
+            blogName: newPost.blogName,
+            createdAt: newPost.createdAt
+        }
+        return postDto
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string
     ): Promise<boolean> {

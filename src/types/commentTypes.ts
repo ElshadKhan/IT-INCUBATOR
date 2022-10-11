@@ -1,3 +1,5 @@
+import {SortDirection} from "../middleware/queryValidation";
+
 export type CommentDbType = {
     id: string
     content: string
@@ -9,7 +11,7 @@ export type QueryCommentType = {
     pageNumber: number
     pageSize: number
     sortBy: string
-    sortDirection: string
+    sortDirection: SortDirection
 }
 
 export type CommentsBusinessType = {

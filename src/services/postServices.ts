@@ -17,17 +17,7 @@ export const postService = {
             blogName: blog!.name,
             createdAt: new Date().toISOString()
         }
-        await postRepository.createPost(newPost)
-        const postDto = {
-            id: newPost.id,
-            title: newPost.title,
-            shortDescription: newPost.shortDescription,
-            content: newPost.content,
-            blogId: newPost.blogId,
-            blogName: newPost.blogName,
-            createdAt: newPost.createdAt
-        }
-        return postDto
+        return await postRepository.createPost(newPost)
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string
     ): Promise<boolean> {

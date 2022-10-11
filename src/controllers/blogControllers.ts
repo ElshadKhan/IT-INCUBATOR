@@ -1,30 +1,18 @@
 import {Request, Response} from "express";
 import {blogService} from "../services/blogServises";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
-import {BlogDbType, QueryBlogType} from "../types/blogTypes";
+import {queryValidation} from "../middleware/queryValidation";
 
 export const blogControllers = {
     async getBlogs(req: Request, res: Response) {
-        const blogQueryParamsFilter: QueryBlogType = {
-            searchNameTerm:  typeof req.query.searchNameTerm === 'string' ? req.query.searchNameTerm : "",
-            pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-            pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-            sortBy: typeof req.query.sortBy === 'string' ? req.query.sortBy : "createdAt",
-            sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
-        }
-        const blogs = await blogQueryRepository.findBlogs(blogQueryParamsFilter)
+        const {searchNameTerm, pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
+        const blogs = await blogQueryRepository.findBlogs({searchNameTerm, pageNumber, pageSize, sortBy, sortDirection})
         res.status(200).send(blogs)
     },
     async getBlogById(req: Request, res: Response) {
         const blogDto = await blogQueryRepository.findBlogById(req.params.id)
         if (blogDto) {
-            const blog: BlogDbType = {
-                id: blogDto.id,
-                name: blogDto.name,
-                youtubeUrl: blogDto.youtubeUrl,
-                createdAt: blogDto.createdAt
-            }
-            res.status(200).send(blog)
+            res.status(200).send(blogDto)
         } else {
             res.sendStatus(404)
         }

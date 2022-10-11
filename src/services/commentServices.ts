@@ -17,15 +17,7 @@ export const commentService = {
             postId: postId,
             createdAt: new Date().toISOString()
         }
-        await commentRepository.createComment(newComment)
-        const commentDto = {
-            id: newComment.id,
-            content: newComment.content,
-            userId: newComment.userId,
-            userLogin: newComment.userLogin,
-            createdAt: newComment.createdAt
-        }
-        return commentDto
+        return await commentRepository.createComment(newComment)
     },
     async updateComment(commentId: string, content: string
     ): Promise<boolean> {

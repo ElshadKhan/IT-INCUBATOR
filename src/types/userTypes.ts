@@ -1,3 +1,4 @@
+import {SortDirection} from "../middleware/queryValidation";
 
 export type UserDbType = {
     id: string
@@ -22,7 +23,7 @@ export type QueryUserType = {
     pageNumber: number
     pageSize: number
     sortBy: string
-    sortDirection: string
+    sortDirection: SortDirection
 }
 
 export type UsersBusinessType = {

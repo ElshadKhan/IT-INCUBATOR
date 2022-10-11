@@ -1,16 +1,12 @@
 import {Request, Response} from "express";
 import {postService} from "../services/postServices";
 import {postQueryRepository} from "../repositories/queryRep/postQueryRepository";
+import {queryValidation} from "../middleware/queryValidation";
 
 export const postControllers = {
     async getPosts(req: Request, res: Response) {
-        const postQueryParamsFilter: any = {
-            pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-            pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-            sortBy: req.query.sortBy || "createdAt",
-            sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
-        }
-        const posts = await postQueryRepository.findPosts(postQueryParamsFilter)
+        const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
+        const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection})
         res.status(200).send(posts)
     },
     async getPostById(req: Request, res: Response) {
@@ -22,13 +18,8 @@ export const postControllers = {
         }
     },
     async getPostsByBlogId(req: Request, res: Response) {
-            const postQueryParamsFilter: any = {
-            pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-            pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-            sortBy: req.query.sortBy || "createdAt",
-            sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
-        }
-        const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, postQueryParamsFilter)
+        const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
+        const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {pageNumber, pageSize, sortBy, sortDirection})
         if (postsForSpecificBlog) {
             res.status(200).send(postsForSpecificBlog)
         } else {

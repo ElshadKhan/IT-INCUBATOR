@@ -1,3 +1,5 @@
+import {SortDirection} from "../middleware/queryValidation";
+
 export type BlogDbType = {
     id: string
     name: string
@@ -10,7 +12,7 @@ export type QueryBlogType = {
     pageNumber: number
     pageSize: number
     sortBy: string
-    sortDirection: string
+    sortDirection: SortDirection
 }
 
 export type BlogsBusinessType = {

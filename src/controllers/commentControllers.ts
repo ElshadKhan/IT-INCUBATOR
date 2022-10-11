@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import {commentQueryRepository} from "../repositories/queryRep/commentQueryRepository";
 import {commentService} from "../services/commentServices";
+import {queryValidation} from "../middleware/queryValidation";
 
 
 export const commentControllers = {
@@ -13,13 +14,8 @@ export const commentControllers = {
         }
     },
     async getCommentsByPostId(req: Request, res: Response) {
-            const commentQueryParamsFilter: any = {
-            pageNumber: req.query.pageNumber ? +req.query.pageNumber : 1,
-            pageSize: req.query.pageSize ? +req.query.pageSize : 10,
-            sortBy: req.query.sortBy || "createdAt",
-            sortDirection: req.query.sortDirection === "asc" ? "asc" : "desc"
-        }
-        const commentForSpecificPost = await commentQueryRepository.findCommentsByPostId(req.params.postId, commentQueryParamsFilter)
+        const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
+        const commentForSpecificPost = await commentQueryRepository.findCommentsByPostId(req.params.postId, {pageNumber, pageSize, sortBy, sortDirection})
         if (commentForSpecificPost) {
             res.status(200).send(commentForSpecificPost)
         } else {

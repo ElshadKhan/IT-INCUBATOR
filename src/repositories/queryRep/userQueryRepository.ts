@@ -1,20 +1,15 @@
 import {QueryUserType, UsersBusinessType} from "../../types/userTypes";
 import {usersCollection} from "../../db";
+import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 
 export const userQueryRepository = {
-    async findUsers(userQueryParamsFilter: QueryUserType): Promise<UsersBusinessType> {
-        const searchLoginTerm =  userQueryParamsFilter.searchLoginTerm
-        const searchEmailTerm =  userQueryParamsFilter.searchEmailTerm
-        const skip = userQueryParamsFilter.pageSize * (userQueryParamsFilter.pageNumber - 1)
-        const sort = userQueryParamsFilter.sortBy
-        const limit = userQueryParamsFilter.pageSize
-        const sortDirection: any = userQueryParamsFilter.sortDirection
-        const users = await usersCollection.find({$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
+    async findUsers({searchLoginTerm, searchEmailTerm, pageNumber, pageSize, sortBy, sortDirection}: QueryUserType): Promise<UsersBusinessType> {
+        const users = await usersCollection.find({$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
         const totalCountUsers = await usersCollection.find( {$or: [{login: {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {email: {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).count()
         const userDto = {
-            "pagesCount": (Math.ceil(totalCountUsers/limit)),
-            "page": userQueryParamsFilter.pageNumber,
-            "pageSize": limit,
+            "pagesCount": getPagesCounts(totalCountUsers, pageSize),
+            "page": pageNumber,
+            "pageSize": pageSize,
             "totalCount": totalCountUsers,
             "items": users.map(u => (
                 {

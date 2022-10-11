@@ -4,7 +4,14 @@ import {CommentDbType} from "../types/commentTypes";
 export const commentRepository = {
     async createComment(newComment: CommentDbType): Promise<CommentDbType> {
         await commentsCollection.insertOne(newComment)
-        return newComment
+        const commentDto = {
+            id: newComment.id,
+            content: newComment.content,
+            userId: newComment.userId,
+            userLogin: newComment.userLogin,
+            createdAt: newComment.createdAt
+        }
+        return commentDto
     },
     async updateComment(content: string, id: string
     ): Promise<boolean> {

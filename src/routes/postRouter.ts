@@ -1,7 +1,6 @@
 import {Router} from "express";
 import {postControllers} from "../controllers/postControllers";
-import {
-    postBodyValidationsBlogId, postIdParamValidation
+import {postBodyValidationsBlogId, postIdParamValidation
 } from "../middleware/postMiddleware/postInputMiddlewares";
 import {authBearerMiddleware, authMiddleware} from "../middleware/authMiddleware";
 import {commentValidations} from "../middleware/commentMiddleware/commentInputMiddlewares";

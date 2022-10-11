@@ -1,25 +1,16 @@
 import {blogsCollection} from "../../db";
 import {BlogDbType, BlogsBusinessType, QueryBlogType} from "../../types/blogTypes";
+import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 
 export const blogQueryRepository = {
-    async findBlogs(blogQueryParamsFilter: QueryBlogType): Promise<BlogsBusinessType> {
-        const skip = blogQueryParamsFilter.pageSize * (blogQueryParamsFilter.pageNumber - 1)
-        const pageNumber = blogQueryParamsFilter.pageNumber
-        const sort = blogQueryParamsFilter.sortBy
-        const limit = blogQueryParamsFilter.pageSize
-        const sortDirection: any = blogQueryParamsFilter.sortDirection
-        const searchNameTerm = blogQueryParamsFilter.searchNameTerm
-        const blogs = await blogsCollection.find({
-            name: {
-                $regex: searchNameTerm,
-                $options: "(?i)a(?-i)cme"
-            }
-        }).sort(sort, sortDirection).skip(skip).limit(limit).toArray()
+    async findBlogs({searchNameTerm, pageNumber, pageSize, sortBy, sortDirection}: QueryBlogType): Promise<BlogsBusinessType> {
+        const blogs = await blogsCollection.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}})
+            .sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
         const totalCountBlogs = await blogsCollection.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}}).count()
         const blogDto = {
-            "pagesCount": (Math.ceil(totalCountBlogs/limit)),
+            "pagesCount": getPagesCounts(totalCountBlogs, pageSize),
             "page": pageNumber,
-            "pageSize": limit,
+            "pageSize": pageSize,
             "totalCount": totalCountBlogs,
             "items": blogs.map(b => (
                 {
@@ -32,6 +23,16 @@ export const blogQueryRepository = {
         return blogDto
     },
     async findBlogById(id: string): Promise<BlogDbType | null> {
-            return await blogsCollection.findOne({id:id});
+            const findBlog = await blogsCollection.findOne({id:id});
+            if(findBlog){
+                    const blog: BlogDbType = {
+                    id: findBlog.id,
+                    name: findBlog.name,
+                    youtubeUrl: findBlog.youtubeUrl,
+                    createdAt: findBlog.createdAt
+                    }
+                    return blog
+            }
+            return findBlog
     }
 }
