@@ -25,9 +25,10 @@ export const authService = {
                 isConfirmed: false
             }
         }
-        const createResults = userRepository.createUser(user)
-        await emailManager.sendEmailConfirmationMessage(user)
-        return createResults
+        await userRepository.createUser(user)
+        const result = emailManager.sendEmailConfirmationMessage(user)
+        console.log(result)
+        return result
     },
     async emailResending(email: string) {
         const user = await userRepository.findUserByLoginOrEmail(email)
