@@ -2,10 +2,10 @@ import {PostDbType} from "../types/postTypes";
 import {commentRepository} from "../repositories/commentRepository";
 import {postQueryRepository} from "../repositories/queryRep/postQueryRepository";
 import {CommentDbType} from "../types/commentTypes";
-import {UserDbType} from "../types/userTypes";
+import {UserAccountDBType} from "../types/userTypes";
 
 export const commentService = {
-    async createComment(content: string, postId: string, user: UserDbType
+    async createComment(content: string, postId: string, user: UserAccountDBType
     ): Promise<CommentDbType | null> {
         const post: PostDbType | null = await postQueryRepository.findPostById(postId);
         if (!post) return null
@@ -13,7 +13,7 @@ export const commentService = {
             id: String(+new Date()),
             content: content,
             userId: user.id,
-            userLogin: user.login,
+            userLogin: user.accountData.userName,
             postId: postId,
             createdAt: new Date().toISOString()
         }

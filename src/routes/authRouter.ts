@@ -10,7 +10,7 @@ import {authControllers} from "../controllers/authControllers";
 export const authRouter = Router({})
 
 authRouter.post('/login', userAuthValidations, authControllers.loginUser)
-authRouter.post('/registration-confirmation', codeEmailAuthValidations, authControllers.loginUser)
-authRouter.post('/registration', userLoginValidations,  authControllers.authUser)
-authRouter.post('/registration-email-resending', userEmailAuthValidations, authControllers.loginUser)
+authRouter.post('/registration-confirmation', codeEmailAuthValidations, authControllers.confirmationEmail)
+authRouter.post('/registration', userLoginValidations, authControllers.createUser)
+authRouter.post('/registration-email-resending', userEmailAuthValidations, authControllers.emailResending)
 authRouter.get('/me', authBearerMiddleware, authControllers.getAuthUser)

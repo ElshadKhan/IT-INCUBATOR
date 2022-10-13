@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import {authService} from "../services/authServices";
 import {jwtService} from "../application/jwt-service";
-import {emailManager} from "../managers/emailManagers";
 export const authControllers = {
     async getAuthUser(req: any, res: Response) {
         const user = {
@@ -20,8 +19,28 @@ export const authControllers = {
             res.send(401)
         }
     },
-    async authUser(req: Request, res: Response) {
-        const user = await emailManager.sendEmail(req.body.email, req.body.subject, req.body.message)
-        res.send(204)
+    async createUser(req: Request, res: Response) {
+        const user = await authService.createUser(req.body.login, req.body.password, req.body.email)
+        if(user) {
+            res.send(204)
+        } else {
+            res.status(404)
+        }
+    },
+    async confirmationEmail(req: Request, res: Response) {
+        const user = await authService.confirmationEmail(req.body.code)
+        if(user) {
+            res.send(204)
+        } else {
+            res.status(404)
+        }
+    },
+    async emailResending(req: Request, res: Response) {
+        const user = await authService.emailResending(req.body.email)
+        if(user) {
+            res.send(204)
+        } else {
+            res.status(400)
+        }
     }
 }

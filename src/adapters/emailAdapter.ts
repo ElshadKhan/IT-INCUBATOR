@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 export const emailAdapter = {
-    async sendEmail(email: string, subject: string, message: string) {
+    async sendEmail(email: string, subject: string) {
         const transport = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -12,8 +12,8 @@ export const emailAdapter = {
         let info = await transport.sendMail({
             from: 'Elshad <khanakhmedov.elshad@gmail.com>',
             to: email,
-            subject: subject,
-            html: message,
+            subject: `https://some-front.com/confirm-registration?code=${subject}`,
+            html: "message",
         });
         return info
     }

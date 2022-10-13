@@ -1,8 +1,9 @@
 import {emailAdapter} from "../adapters/emailAdapter";
+import {UserAccountDBType} from "../types/userTypes";
 
 export const emailManager = {
-    async sendEmail(email: string, subject: string, message: string) {
-        const user = await emailAdapter.sendEmail(email, subject, message)
-        return user
+    async sendEmailConfirmationMessage(user: UserAccountDBType) {
+        const userMessage = await emailAdapter.sendEmail(user.accountData.email, user.emailConfirmation.confirmationCode)
+        return userMessage
     }
 }
