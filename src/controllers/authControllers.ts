@@ -21,7 +21,7 @@ export const authControllers = {
     },
     async createUser(req: Request, res: Response) {
         const user = await authService.createUser(req.body.login, req.body.password, req.body.email)
-        res.status(400)
+        res.status(204).send(user)
     },
     async confirmationEmail(req: Request, res: Response) {
         const user = await authService.confirmationEmail(req.body.code)
