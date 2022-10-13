@@ -21,8 +21,7 @@ export const authControllers = {
     },
     async createUser(req: Request, res: Response) {
         const user = await authService.createUser(req.body.login, req.body.password, req.body.email)
-        res.send("Input data is accepted. Email with confirmation code will be send to passed email address")
-
+        res.status(400)
     },
     async confirmationEmail(req: Request, res: Response) {
         const user = await authService.confirmationEmail(req.body.code)
