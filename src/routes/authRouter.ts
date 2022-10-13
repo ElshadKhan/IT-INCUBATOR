@@ -3,7 +3,7 @@ import {authBearerMiddleware} from "../middleware/authMiddleware";
 import {
     codeEmailAuthValidations, userAuthValidations,
     userEmailAuthValidations,
-    userLoginValidations, userRegistrationValidations
+    userRegistrationValidations
 } from "../middleware/userMiddleware/userInputMiddlewares";
 import {authControllers} from "../controllers/authControllers";
 
