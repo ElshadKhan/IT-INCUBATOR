@@ -26,8 +26,7 @@ export const authService = {
             }
         }
         await userRepository.createUser(user)
-        const result = emailManager.sendEmailConfirmationMessage(user)
-        console.log(result)
+        const result = await emailManager.sendEmailConfirmationMessage(user)
         return result
     },
     async emailResending(email: string) {
