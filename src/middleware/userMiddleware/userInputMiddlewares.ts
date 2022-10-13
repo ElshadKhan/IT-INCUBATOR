@@ -12,6 +12,18 @@ export const confirmationCodeInputValidation = body('code')
         return true;
     })
 
+export const emailResendingInputValidation = body('email')
+    .isString().withMessage("Field 'email' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
+    .isEmail().withMessage("Field 'email' is invalid.")
+    .custom( async (value) => {
+        const user = await userRepository.findUserByConfirmationCode(value);
+        if (!user) {
+            throw new Error("Field 'email' is not correct.");
+        }
+        return true;
+    })
+
 const loginValueValidation = body("login")
     .isString().withMessage("Field 'login' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'login' cannot be empty.")
@@ -31,8 +43,8 @@ const codeValueValidation = body("code")
 export const userLoginValidations = [ loginValueValidation, passwordValueValidation, emailValueValidation,
     inputValidation
 ]
-export const userEmailAuthValidations = [ confirmationCodeInputValidation, inputValidation ]
-export const codeEmailAuthValidations = [ codeValueValidation, inputValidation ]
+export const userEmailAuthValidations = [ emailResendingInputValidation, inputValidation ]
+export const codeEmailAuthValidations = [ confirmationCodeInputValidation, inputValidation ]
 
 export const userAuthValidations = [
     body("login")
