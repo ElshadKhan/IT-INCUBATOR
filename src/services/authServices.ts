@@ -8,7 +8,6 @@ import {UserAccountDBType} from "../types/userTypes";
 
 export const authService = {
     async createUser(login: string, password: string, email: string) {
-        console.log("1")
         const passwordSalt = await bcrypt.genSalt(4)
         const passwordHash = await _generateHash(password, passwordSalt)
         const user: UserAccountDBType = {
@@ -26,7 +25,6 @@ export const authService = {
                 isConfirmed: false
             }
         }
-        console.log("2")
         const createResults = userRepository.createUser(user)
         await emailManager.sendEmailConfirmationMessage(user)
         return createResults

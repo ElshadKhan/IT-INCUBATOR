@@ -24,6 +24,29 @@ export const emailResendingInputValidation = body('email')
         return true;
     })
 
+export const emailRegistrationInputValidation = body('email')
+    .isString().withMessage("Field 'email' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
+    .isEmail().withMessage("Field 'email' is invalid.")
+    .custom( async (value) => {
+        const user = await userRepository.findUserByConfirmationCode(value);
+        if (user) {
+            throw new Error("Field 'email' is not correct.");
+        }
+        return true;
+    })
+export const loginRegistrationInputValidation = body('login')
+    .isString().withMessage("Field 'login' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'login' cannot be empty.")
+    .isLength({min: 3, max: 10}).withMessage("Min length of field 'login' 3 max 10.")
+    .custom( async (value) => {
+        const user = await userRepository.findUserByLoginOrEmail(value);
+        if (user) {
+            throw new Error("Field 'login' is not correct.");
+        }
+        return true;
+    })
+
 const loginValueValidation = body("login")
     .isString().withMessage("Field 'login' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'login' cannot be empty.")
@@ -36,11 +59,12 @@ const emailValueValidation = body("email")
     .isString().withMessage("Field 'email' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
     .isEmail().withMessage("Field 'email' is invalid.")
-const codeValueValidation = body("code")
-    .isString().withMessage("Field 'code' is not a string.")
-    .notEmpty({ignore_whitespace: true}).withMessage("Field 'code' cannot be empty.")
+
 
 export const userLoginValidations = [ loginValueValidation, passwordValueValidation, emailValueValidation,
+    inputValidation
+]
+export const userRegistrationValidations = [ loginRegistrationInputValidation, passwordValueValidation, emailRegistrationInputValidation,
     inputValidation
 ]
 export const userEmailAuthValidations = [ emailResendingInputValidation, inputValidation ]
