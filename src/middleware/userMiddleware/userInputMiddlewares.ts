@@ -1,5 +1,16 @@
 import {body} from "express-validator";
 import {inputValidation} from "../inputValidation";
+import {userRepository} from "../../repositories/userRepository";
+
+export const confirmationCodeInputValidation = body('code')
+    .isString().withMessage("Field 'code' is not a string.")
+    .custom( async (value) => {
+        const user = await userRepository.findUserByConfirmationCode(value);
+        if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.confirmationCode !== value || user.emailConfirmation.expirationDate < new Date()) {
+            throw new Error("Field 'code' is not correct.");
+        }
+        return true;
+    })
 
 const loginValueValidation = body("login")
     .isString().withMessage("Field 'login' is not a string.")
@@ -20,7 +31,7 @@ const codeValueValidation = body("code")
 export const userLoginValidations = [ loginValueValidation, passwordValueValidation, emailValueValidation,
     inputValidation
 ]
-export const userEmailAuthValidations = [ emailValueValidation, inputValidation ]
+export const userEmailAuthValidations = [ confirmationCodeInputValidation, inputValidation ]
 export const codeEmailAuthValidations = [ codeValueValidation, inputValidation ]
 
 export const userAuthValidations = [

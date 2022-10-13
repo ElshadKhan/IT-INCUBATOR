@@ -32,7 +32,7 @@ export const authControllers = {
         if(user) {
             res.send(204)
         } else {
-            res.status(404)
+            res.status(400)
         }
     },
     async emailResending(req: Request, res: Response) {
