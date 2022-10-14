@@ -33,6 +33,7 @@ export const authService = {
         const user = await userRepository.findUserByLoginOrEmail(email)
         if(!user) return null
         const subject = uuidv4()
+        await userRepository.updateResendingCode(user.id, subject)
         await emailManager.emailResendingConfirmationMessage(email, subject)
         return user
     },

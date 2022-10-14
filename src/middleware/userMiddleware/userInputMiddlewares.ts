@@ -18,7 +18,7 @@ export const emailResendingInputValidation = body('email')
     .isEmail().withMessage("Field 'email' is invalid.")
     .custom( async (value) => {
         const user = await userRepository.findUserByLoginOrEmail(value);
-        if (!user || user.emailConfirmation.isConfirmed) {
+        if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.expirationDate < new Date()) {
             throw new Error("Field 'email' is not correct.");
         }
         return true;
