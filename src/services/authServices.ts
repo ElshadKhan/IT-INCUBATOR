@@ -32,7 +32,8 @@ export const authService = {
     async emailResending(email: string) {
         const user = await userRepository.findUserByLoginOrEmail(email)
         if(!user) return null
-        await emailManager.sendEmailConfirmationMessage(user)
+        const subject = uuidv4()
+        await emailManager.emailResendingConfirmationMessage(email, subject)
         return user
     },
     async confirmationEmail (code: string): Promise<boolean> {
