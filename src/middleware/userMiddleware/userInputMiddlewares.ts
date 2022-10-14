@@ -27,7 +27,8 @@ export const emailResendingInputValidation = body('email')
 export const emailRegistrationInputValidation = body('email')
     .isString().withMessage("Field 'email' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
-    .isEmail().withMessage("Field 'email' is invalid.")
+    .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+).withMessage("Field 'email' is invalid.")
     .custom( async (value) => {
         const user = await userRepository.findUserByLoginOrEmail(value);
         if (user) {
