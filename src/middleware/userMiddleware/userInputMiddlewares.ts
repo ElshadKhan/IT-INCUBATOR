@@ -17,7 +17,7 @@ export const emailResendingInputValidation = body('email')
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
     .isEmail().withMessage("Field 'email' is invalid.")
     .custom( async (value) => {
-        const user = await userRepository.findUserByConfirmationCode(value);
+        const user = await userRepository.findUserByLoginOrEmail(value);
         if (!user) {
             throw new Error("Field 'email' is not correct.");
         }

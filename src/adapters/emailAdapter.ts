@@ -9,12 +9,11 @@ export const emailAdapter = {
                 pass: 'jywuqaepczorwvso'
             }
         });
-        const stringCode = 'https://somesite.com/confirm-email?code='+subject
         let info = await transport.sendMail({
             from: 'Elshad <khanakhmedov.elshad@gmail.com>',
             to: email,
             subject: `Back-end`,
-            html: `<h1>Thank for your registration</h1>\n <div>To finish registration please follow the link below:\n   <a href='${stringCode}'>complete registration</a>\n</div>`,
+            html: `<h1>Thank for your registration</h1>\n <div>To finish registration please follow the link below:\n   <a href='https://somesite.com/confirm-email?code=${subject}'>complete registration</a>\n</div>`,
         });
         return info.messageId
     }
