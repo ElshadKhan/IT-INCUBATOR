@@ -4,8 +4,8 @@ import {jwtService} from "../application/jwt-service";
 export const authControllers = {
     async getAuthUser(req: any, res: Response) {
         const user = {
-            email: req.user.email,
-            login: req.user.login,
+            email: req.user.accountData.email,
+            login: req.user.accountData.userName,
             userId: req.user.id
         }
         res.status(200).send(user)
