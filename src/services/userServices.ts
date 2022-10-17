@@ -1,12 +1,12 @@
 import {userRepository} from "../repositories/userRepository";
-import {UserAccountDBType, UserDto} from "../types/userTypes";
+import {UserAccountDBType} from "../types/userTypes";
 import  bcrypt from "bcrypt"
 import {_generateHash} from "../helpers/helpFunctions";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
 export const userService = {
-    async createUser(login: string, password: string, email: string): Promise<UserDto> {
+    async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(4)
         const passwordHash = await _generateHash(password, passwordSalt)
         const newUser: UserAccountDBType = {

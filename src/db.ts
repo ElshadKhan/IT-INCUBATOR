@@ -1,7 +1,7 @@
 import {MongoClient} from "mongodb"
 import {BlogDbType} from "./types/blogTypes";
 import {PostDbType} from "./types/postTypes";
-import {UserAccountDBType, UserDbType} from "./types/userTypes";
+import {UserAccountDBType} from "./types/userTypes";
 import {CommentDbType} from "./types/commentTypes";
 import * as dotenv from "dotenv";
 dotenv.config()

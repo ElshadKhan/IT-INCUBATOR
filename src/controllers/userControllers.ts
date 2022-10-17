@@ -14,7 +14,13 @@ async getUsers(req: Request, res: Response) {
     },
     async createUser(req: Request, res: Response) {
         const newUser = await userService.createUser(req.body.login, req.body.password, req.body.email)
-        res.status(201).send(newUser)
+        const userDto = {
+            id: newUser.id,
+            login: newUser.accountData.userName,
+            email: newUser.accountData.email,
+            createdAt: newUser.accountData.createdAt
+        }
+        res.status(201).send(userDto)
     },
     async deleteUser(req: Request, res: Response) {
         const user = await userService.deleteUser(req.params.id);

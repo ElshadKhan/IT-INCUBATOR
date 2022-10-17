@@ -20,9 +20,6 @@ export type UsersAccountDataType = {
     passwordSalt: string
     createdAt: string
 }
-export type SendEmailType = {
-    sentDate: Date
-}
 export type EmailConfirmationType = {
     confirmationCode: string
     expirationDate: Date

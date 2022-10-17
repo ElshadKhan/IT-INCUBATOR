@@ -3,15 +3,17 @@ import {UserAccountDBType} from "../types/userTypes";
 import  jwt from "jsonwebtoken"
 
 export const jwtService = {
-    async createJWT(user: UserAccountDBType) {
-        const token = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: "1h"} )
-        return {
-            accessToken: token
-        }
+    async createAccessJWT(user: UserAccountDBType) {
+        const token = jwt.sign({userId: user.id}, settings.ACCESS_JWT_TOKEN_SECRET, {expiresIn: 10000} )
+        return token
+    },
+    async createRefreshJWT(user: UserAccountDBType) {
+        const token = jwt.sign({userId: user.id}, settings.REFRESH_JWT_TOKEN_SECRET, {expiresIn: 20000} )
+        return token
     },
     async getUserIdByToken(token: string) {
         try {
-            const result: any = jwt.verify(token, settings.JWT_SECRET)
+            const result: any = jwt.verify(token, settings.ACCESS_JWT_TOKEN_SECRET)
             return result.userId
         } catch (error) {
             return null

@@ -1,16 +1,10 @@
 import {usersCollection} from "../db";
-import {UserAccountDBType, UserDto} from "../types/userTypes";
+import {UserAccountDBType} from "../types/userTypes";
 
 export const userRepository = {
-    async createUser(newUser: UserAccountDBType): Promise<UserDto> {
+    async createUser(newUser: UserAccountDBType): Promise<UserAccountDBType> {
         await usersCollection.insertOne(newUser)
-        const userDto = {
-            id: newUser.id,
-            login: newUser.accountData.userName,
-            email: newUser.accountData.email,
-            createdAt: newUser.accountData.createdAt
-        }
-        return userDto
+        return newUser
     },
     async updateConfirmation(id: string) {
         let result = await usersCollection.updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})

@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 export const emailAdapter = {
-    async sendEmail(email: string, subject: string) {
+    async sendEmail(email: string, code: string) {
         const transport = await nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -13,7 +13,10 @@ export const emailAdapter = {
             from: 'Elshad <khanakhmedov.elshad@gmail.com>',
             to: email,
             subject: `Back-end`,
-            html: `<h1>Thank for your registration</h1>\n <div>To finish registration please follow the link below:\n   <a href='https://somesite.com/confirm-email?code=${subject}'>complete registration</a>\n</div>`,
+            html: " <h1>Thank for your registration</h1>\n" +
+            "       <p>To finish registration please follow the link below:\n" +
+            `<a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>\n` +
+            "      </p>"
         });
         return info.messageId
     }

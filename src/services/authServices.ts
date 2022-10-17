@@ -1,32 +1,13 @@
 import {userRepository} from "../repositories/userRepository";
 import {_generateHash} from "../helpers/helpFunctions";
 import {emailManager} from "../managers/emailManagers";
-import bcrypt from "bcrypt";
 import {v4 as uuidv4} from "uuid"
-import add from "date-fns/add"
-import {UserAccountDBType} from "../types/userTypes";
+import {userService} from "./userServices";
 
 export const authService = {
     async createUser(login: string, password: string, email: string) {
-        const passwordSalt = await bcrypt.genSalt(4)
-        const passwordHash = await _generateHash(password, passwordSalt)
-        const user: UserAccountDBType = {
-            id: String(+new Date()),
-            accountData: {
-                userName: login,
-                email: email,
-                passwordHash,
-                passwordSalt,
-                createdAt: new Date().toISOString()
-            },
-            emailConfirmation: {
-                confirmationCode: uuidv4(),
-                expirationDate: add(new Date(), {hours: 1, minutes: 1}),
-                isConfirmed: false
-            }
-        }
-        await userRepository.createUser(user)
-        const result = await emailManager.sendEmailConfirmationMessage(user)
+        const newUser = await userService.createUser(login, password, email)
+        const result = await emailManager.sendEmailConfirmationMessage(newUser)
         return result
     },
     async emailResending(email: string) {

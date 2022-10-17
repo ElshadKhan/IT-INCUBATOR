@@ -13,8 +13,33 @@ export const authControllers = {
     async loginUser(req: Request, res: Response) {
         const user = await authService.checkCredentials(req.body.login, req.body.password)
         if (user) {
-            const token = await jwtService.createJWT(user)
-            res.status(200).send(token)
+            const accessToken = await jwtService.createAccessJWT(user);
+            const refreshToken = await jwtService.createRefreshJWT(user);
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: true
+            })
+            res.status(200).send({
+                "accessToken": accessToken
+            })
+        } else {
+            res.send(401)
+        }
+    },
+    async logoutUser(req: Request, res: Response) {
+        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
+        const user = await authService.checkCredentials(req.body.login, req.body.password)
+        if (user) {
+            const accessToken = await jwtService.createAccessJWT(user);
+            const refreshToken = await jwtService.createRefreshJWT(user);
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: true
+            })
+            res.status(200).send({
+                "accessToken": accessToken
+            })
+            return
         } else {
             res.send(401)
         }
