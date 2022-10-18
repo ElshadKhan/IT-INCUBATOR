@@ -18,7 +18,7 @@ export const authControllers = {
             const refreshToken = await jwtService.createRefreshJWT(user);
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: false
+                secure: true
             })
             res.status(200).send({
                 "accessToken": accessToken
@@ -39,7 +39,7 @@ export const authControllers = {
             res.cookie("refreshToken", refreshToken, {
                 maxAge: 2000000,
                 httpOnly: true,
-                secure: false
+                secure: true
             })
             res.status(200).send({
                 "accessToken": accessToken
