@@ -31,6 +31,7 @@ export const authControllers = {
     async resendingRefreshTokens(req: Request, res: Response) {
             const accessToken = await jwtService.createAccessJWT(req.user!);
             const refreshToken = await jwtService.createRefreshJWT(req.user!);
+            await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
             res.cookie("refreshToken", refreshToken, {
                 maxAge: 2000000,
                 httpOnly: true,
