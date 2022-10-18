@@ -42,7 +42,7 @@ export const authControllers = {
     },
     async logoutUser(req: Request, res: Response) {
             await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
-            res.clearCookie("refreshToken").status(200)
+            res.sendStatus(204)
     },
     async createUser(req: Request, res: Response) {
         const user = await authService.createUser(req.body.login, req.body.password, req.body.email)
