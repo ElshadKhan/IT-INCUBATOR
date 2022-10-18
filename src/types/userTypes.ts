@@ -16,6 +16,7 @@ export type UserAccountDBType = {
 export type UsersAccountDataType = {
     userName: string
     email: string
+    refreshToken: string
     passwordHash: string
     passwordSalt: string
     createdAt: string

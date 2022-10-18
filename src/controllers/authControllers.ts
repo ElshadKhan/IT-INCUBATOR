@@ -14,9 +14,9 @@ export const authControllers = {
     async loginUser(req: Request, res: Response) {
         const user = await authService.checkCredentials(req.body.login, req.body.password)
         if (user) {
-
             const accessToken = await jwtService.createAccessJWT(user);
             const refreshToken = await jwtService.createRefreshJWT(user);
+            await userRepository.updateRefreshToken(user.id, refreshToken)
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true
@@ -29,11 +29,11 @@ export const authControllers = {
         }
     },
     async resendingTokens(req: Request, res: Response) {
-        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-        const user = await userRepository.findUserById(userId)
+        const user = await userRepository.findUserRefreshToken(req.cookies.refreshToken)
         if (user) {
             const accessToken = await jwtService.createAccessJWT(user);
             const refreshToken = await jwtService.createRefreshJWT(user);
+            await userRepository.updateRefreshToken(user.id, refreshToken)
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true
@@ -49,6 +49,8 @@ export const authControllers = {
         const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
         const user = await userRepository.findUserById(userId)
         if (user) {
+            const refreshToken = ""
+            await userRepository.updateRefreshToken(user.id, refreshToken)
             res.clearCookie("refreshToken")
             res.status(200)
             return
