@@ -20,48 +20,28 @@ export const authControllers = {
                 maxAge: 200000000,
                 httpOnly: true,
                 secure: true
-            })
-            res.status(200).send({
+            }).status(200).send({
                 "accessToken": accessToken
             })
+
         } else {
             res.send(401)
         }
     },
     async resendingRefreshTokens(req: Request, res: Response) {
-        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-        if (!userId) {
-            res.sendStatus(401)
-        }
-        const tokenFromBlackList = await userRepository.findRefreshTokenInBlackList(req.cookies.refreshToken)
-        if (!tokenFromBlackList) {
-            const accessToken = await jwtService.createAccessJWT(userId);
-            const refreshToken = await jwtService.createRefreshJWT(userId);
+            const accessToken = await jwtService.createAccessJWT(req.user!);
+            const refreshToken = await jwtService.createRefreshJWT(req.user!);
             res.cookie("refreshToken", refreshToken, {
                 maxAge: 2000000,
                 httpOnly: true,
                 secure: true
-            })
-            res.status(200).send({
+            }).status(200).send({
                 "accessToken": accessToken
             })
-        } else {
-            res.send(401)
-        }
     },
     async logoutUser(req: Request, res: Response) {
-        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-        if (!userId) {
-            res.sendStatus(401)
-        }
-        const tokenFromBlackList = await userRepository.findRefreshTokenInBlackList(req.cookies.refreshToken)
-        if (!tokenFromBlackList) {
             await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
-            res.clearCookie("refreshToken")
-            res.status(200)
-        } else {
-            res.send(401)
-        }
+            res.clearCookie("refreshToken").status(200)
     },
     async createUser(req: Request, res: Response) {
         const user = await authService.createUser(req.body.login, req.body.password, req.body.email)

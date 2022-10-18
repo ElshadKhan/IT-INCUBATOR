@@ -6,12 +6,13 @@ import {
     userRegistrationValidations
 } from "../middleware/userMiddleware/userInputMiddlewares";
 import {authControllers} from "../controllers/authControllers";
+import {refreshTokenMiddleware} from "../middleware/refreshTokenValidation";
 
 export const authRouter = Router({})
 
 authRouter.post('/login', userAuthValidations, authControllers.loginUser)
-authRouter.post('/logout',  authControllers.logoutUser)
-authRouter.post('/refresh-token',  authControllers.resendingRefreshTokens)
+authRouter.post('/logout', refreshTokenMiddleware, authControllers.logoutUser)
+authRouter.post('/refresh-token', refreshTokenMiddleware, authControllers.resendingRefreshTokens)
 authRouter.post('/registration-confirmation', codeEmailAuthValidations, authControllers.confirmationEmail)
 authRouter.post('/registration', userRegistrationValidations, authControllers.createUser)
 authRouter.post('/registration-email-resending', userEmailAuthValidations, authControllers.emailResending)
