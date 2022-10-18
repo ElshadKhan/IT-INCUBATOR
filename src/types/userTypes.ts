@@ -1,13 +1,5 @@
 import {SortDirection} from "../middleware/queryValidation";
 
-export type UserDbType = {
-    id: string
-    login: string
-    passwordHash: string
-    passwordSalt: string
-    email: string
-    createdAt: string
-}
 export type UserAccountDBType = {
     id: string
     accountData: UsersAccountDataType
@@ -16,10 +8,12 @@ export type UserAccountDBType = {
 export type UsersAccountDataType = {
     userName: string
     email: string
-    refreshToken: string
     passwordHash: string
     passwordSalt: string
     createdAt: string
+}
+export type RefreshToken = {
+    refreshToken: string
 }
 export type EmailConfirmationType = {
     confirmationCode: string

@@ -14,7 +14,6 @@ export const userService = {
             accountData: {
                 userName: login,
                 email: email,
-                refreshToken: "",
                 passwordHash,
                 passwordSalt,
                 createdAt: new Date().toISOString()

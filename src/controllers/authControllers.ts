@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {authService} from "../services/authServices";
 import {jwtService} from "../application/jwt-service";
 import {userRepository} from "../repositories/userRepository";
+import {tokensCollection} from "../db";
 export const authControllers = {
     async getAuthUser(req: any, res: Response) {
         const user = {
@@ -16,7 +17,6 @@ export const authControllers = {
         if (user) {
             const accessToken = await jwtService.createAccessJWT(user);
             const refreshToken = await jwtService.createRefreshJWT(user);
-            await userRepository.updateRefreshToken(user.id, refreshToken)
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true
@@ -28,12 +28,15 @@ export const authControllers = {
             res.send(401)
         }
     },
-    async resendingTokens(req: Request, res: Response) {
-        const user = await userRepository.findUserRefreshToken(req.cookies.refreshToken)
-        if (user) {
-            const accessToken = await jwtService.createAccessJWT(user);
-            const refreshToken = await jwtService.createRefreshJWT(user);
-            await userRepository.updateRefreshToken(user.id, refreshToken)
+    async resendingRefreshTokens(req: Request, res: Response) {
+        const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
+        if (!userId) {
+            res.sendStatus(401)
+        }
+        const tokenFromBlackList = await userRepository.findRefreshTokenInBlackList(req.cookies.refreshToken)
+        if (!tokenFromBlackList) {
+            const accessToken = await jwtService.createAccessJWT(userId);
+            const refreshToken = await jwtService.createRefreshJWT(userId);
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: true
@@ -47,13 +50,14 @@ export const authControllers = {
     },
     async logoutUser(req: Request, res: Response) {
         const userId = await jwtService.getUserIdByToken(req.cookies.refreshToken)
-        const user = await userRepository.findUserById(userId)
-        if (user) {
-            const refreshToken = ""
-            await userRepository.updateRefreshToken(user.id, refreshToken)
+        if (!userId) {
+            res.sendStatus(401)
+        }
+        const tokenFromBlackList = await userRepository.findRefreshTokenInBlackList(req.cookies.refreshToken)
+        if (!tokenFromBlackList) {
+            await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
             res.clearCookie("refreshToken")
             res.status(200)
-            return
         } else {
             res.send(401)
         }

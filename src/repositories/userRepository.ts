@@ -1,5 +1,5 @@
-import {usersCollection} from "../db";
-import {UserAccountDBType} from "../types/userTypes";
+import {tokensCollection, usersCollection} from "../db";
+import {RefreshToken, UserAccountDBType} from "../types/userTypes";
 
 export const userRepository = {
     async createUser(newUser: UserAccountDBType): Promise<UserAccountDBType> {
@@ -10,9 +10,13 @@ export const userRepository = {
         let result = await usersCollection.updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return  result.modifiedCount === 1
     },
-    async updateRefreshToken(id: string, token: string) {
-        let result = await usersCollection.updateOne({id: id}, {$set: {'accountData.refreshToken': token}})
-        return  result.modifiedCount === 1
+    async addRefreshTokenToBlackList(token: string): Promise<string> {
+        await tokensCollection.insertOne( {refreshToken: token})
+        return token
+    },
+    async findRefreshTokenInBlackList(token: string): Promise<RefreshToken | null> {
+        const result = await tokensCollection.findOne({refreshToken: token})
+        return  result
     },
     async updateResendingCode(id: string ,code: string) {
         let result = await usersCollection.updateOne({id: id}, {$set: {'emailConfirmation.confirmationCode': code}})
