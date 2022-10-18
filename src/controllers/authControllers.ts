@@ -2,7 +2,6 @@ import {Request, Response} from "express";
 import {authService} from "../services/authServices";
 import {jwtService} from "../application/jwt-service";
 import {userRepository} from "../repositories/userRepository";
-import {tokensCollection} from "../db";
 export const authControllers = {
     async getAuthUser(req: any, res: Response) {
         const user = {
@@ -19,7 +18,7 @@ export const authControllers = {
             const refreshToken = await jwtService.createRefreshJWT(user);
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: true
+                secure: false
             })
             res.status(200).send({
                 "accessToken": accessToken
@@ -39,7 +38,7 @@ export const authControllers = {
             const refreshToken = await jwtService.createRefreshJWT(userId);
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: true
+                secure: false
             })
             res.status(200).send({
                 "accessToken": accessToken
