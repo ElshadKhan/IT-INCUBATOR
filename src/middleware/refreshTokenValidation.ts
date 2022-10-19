@@ -8,7 +8,6 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
         res.send(401)
         return
     }
-
     const findRefToken = await userRepository.findRefreshTokenInBlackList(refToken)
     if(findRefToken) {
         res.sendStatus(401)

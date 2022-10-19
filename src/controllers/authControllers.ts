@@ -23,7 +23,6 @@ export const authControllers = {
             }).status(200).send({
                 "accessToken": accessToken
             })
-
         } else {
             res.send(401)
         }
