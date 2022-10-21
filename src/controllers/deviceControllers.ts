@@ -18,11 +18,7 @@ export const sessionsControllers = {
     },
     async deleteAllSessionsExceptOne(req: Request, res: Response) {
         const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
-        const sessions = await sessionsService.deleteAllSessionsExceptOne(payload.userId, payload.deviceId);
-        if (sessions) {
-            res.send(204)
-        } else {
-            res.send(404)
-        }
+        await sessionsService.deleteAllSessionsExceptOne(payload.userId, payload.deviceId);
+        res.send(204)
     }
 }

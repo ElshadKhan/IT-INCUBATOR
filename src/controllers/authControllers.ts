@@ -18,12 +18,13 @@ export const authControllers = {
             res.sendStatus(401)
             return
         }
+
+        const session = await sessionsService.createSession(user, req.ip, req.headers["user-agent"]!)
         const checkingTheNumberOfRequests = await sessionsService.findCreateDateFromIp(req.ip)
         if(checkingTheNumberOfRequests > 4){
             res.sendStatus(429)
             return
         }
-        const session = await sessionsService.createSession(user, req.ip, req.headers["user-agent"]!)
         res.cookie("refreshToken", session.refreshToken, {
             maxAge: 200000000,
             httpOnly: true,
