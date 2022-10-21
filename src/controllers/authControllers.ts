@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {authService} from "../services/authServices";
 import {jwtService} from "../application/jwt-service";
 import {userRepository} from "../repositories/userRepository";
+import {sessionsService} from "../services/sessionsServices";
 export const authControllers = {
     async getAuthUser(req: any, res: Response) {
         const user = {
@@ -13,30 +14,30 @@ export const authControllers = {
     },
     async loginUser(req: Request, res: Response) {
         const user = await authService.checkCredentials(req.body.login, req.body.password)
-        if (user) {
-            const accessToken = await jwtService.createAccessJWT(user);
-            const refreshToken = await jwtService.createRefreshJWT(user);
-            res.cookie("refreshToken", refreshToken, {
-                maxAge: 200000000,
-                httpOnly: true,
-                secure: true
-            }).status(200).send({
-                "accessToken": accessToken
-            })
-        } else {
-            res.send(401)
+        if (!user) {
+            res.sendStatus(401)
+            return
         }
+        const session = await sessionsService.createSession(user, req.ip, "device")
+        res.cookie("refreshToken", session.refreshToken, {
+            maxAge: 200000000,
+            httpOnly: true,
+            secure: false
+        }).status(200).send({
+            "accessToken": session.accessToken
+        })
     },
     async resendingRefreshTokens(req: Request, res: Response) {
-            const accessToken = await jwtService.createAccessJWT(req.user!);
-            const refreshToken = await jwtService.createRefreshJWT(req.user!);
+            const deviceId =  "req.user!"
+            const tokens = await jwtService.createJWTTokens(req.user!, deviceId);
+
             await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", tokens.refreshToken, {
                 maxAge: 2000000,
                 httpOnly: true,
-                secure: true
+                secure: false
             }).status(200).send({
-                "accessToken": accessToken
+                "accessToken": tokens.accessToken
             })
     },
     async logoutUser(req: Request, res: Response) {

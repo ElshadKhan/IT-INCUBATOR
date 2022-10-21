@@ -2,13 +2,18 @@ import {settings} from "../types/settings";
 import {UserAccountDBType} from "../types/userTypes";
 import  jwt from "jsonwebtoken"
 
+
 export const jwtService = {
-    async createAccessJWT(user: UserAccountDBType) {
-        const token = jwt.sign({userId: user.id}, settings.ACCESS_JWT_TOKEN_SECRET, {expiresIn: "10sec"} )
-        return token
+    async createJWTTokens(user: UserAccountDBType, deviceId: string) {
+        const accessToken = jwt.sign({userId: user.id}, settings.ACCESS_JWT_TOKEN_SECRET, {expiresIn: "10sec"} )
+        const refreshToken = jwt.sign({userId: user.id, deviceId: deviceId}, settings.REFRESH_JWT_TOKEN_SECRET, {expiresIn: "20sec"} )
+        return {
+            "accessToken": accessToken,
+            "refreshToken": refreshToken
+        }
     },
-    async createRefreshJWT(user: UserAccountDBType) {
-        const token = jwt.sign({userId: user.id}, settings.REFRESH_JWT_TOKEN_SECRET, {expiresIn: "20sec"} )
+    async createRefreshJWT(user: UserAccountDBType, deviceId: string) {
+        const token = jwt.sign({userId: user.id, deviceId: deviceId}, settings.REFRESH_JWT_TOKEN_SECRET, {expiresIn: "20sec"} )
         return token
     },
     async getUserIdByToken(token: string) {
@@ -22,7 +27,7 @@ export const jwtService = {
     async getUserIdByRefreshToken(token: string) {
         try {
             const result: any = jwt.verify(token, settings.REFRESH_JWT_TOKEN_SECRET)
-            return result.userId
+            return result
         } catch (error) {
             return null
         }
