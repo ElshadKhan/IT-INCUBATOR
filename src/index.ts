@@ -16,6 +16,8 @@ app.use(cookieParser())
 
 app.use(express.json());
 
+app.set('trust proxy', true)
+
 app.use("/api", router)
 
 const startApp = async () => {

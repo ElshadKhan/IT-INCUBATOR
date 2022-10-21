@@ -16,7 +16,7 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     const token = refToken.split(' ')[0]
     const user = await jwtService.getUserIdByRefreshToken(token)
     if (user) {
-        req.user = await userRepository.findUserById(user)
+        req.user = await userRepository.findUserById(user.userId)
         next()
         return
     }

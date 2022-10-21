@@ -5,6 +5,7 @@ import {blogService} from "../services/blogServises";
 import {commentService} from "../services/commentServices";
 import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {queryValidation} from "../middleware/queryValidation";
+import {sessionsService} from "../services/sessionsServices";
 
 export const userControllers = {
 async getUsers(req: Request, res: Response) {
@@ -35,6 +36,7 @@ async getUsers(req: Request, res: Response) {
         await blogService.deleteAllBlogs();
         await postService.deleteAllPosts()
         await commentService.deleteAllComments()
+        await sessionsService.deleteAllSessions()
         res.send(204)
     }
 }

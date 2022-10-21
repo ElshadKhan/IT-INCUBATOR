@@ -18,7 +18,12 @@ export const authControllers = {
             res.sendStatus(401)
             return
         }
-        const session = await sessionsService.createSession(user, req.ip, "device")
+        const checkingTheNumberOfRequests = await sessionsService.findCreateDateFromIp(req.ip)
+        if(checkingTheNumberOfRequests > 4){
+            res.sendStatus(429)
+            return
+        }
+        const session = await sessionsService.createSession(user, req.ip, req.headers["user-agent"]!)
         res.cookie("refreshToken", session.refreshToken, {
             maxAge: 200000000,
             httpOnly: true,
@@ -28,21 +33,25 @@ export const authControllers = {
         })
     },
     async resendingRefreshTokens(req: Request, res: Response) {
-            const deviceId =  "req.user!"
-            const tokens = await jwtService.createJWTTokens(req.user!, deviceId);
+        const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
 
-            await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
-            res.cookie("refreshToken", tokens.refreshToken, {
-                maxAge: 2000000,
-                httpOnly: true,
-                secure: false
-            }).status(200).send({
+        const tokens = await jwtService.createJWTTokens(req.user!, payload.deviceId);
+        const newLastActiveDate = await jwtService.getUserIdByRefreshToken(tokens.refreshToken.split(' ')[0])
+
+        await sessionsService.updateSession(payload.userId, payload.deviceId, newLastActiveDate.iat)
+
+        await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
+        res.cookie("refreshToken", tokens.refreshToken, {
+            maxAge: 2000000,
+            httpOnly: true,
+            secure: false
+        }).status(200).send({
                 "accessToken": tokens.accessToken
-            })
+        })
     },
     async logoutUser(req: Request, res: Response) {
-            await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
-            res.sendStatus(204)
+        await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
+        res.sendStatus(204)
     },
     async createUser(req: Request, res: Response) {
         const user = await authService.createUser(req.body.login, req.body.password, req.body.email)

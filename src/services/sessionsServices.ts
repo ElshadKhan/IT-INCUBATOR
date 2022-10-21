@@ -8,6 +8,9 @@ export const sessionsService = {
     async getAllActiveSessions(userId: string) {
         return await sessionsRepository.getAllActiveSessions(userId)
     },
+    async findCreateDateFromIp(ip: string) {
+        return await sessionsRepository.findCreateDateFromIp(ip)
+    },
     async createSession(user: UserAccountDBType, ip: string, deviceName: string) {
         const userId = user.id
         const deviceId = uuidv4()
@@ -16,21 +19,27 @@ export const sessionsService = {
         const session: SessionDBType = {
             ip: ip,
             title: deviceName,
-            lastActivateDate: new Date(payload.iat * 1000),
+            lastActiveDate: new Date(payload.iat * 1000),
             expiredDate: new Date(payload.exp * 1000),
             deviceId: deviceId,
             userId: userId
         }
-        const sessionss = await sessionsRepository.createSession(session)
+        await sessionsRepository.createSession(session)
         return {
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken
         }
     },
-    async deleteAllSessions(commentId: string) {
-        return await sessionsRepository.deleteAllSessions(commentId)
+    async updateSession(userId: string, deviceId: string, lastActiveDate: Date) {
+        return await sessionsRepository.updateSessions(userId, deviceId, lastActiveDate)
     },
-    async deleteAllSessionsExceptOne(commentId: string) {
-        return await sessionsRepository.deleteAllSessionsExceptOne(commentId)
+    async deleteAllSessions() {
+        return await sessionsRepository.deleteAllSessions()
+    },
+    async deleteSessionsByDeviceId(userId: string, deviceId: string) {
+        return await sessionsRepository.deleteSessionsByDeviceId(userId, deviceId)
+    },
+    async deleteAllSessionsExceptOne(userId: string, deviceId: string) {
+        return await sessionsRepository.deleteAllSessionsExceptOne(userId, deviceId)
     }
 }
