@@ -27,7 +27,7 @@ export const authControllers = {
         res.cookie("refreshToken", session.refreshToken, {
             maxAge: 200000000,
             httpOnly: true,
-            secure: false
+            secure: true
         }).status(200).send({
             "accessToken": session.accessToken
         })
@@ -44,7 +44,7 @@ export const authControllers = {
         res.cookie("refreshToken", tokens.refreshToken, {
             maxAge: 2000000,
             httpOnly: true,
-            secure: false
+            secure: true
         }).status(200).send({
                 "accessToken": tokens.accessToken
         })
