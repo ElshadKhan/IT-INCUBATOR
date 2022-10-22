@@ -1,8 +1,8 @@
 export type SessionDBType = {
     ip: string
     title: string
-    lastActiveDate: Date
-    expiredDate: Date
+    lastActiveDate: string
+    expiredDate: string
     deviceId: string
     userId: string
 }

@@ -19,8 +19,8 @@ export const sessionsService = {
         const session: SessionDBType = {
             ip: ip,
             title: deviceName,
-            lastActiveDate: new Date(payload.iat * 1000),
-            expiredDate: new Date(payload.exp * 1000),
+            lastActiveDate: new Date(payload.iat * 1000).toISOString(),
+            expiredDate: new Date(payload.exp * 1000).toISOString(),
             deviceId: deviceId,
             userId: userId
         }
@@ -30,7 +30,7 @@ export const sessionsService = {
             refreshToken: tokens.refreshToken
         }
     },
-    async updateSession(userId: string, deviceId: string, lastActiveDate: Date) {
+    async updateSession(userId: string, deviceId: string, lastActiveDate: string) {
         return await sessionsRepository.updateSessions(userId, deviceId, lastActiveDate)
     },
     async deleteAllSessions() {

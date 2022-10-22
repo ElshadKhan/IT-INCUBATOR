@@ -7,12 +7,12 @@ export const sessionsRepository = {
             "_id": 0,
             "ip": 1,
             "title": 1,
-            "lastActiveDate": 1,
+            "lastActiveDate": 1.,
             "deviceId": 1
         }).toArray()
         return sessions as SessionType[]
     },
-    async updateSessions(userId: string, deviceId: string, lastActiveDate: Date) {
+    async updateSessions(userId: string, deviceId: string, lastActiveDate: string) {
         const sessions = await sessionsCollection.updateOne({userId: userId, deviceId: deviceId}, {$set: {lastActiveDate: lastActiveDate}})
         return sessions.modifiedCount === 1
     },
