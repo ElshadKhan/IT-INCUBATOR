@@ -8,7 +8,6 @@ export const ipMiddleware = async (req: Request, res: Response, next: NextFuncti
     const findIpAttempts = await sessionsRepository.findCreateDateFromIp(ip)
     if(findIpAttempts > 4) {
         res.sendStatus(429)
-        return
     }
     next()
 
