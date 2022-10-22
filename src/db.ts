@@ -4,11 +4,10 @@ import {PostDbType} from "./types/postTypes";
 import {RefreshToken, UserAccountDBType} from "./types/userTypes";
 import {CommentDbType} from "./types/commentTypes";
 import * as dotenv from "dotenv";
-import {SessionDBType} from "./types/sessionTypes";
+import {IpVerificationType, SessionDBType} from "./types/sessionTypes";
 dotenv.config()
 
 const mongoUri = process.env.MONGODB_URL || ""
-
 
 export const client = new MongoClient(mongoUri);
 
@@ -16,6 +15,7 @@ const db = client.db("network")
 export const usersCollection = db.collection<UserAccountDBType>("users")
 export const tokensCollection = db.collection<RefreshToken>("blackListOfRefreshToken")
 export const sessionsCollection = db.collection<SessionDBType>("sessions")
+export const ipVerificationCollection = db.collection<IpVerificationType>("ipVerification")
 export const blogsCollection = db.collection<BlogDbType>("blogs")
 export const postsCollection = db.collection<PostDbType>("posts")
 export const commentsCollection = db.collection<CommentDbType>("comments")

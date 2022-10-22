@@ -1,5 +1,5 @@
-import {sessionsCollection} from "../db";
-import {SessionDBType, SessionType} from "../types/sessionTypes";
+import {ipVerificationCollection, sessionsCollection} from "../db";
+import {IpVerificationType, SessionDBType, SessionType} from "../types/sessionTypes";
 
 export const sessionsRepository = {
     async getAllActiveSessions(userId: string): Promise<SessionType[]> {
@@ -16,9 +16,18 @@ export const sessionsRepository = {
         const sessions = await sessionsCollection.updateOne({userId: userId, deviceId: deviceId}, {$set: {lastActiveDate: lastActiveDate}})
         return sessions.modifiedCount === 1
     },
+    // async findCreateDateFromIp(ip: string): Promise<number> {
+    //     const date10SecAgo = new Date(+new Date() - 10000)
+    //     return await ipVerificationCollection.countDocuments({ip: ip, lastActiveDate: {$gte: date10SecAgo}})
+    // },
     async findCreateDateFromIp(ip: string): Promise<number> {
+        const ipVerification = {
+            ip: ip,
+            lastActiveDate: new Date()
+        }
+        await ipVerificationCollection.insertOne(ipVerification)
         const date10SecAgo = new Date(+new Date() - 10000)
-        return await sessionsCollection.countDocuments({ip: ip, lastActiveDate: {$gte: date10SecAgo}})
+        return await ipVerificationCollection.countDocuments({ip: ip, lastActiveDate: {$gte: date10SecAgo}})
     },
     async createSession(session: SessionDBType): Promise<SessionDBType> {
         await sessionsCollection.insertOne(session)

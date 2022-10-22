@@ -20,15 +20,15 @@ export const authControllers = {
         }
 
         const session = await sessionsService.createSession(user, req.ip, req.headers["user-agent"]!)
-        const checkingTheNumberOfRequests = await sessionsService.findCreateDateFromIp(req.ip)
-        if(checkingTheNumberOfRequests > 4){
-            res.sendStatus(429)
-            return
-        }
+        // const checkingTheNumberOfRequests = await sessionsService.findCreateDateFromIp(req.ip)
+        // if(checkingTheNumberOfRequests > 4){
+        //     res.sendStatus(429)
+        //     return
+        // }
         res.cookie("refreshToken", session.refreshToken, {
             maxAge: 200000000,
             httpOnly: true,
-            secure: true
+            secure: false
         }).status(200).send({
             "accessToken": session.accessToken
         })
@@ -45,7 +45,7 @@ export const authControllers = {
         res.cookie("refreshToken", tokens.refreshToken, {
             maxAge: 2000000,
             httpOnly: true,
-            secure: true
+            secure: false
         }).status(200).send({
                 "accessToken": tokens.accessToken
         })

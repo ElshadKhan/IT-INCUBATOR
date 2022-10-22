@@ -12,3 +12,7 @@ export type SessionType = {
     lastActiveDate: Date
     deviceId: string
 }
+export type IpVerificationType = {
+    ip: string
+    lastActiveDate: Date
+}
