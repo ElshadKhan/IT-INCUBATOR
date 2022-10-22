@@ -8,9 +8,9 @@ export const sessionsService = {
     async getAllActiveSessions(userId: string) {
         return await sessionsRepository.getAllActiveSessions(userId)
     },
-    async findCreateDateFromIp(ip: string) {
-        return await sessionsRepository.findCreateDateFromIp(ip)
-    },
+    // async findCreateDateFromIp(ip: string) {
+    //     return await sessionsRepository.findCreateDateFromIp(ip)
+    // },
     async createSession(user: UserAccountDBType, ip: string, deviceName: string) {
         const userId = user.id
         const deviceId = uuidv4()
