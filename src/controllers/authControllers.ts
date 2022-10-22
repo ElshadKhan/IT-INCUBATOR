@@ -3,6 +3,7 @@ import {authService} from "../services/authServices";
 import {jwtService} from "../application/jwt-service";
 import {userRepository} from "../repositories/userRepository";
 import {sessionsService} from "../services/sessionsServices";
+import {sessionsRepository} from "../repositories/sessionsRepository";
 export const authControllers = {
     async getAuthUser(req: any, res: Response) {
         const user = {
@@ -51,6 +52,8 @@ export const authControllers = {
         })
     },
     async logoutUser(req: Request, res: Response) {
+        const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
+        await sessionsRepository.deleteSessionsByDeviceId(payload.userId, payload.deviceId)
         await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
         res.sendStatus(204)
     },
