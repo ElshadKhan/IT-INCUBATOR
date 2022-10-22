@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {sessionsService} from "../services/sessionsServices";
 import {jwtService} from "../application/jwt-service";
 
-export const sessionsControllers = {
+export const sessionControllers = {
     async getAllActiveSessions(req: Request, res: Response) {
         const allSessions = await sessionsService.getAllActiveSessions(req.user!.id)
         res.status(200).send(allSessions)
