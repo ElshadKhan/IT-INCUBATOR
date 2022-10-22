@@ -35,8 +35,8 @@ export const authControllers = {
 
         const tokens = await jwtService.createJWTTokens(req.user!, payload.deviceId);
         const newLastActiveDate = await jwtService.getUserIdByRefreshToken(tokens.refreshToken.split(' ')[0])
-
-        await sessionsService.updateSession(payload.userId, payload.deviceId, newLastActiveDate.iat.toISOString())
+        const lastActiveDate = new Date(newLastActiveDate.iat * 1000).toISOString()
+        await sessionsService.updateSession(payload.userId, payload.deviceId, lastActiveDate)
 
         await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
         res.cookie("refreshToken", tokens.refreshToken, {
