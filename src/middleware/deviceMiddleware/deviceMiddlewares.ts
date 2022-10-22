@@ -1,8 +1,13 @@
-import {body} from "express-validator";
-import {inputValidation} from "../inputValidation";
+import {NextFunction, Response} from "express";
+import {sessionsCollection} from "../../db";
+import {jwtService} from "../../application/jwt-service";
 
-export const deviceIdValidations = [
-    body("deviceId")
-        .isString().withMessage("Field 'deviceId' is not a string."),
-    inputValidation
-]
+export const deviceIdInputValidation = async (req: any, res: Response, next: NextFunction) => {
+    const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
+    if(!payload){
+        return res.sendStatus(401)
+    }
+    const comment = await sessionsCollection.findOne({userId: payload.userId, deviceId: req.params.deviceId})
+    if (comment) return next()
+    return res.sendStatus(403)
+}

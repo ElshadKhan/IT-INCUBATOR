@@ -22,16 +22,3 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     }
     res.sendStatus(401)
 }
-export const deviceIdRefreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const refToken = req.cookies.refreshToken
-
-    const token = refToken.split(' ')[0]
-    const user = await jwtService.getUserIdByRefreshToken(token)
-    console.log("token", user.userId, user.deviceId, new Date(user.exp * 1000) )
-    if (user) {
-        req.user = await userRepository.findUserById(user)
-        next()
-        return
-    }
-    res.sendStatus(401)
-}
