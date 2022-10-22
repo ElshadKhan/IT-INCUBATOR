@@ -10,11 +10,8 @@ export const sessionControllers = {
     async deleteSessionsByDeviceId(req: Request, res: Response) {
         const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
         const sessions = await sessionsService.deleteSessionsByDeviceId(payload.userId, req.params.deviceId);
-        if (sessions) {
-            res.send(204)
-        } else {
-            res.send(404)
-        }
+        res.send(204)
+
     },
     async deleteAllSessionsExceptOne(req: Request, res: Response) {
         const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
