@@ -7,7 +7,7 @@ export const deviceIdInputValidation = async (req: any, res: Response, next: Nex
     if(!payload){
         return res.sendStatus(401)
     }
-    const comment = await sessionsCollection.findOne({userId: payload.userId, deviceId: payload.deviceId})
-    if (comment?.deviceId === req.params.deviceId) return next()
+    const comment = await sessionsCollection.findOne({deviceId: req.params.deviceId})
+    if (comment && comment!.userId === payload.userId) return next()
     return res.sendStatus(403)
 }
