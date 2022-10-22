@@ -20,15 +20,15 @@ export const sessionsRepository = {
     //     const date10SecAgo = new Date(+new Date() - 10000)
     //     return await ipVerificationCollection.countDocuments({ip: ip, lastActiveDate: {$gte: date10SecAgo}})
     // },
-    async findCreateDateFromIp(ip: string): Promise<number> {
-        const ipVerification = {
-            ip: ip,
-            lastActiveDate: new Date()
-        }
-        await ipVerificationCollection.insertOne(ipVerification)
-        const date10SecAgo = new Date(+new Date() - 10000)
-        return await ipVerificationCollection.countDocuments({ip: ip, lastActiveDate: {$gte: date10SecAgo}})
-    },
+    // async findCreateDateFromIp(ip: string): Promise<number> {
+    //     const ipVerification = {
+    //         ip: ip,
+    //         lastActiveDate: new Date()
+    //     }
+    //     await ipVerificationCollection.insertOne(ipVerification)
+    //     const date10SecAgo = new Date(+new Date() - 10000)
+    //     return await ipVerificationCollection.countDocuments({ip: ip, lastActiveDate: {$gte: date10SecAgo}})
+    // },
     async createSession(session: SessionDBType): Promise<SessionDBType> {
         await sessionsCollection.insertOne(session)
         return session

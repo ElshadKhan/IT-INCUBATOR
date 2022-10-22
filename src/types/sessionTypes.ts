@@ -14,5 +14,8 @@ export type SessionType = {
 }
 export type IpVerificationType = {
     ip: string
-    lastActiveDate: Date
+    endpoint: string
+    connectionAt: number
+    isBlocked: boolean
+    blockedDate: null | number
 }
