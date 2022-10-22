@@ -6,8 +6,9 @@ import {sessionsRepository} from "../repositories/sessionsRepository";
 export const ipMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const ip = req.ip
     const findIpAttempts = await sessionsRepository.findCreateDateFromIp(ip)
-    if(findIpAttempts > 4) {
+    if(findIpAttempts > 5) {
         res.sendStatus(429)
+        return
     }
     next()
 
