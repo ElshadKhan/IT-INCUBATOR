@@ -47,7 +47,7 @@ export const authService = {
         const passwordHash = await _generateHash(newPassword, user.accountData.passwordSalt)
 
         await userRepository.updatePasswordConfirmation(user.id)
-        await userRepository.updatePassword(passwordHash)
+        await userRepository.updatePassword(user.id, passwordHash)
 
         return true
     },
