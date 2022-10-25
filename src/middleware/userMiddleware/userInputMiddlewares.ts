@@ -11,12 +11,12 @@ export const emailConfirmationCodeInputValidation = body('code')
         }
         return true;
     })
-export const passwordConfirmationCodeInputValidation = body('code')
-    .isString().withMessage("Field 'code' is not a string.")
+export const passwordConfirmationCodeInputValidation = body('recoveryCode')
+    .isString().withMessage("Field 'recoveryCode' is not a string.")
     .custom( async (value) => {
         const user = await userRepository.findUserByPasswordConfirmationCode(value);
         if (!user || user.passwordConfirmation.isConfirmed || user.passwordConfirmation.confirmationCode !== value || user.passwordConfirmation.expirationDate < new Date()) {
-            throw new Error("Field 'code' is not correct.");
+            throw new Error("Field 'recoveryCode' is not correct.");
         }
         return true;
     })
@@ -70,6 +70,10 @@ const passwordValueValidation =body("password")
     .isString().withMessage("Field 'password' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'password' cannot be empty.")
     .isLength({min: 6, max: 20}).withMessage("Min length of field 'password' 6 max 20.")
+const newPasswordValueValidation =body("newPassword")
+    .isString().withMessage("Field 'newPassword' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'newPassword' cannot be empty.")
+    .isLength({min: 6, max: 20}).withMessage("Min length of field 'newPassword' 6 max 20.")
 const emailValueValidation = body("email")
     .isString().withMessage("Field 'email' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
@@ -82,7 +86,7 @@ export const userLoginValidations = [ loginValueValidation, passwordValueValidat
 export const userRegistrationValidations = [ loginRegistrationInputValidation, passwordValueValidation, emailRegistrationInputValidation,
     inputValidation
 ]
-export const codePasswordAuthValidations = [ passwordConfirmationCodeInputValidation, passwordValueValidation, inputValidation ]
+export const codePasswordAuthValidations = [ passwordConfirmationCodeInputValidation, newPasswordValueValidation, inputValidation ]
 export const userPasswordAuthValidations = [ passwordResendingInputValidation, inputValidation ]
 
 export const userEmailAuthValidations = [ emailResendingInputValidation, inputValidation ]
