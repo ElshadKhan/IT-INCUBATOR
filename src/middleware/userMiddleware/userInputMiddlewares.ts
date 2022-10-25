@@ -82,8 +82,8 @@ export const userLoginValidations = [ loginValueValidation, passwordValueValidat
 export const userRegistrationValidations = [ loginRegistrationInputValidation, passwordValueValidation, emailRegistrationInputValidation,
     inputValidation
 ]
-export const codePasswordAuthValidations = [ passwordConfirmationCodeInputValidation, passwordValueValidation, inputPasswordValidation ]
-export const userPasswordAuthValidations = [ passwordResendingInputValidation, inputPasswordValidation ]
+export const codePasswordAuthValidations = [ passwordConfirmationCodeInputValidation, passwordValueValidation, inputValidation ]
+export const userPasswordAuthValidations = [ passwordResendingInputValidation, inputValidation ]
 
 export const userEmailAuthValidations = [ emailResendingInputValidation, inputValidation ]
 export const codeEmailAuthValidations = [ emailConfirmationCodeInputValidation, inputValidation ]
