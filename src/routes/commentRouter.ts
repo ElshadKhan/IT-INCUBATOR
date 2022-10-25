@@ -1,7 +1,6 @@
 import {Router} from "express";
 import {authBearerMiddleware} from "../middleware/authMiddleware";
-import {
-    commentIdInputValidation, commentIdValidations
+import {commentIdInputValidation, commentIdValidations
 } from "../middleware/commentMiddleware/commentInputMiddlewares";
 import {commentControllers} from "../controllers/commentControllers";
 

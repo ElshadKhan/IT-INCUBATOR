@@ -3,7 +3,6 @@ import {commentQueryRepository} from "../repositories/queryRep/commentQueryRepos
 import {commentService} from "../services/commentServices";
 import {queryValidation} from "../middleware/queryValidation";
 
-
 export const commentControllers = {
     async getCommentById(req: Request, res: Response) {
         const comment = await commentQueryRepository.findCommentById(req.params.id)
@@ -30,7 +29,7 @@ export const commentControllers = {
             res.send(404)
         }
     },
-    async updateComment(req: any, res: Response) {
+    async updateComment(req: Request, res: Response) {
         const comment = await commentService.updateComment(req.body.content, req.params.commentId);
         if (comment) {
             res.send(204)

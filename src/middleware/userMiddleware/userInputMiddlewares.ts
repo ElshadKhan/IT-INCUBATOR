@@ -1,16 +1,31 @@
 import {body} from "express-validator";
-import {inputValidation} from "../inputValidation";
+import {inputPasswordValidation, inputValidation} from "../inputValidation";
 import {userRepository} from "../../repositories/userRepository";
 
-export const confirmationCodeInputValidation = body('code')
+export const emailConfirmationCodeInputValidation = body('code')
     .isString().withMessage("Field 'code' is not a string.")
     .custom( async (value) => {
-        const user = await userRepository.findUserByConfirmationCode(value);
+        const user = await userRepository.findUserByEmailConfirmationCode(value);
         if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.confirmationCode !== value || user.emailConfirmation.expirationDate < new Date()) {
             throw new Error("Field 'code' is not correct.");
         }
         return true;
     })
+export const passwordConfirmationCodeInputValidation = body('code')
+    .isString().withMessage("Field 'code' is not a string.")
+    .custom( async (value) => {
+        const user = await userRepository.findUserByPasswordConfirmationCode(value);
+        if (!user || user.passwordConfirmation.isConfirmed || user.passwordConfirmation.confirmationCode !== value || user.passwordConfirmation.expirationDate < new Date()) {
+            throw new Error("Field 'code' is not correct.");
+        }
+        return true;
+    })
+
+export const passwordResendingInputValidation = body('email')
+    .isString().withMessage("Field 'email' is not a string.")
+    .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
+    .isEmail().withMessage("Field 'email' is invalid.")
+
 
 export const emailResendingInputValidation = body('email')
     .isString().withMessage("Field 'email' is not a string.")
@@ -67,8 +82,11 @@ export const userLoginValidations = [ loginValueValidation, passwordValueValidat
 export const userRegistrationValidations = [ loginRegistrationInputValidation, passwordValueValidation, emailRegistrationInputValidation,
     inputValidation
 ]
+export const codePasswordAuthValidations = [ passwordConfirmationCodeInputValidation, passwordValueValidation, inputPasswordValidation ]
+export const userPasswordAuthValidations = [ passwordResendingInputValidation, inputPasswordValidation ]
+
 export const userEmailAuthValidations = [ emailResendingInputValidation, inputValidation ]
-export const codeEmailAuthValidations = [ confirmationCodeInputValidation, inputValidation ]
+export const codeEmailAuthValidations = [ emailConfirmationCodeInputValidation, inputValidation ]
 
 export const userAuthValidations = [
     body("login")

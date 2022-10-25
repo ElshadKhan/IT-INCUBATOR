@@ -27,6 +27,5 @@ export const postRepository = {
     },
     async deleteAllPosts() {
         await postsCollection.deleteMany({})
-        return
     }
 }

@@ -22,6 +22,11 @@ export const userService = {
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {hours: 1, minutes: 1}),
                 isConfirmed: false
+            },
+            passwordConfirmation: {
+                confirmationCode: uuidv4(),
+                expirationDate: add(new Date(), {hours: 2, minutes: 2}),
+                isConfirmed: false
             }
         }
         await userRepository.createUser(newUser)

@@ -4,6 +4,7 @@ export type UserAccountDBType = {
     id: string
     accountData: UsersAccountDataType
     emailConfirmation: EmailConfirmationType
+    passwordConfirmation: PasswordConfirmationType
 }
 export type UsersAccountDataType = {
     userName: string
@@ -16,6 +17,11 @@ export type RefreshToken = {
     refreshToken: string
 }
 export type EmailConfirmationType = {
+    confirmationCode: string
+    expirationDate: Date
+    isConfirmed: boolean
+}
+export type PasswordConfirmationType = {
     confirmationCode: string
     expirationDate: Date
     isConfirmed: boolean

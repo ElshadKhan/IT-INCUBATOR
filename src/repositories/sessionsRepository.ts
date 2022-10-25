@@ -1,5 +1,5 @@
-import {ipVerificationCollection, sessionsCollection} from "../db";
-import {IpVerificationType, SessionDBType, SessionType} from "../types/sessionTypes";
+import {sessionsCollection} from "../db";
+import {SessionDBType, SessionType} from "../types/sessionTypes";
 
 export const sessionsRepository = {
     async getAllActiveSessions(userId: string): Promise<SessionType[]> {

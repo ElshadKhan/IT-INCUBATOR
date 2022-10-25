@@ -4,12 +4,13 @@ import {jwtService} from "../application/jwt-service";
 import {userRepository} from "../repositories/userRepository";
 import {sessionsService} from "../services/sessionsServices";
 import {sessionsRepository} from "../repositories/sessionsRepository";
+
 export const authControllers = {
-    async getAuthUser(req: any, res: Response) {
+    async getAuthUser(req: Request, res: Response) {
         const user = {
-            email: req.user.accountData.email,
-            login: req.user.accountData.userName,
-            userId: req.user.id
+            email: req.user!.accountData.email,
+            login: req.user!.accountData.userName,
+            userId: req.user!.id
         }
         res.status(200).send(user)
     },
@@ -58,19 +59,19 @@ export const authControllers = {
         res.status(204).send(user)
     },
     async confirmationEmail(req: Request, res: Response) {
-        const user = await authService.confirmationEmail(req.body.code)
-        if(user) {
-            res.send(204)
-        } else {
-            res.status(400)
-        }
+        await authService.confirmationEmail(req.body.code)
+        res.send(204)
+    },
+    async confirmationPassword(req: Request, res: Response) {
+        await authService.confirmationPassword(req.body.newPassword, req.body.recoveryCode)
+        res.send(204)
     },
     async emailResending(req: Request, res: Response) {
-        const user = await authService.emailResending(req.body.email)
-        if(user) {
-            res.send(204)
-        } else {
-            res.status(400)
-        }
+        await authService.emailResending(req.body.email)
+        res.send(204)
+    },
+    async passwordResending(req: Request, res: Response) {
+        await authService.passwordResending(req.body.email)
+        res.send(204)
     }
 }

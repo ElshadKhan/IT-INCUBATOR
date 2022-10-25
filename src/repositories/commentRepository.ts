@@ -25,6 +25,5 @@ export const commentRepository = {
     },
     async deleteAllComments() {
         await commentsCollection.deleteMany({})
-        return
     }
 }

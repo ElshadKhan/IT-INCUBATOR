@@ -1,6 +1,4 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtService} from "../application/jwt-service";
-import {userRepository} from "../repositories/userRepository";
 import {ipVerificationCollection} from "../db";
 
 export const ipMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,17 +20,4 @@ export const ipMiddleware = async (req: Request, res: Response, next: NextFuncti
 
     return next()
 
-}
-export const deviceIdRefreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const refToken = req.cookies.refreshToken
-
-    const token = refToken.split(' ')[0]
-    const user = await jwtService.getUserIdByRefreshToken(token)
-    console.log("token", user.userId, user.deviceId, new Date(user.exp * 1000) )
-    if (user) {
-        req.user = await userRepository.findUserById(user)
-        next()
-        return
-    }
-    res.sendStatus(401)
 }

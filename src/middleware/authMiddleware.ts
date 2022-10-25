@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
-import {userRepository} from "../repositories/userRepository";
+import {usersCollection} from "../db";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const template = 'admin:qwerty'
@@ -23,7 +23,7 @@ export const authBearerMiddleware = async (req: Request, res: Response, next: Ne
        const token = req.headers.authorization.split(" ")[1]
        const userId = await jwtService.getUserIdByAccessToken(token)
        if (userId) {
-           req.user = await userRepository.findUserById(userId)
+           req.user = await usersCollection.findOne({id: userId})
            return  next()
        }
        res.sendStatus(401)
