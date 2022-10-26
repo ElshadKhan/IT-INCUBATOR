@@ -33,10 +33,10 @@ export const commentService = {
             return false
         }
         if(comment!.likesInfo.myStatus === "None") {
-                return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.dislikesCount, comment!.likesInfo.likesCount + 1, likeStatus)
+                return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount + 1, comment!.likesInfo.dislikesCount, likeStatus)
         }
         if(comment!.likesInfo.myStatus === "Dislike") {
-                return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.dislikesCount - 1, comment!.likesInfo.likesCount + 1, likeStatus)
+                return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount + 1, comment!.likesInfo.dislikesCount - 1, likeStatus)
         }
         return false
     },
@@ -46,10 +46,10 @@ export const commentService = {
             return false
         }
         if(comment!.likesInfo.myStatus === "None") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.dislikesCount + 1, comment!.likesInfo.likesCount, likeStatus)
+            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount, comment!.likesInfo.dislikesCount + 1, likeStatus)
         }
         if(comment!.likesInfo.myStatus === "Like") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.dislikesCount + 1, comment!.likesInfo.likesCount - 1, likeStatus)
+            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount - 1, comment!.likesInfo.dislikesCount + 1, likeStatus)
         }
         return false
     },
@@ -59,10 +59,10 @@ export const commentService = {
             return false
         }
         if(comment!.likesInfo.myStatus === "Dislike") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.dislikesCount - 1, comment!.likesInfo.likesCount, likeStatus)
+            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount, comment!.likesInfo.dislikesCount - 1, likeStatus)
         }
         if(comment!.likesInfo.myStatus === "Like") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.dislikesCount, comment!.likesInfo.likesCount - 1, likeStatus)
+            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount - 1, comment!.likesInfo.dislikesCount, likeStatus)
         }
         return false
     },
