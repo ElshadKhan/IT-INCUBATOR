@@ -18,7 +18,6 @@ export const userRepository = {
         await tokensCollection.insertOne( {refreshToken: token})
         return token
     },
-
     async updateEmailResendingCode(id: string ,code: string) {
         let result = await usersCollection.updateOne({id: id}, {$set: {'emailConfirmation.confirmationCode': code}})
         return  result.modifiedCount === 1

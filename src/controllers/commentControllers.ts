@@ -37,6 +37,14 @@ export const commentControllers = {
             res.send(404)
         }
     },
+    async updateLikeStatusComment(req: Request, res: Response) {
+        const comment = await commentService.updateComment(req.body.likeStatus, req.params.commentId);
+        if (comment) {
+            res.send(204)
+        } else {
+            res.send(404)
+        }
+    },
     async deleteComment(req: Request, res: Response) {
         const comment = await commentService.deleteComment(req.params.commentId);
         if (comment) {

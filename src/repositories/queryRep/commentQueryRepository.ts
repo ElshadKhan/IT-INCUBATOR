@@ -1,17 +1,22 @@
 import {commentsCollection} from "../../db";
-import {CommentDbType, CommentsBusinessType, QueryCommentType} from "../../types/commentTypes";
+import {CommentDbType, CommentDtoType, CommentsBusinessType, QueryCommentType} from "../../types/commentTypes";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 
 export const commentQueryRepository = {
-    async findCommentById(id: string): Promise<CommentDbType | null> {
+    async findCommentById(id: string): Promise<CommentDtoType | null> {
         const comment = await commentsCollection.findOne({id: id});
         if (comment) {
-            const commentDto: CommentDbType = {
+            const commentDto: CommentDtoType = {
                 id: comment.id,
                 content: comment.content,
                 userId: comment.userId,
                 userLogin: comment.userLogin,
-                createdAt: comment.createdAt
+                createdAt: comment.createdAt,
+                likesInfo: {
+                    likesCount: comment.likesInfo.likesCount,
+                    dislikesCount: comment.likesInfo.dislikesCount,
+                    myStatus: comment.likesInfo.myStatus
+                }
             }
             return commentDto
         }
@@ -33,7 +38,12 @@ export const commentQueryRepository = {
                         content: c.content,
                         userId: c.userId,
                         userLogin: c.userLogin,
-                        createdAt: c.createdAt
+                        createdAt: c.createdAt,
+                        likesInfo: {
+                            likesCount: c.likesInfo.likesCount,
+                            dislikesCount: c.likesInfo.dislikesCount,
+                            myStatus: c.likesInfo.myStatus
+                        }
                     }
                 ))
             }

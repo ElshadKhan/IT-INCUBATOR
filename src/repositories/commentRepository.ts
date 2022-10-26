@@ -1,15 +1,20 @@
 import {commentsCollection} from "../db";
-import {CommentDbType} from "../types/commentTypes";
+import {CommentDbType, CommentDtoType} from "../types/commentTypes";
 
 export const commentRepository = {
-    async createComment(newComment: CommentDbType): Promise<CommentDbType> {
+    async createComment(newComment: CommentDbType): Promise<CommentDtoType> {
         await commentsCollection.insertOne(newComment)
         const commentDto = {
             id: newComment.id,
             content: newComment.content,
             userId: newComment.userId,
             userLogin: newComment.userLogin,
-            createdAt: newComment.createdAt
+            createdAt: newComment.createdAt,
+            likesInfo: {
+                likesCount: newComment.likesInfo.likesCount,
+                dislikesCount: newComment.likesInfo.dislikesCount,
+                myStatus: newComment.likesInfo.myStatus
+            }
         }
         return commentDto
     },
