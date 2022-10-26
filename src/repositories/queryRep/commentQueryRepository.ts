@@ -1,5 +1,5 @@
 import {commentsCollection} from "../../db";
-import {CommentDbType, CommentDtoType, CommentsBusinessType, QueryCommentType} from "../../types/commentTypes";
+import {CommentDtoType, CommentsBusinessType, QueryCommentType} from "../../types/commentTypes";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 
 export const commentQueryRepository = {

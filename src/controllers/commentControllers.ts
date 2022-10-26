@@ -38,12 +38,31 @@ export const commentControllers = {
         }
     },
     async updateLikeStatusComment(req: Request, res: Response) {
-        const comment = await commentService.updateComment(req.body.likeStatus, req.params.commentId);
-        if (comment) {
-            res.send(204)
-        } else {
-            res.send(404)
+        if(req.body.likeStatus === "Like"){
+            const comment = await commentService.updateLikeStatusComment(req.body.likeStatus, req.params.commentId);
+            if (comment) {
+                res.send(204)
+            } else {
+                res.send(404)
+            }
         }
+        if(req.body.likeStatus === "Dislike"){
+            const comment = await commentService.updateDislikeStatusComment(req.body.likeStatus, req.params.commentId);
+            if (comment) {
+                res.send(204)
+            } else {
+                res.send(404)
+            }
+        }
+        if(req.body.likeStatus === "None"){
+            const comment = await commentService.updateNoneStatusComment(req.body.likeStatus, req.params.commentId);
+            if (comment) {
+                res.send(204)
+            } else {
+                res.send(404)
+            }
+        }
+
     },
     async deleteComment(req: Request, res: Response) {
         const comment = await commentService.deleteComment(req.params.commentId);

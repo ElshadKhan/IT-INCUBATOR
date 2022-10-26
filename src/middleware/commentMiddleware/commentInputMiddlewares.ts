@@ -3,7 +3,6 @@ import {inputValidation} from "../inputValidation";
 import {postIdParamValidation} from "../postMiddleware/postInputMiddlewares";
 import {commentQueryRepository} from "../../repositories/queryRep/commentQueryRepository";
 import {NextFunction, Response} from "express";
-import {blogQueryRepository} from "../../repositories/queryRep/blogQueryRepository";
 
 const bodyCommentValidation = body("content")
     .isString().withMessage("Field 'content' is not a string.")
@@ -25,10 +24,11 @@ export const likeStatusInputValidation = body('likeStatus')
         enum Resolutions {
             None = "None", Like = "Like", Dislike = "Dislike"
         }
-        let availableResolutions: Resolutions[] = value
         const arrayResolutions  = Object.values(Resolutions)
-        const result =  availableResolutions.every((element) => arrayResolutions.includes(element))
-        if (!result) {
+        const result =  arrayResolutions.filter((element) => element === value)
+        const likeStatus = result[0]
+
+        if (!likeStatus) {
             throw new Error("Field 'likeStatus' is not correct.");
         }
         return true;

@@ -18,12 +18,17 @@ export const commentRepository = {
         }
         return commentDto
     },
-    async updateComment(content: string, id: string
-    ): Promise<boolean> {
+    async updateComment(content: string, id: string): Promise<boolean> {
         const result = await commentsCollection.updateOne({id: id},
             { $set: {content: content}})
         return  result.matchedCount === 1
     },
+    async updateLikeStatusComment(id: string, likes: number, dislikes: number, likeStatus: string): Promise<boolean> {
+        const result = await commentsCollection.updateOne({id: id},
+            { $set: {"likesInfo.likesCount": likes, "likesInfo.dislikesCount": dislikes, "likesInfo.myStatus": likeStatus}})
+        return  result.matchedCount === 1
+    },
+
     async deleteComment(id: string) {
         const result = await commentsCollection.deleteOne({id: id})
         return  result.deletedCount === 1
