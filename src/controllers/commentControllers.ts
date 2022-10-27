@@ -5,11 +5,21 @@ import {queryValidation} from "../middleware/queryValidation";
 
 export const commentControllers = {
     async getCommentById(req: Request, res: Response) {
-        const comment = await commentQueryRepository.findCommentById(req.params.id)
-        if (comment) {
-            res.status(200).send(comment)
+        if(!req.user){
+            console.log("hi")
+            const comment = await commentQueryRepository.findCommentById(req.params.id)
+            if (comment) {
+                res.status(200).send(comment)
+            } else {
+                res.send(404)
+            }
         } else {
-            res.send(404)
+            const comment = await commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!.id)
+            if (comment) {
+                res.status(200).send(comment)
+            } else {
+                res.send(404)
+            }
         }
     },
     async getCommentsByPostId(req: Request, res: Response) {
@@ -38,30 +48,16 @@ export const commentControllers = {
         }
     },
     async updateLikeStatusComment(req: Request, res: Response) {
-        if(req.body.likeStatus === "Like"){
-            const comment = await commentService.updateLikeStatusComment(req.body.likeStatus, req.params.commentId);
-            if (comment) {
-                res.send(204)
-            } else {
-                res.send(404)
-            }
+        const comment = await commentQueryRepository.findCommentByUserIdAndCommentId(req.params.commentId, req.user!.id)
+        console.log("comment", comment)
+        if (comment) {
+            await commentService.updateLikeStatusComment(req.body.likeStatus, req.params.commentId, req.user!.id);
+            res.send(204)
+        } else {
+            res.send(404)
         }
-        if(req.body.likeStatus === "Dislike"){
-            const comment = await commentService.updateDislikeStatusComment(req.body.likeStatus, req.params.commentId);
-            if (comment) {
-                res.send(204)
-            } else {
-                res.send(404)
-            }
-        }
-        if(req.body.likeStatus === "None"){
-            const comment = await commentService.updateNoneStatusComment(req.body.likeStatus, req.params.commentId);
-            if (comment) {
-                res.send(204)
-            } else {
-                res.send(404)
-            }
-        }
+
+
 
     },
     async deleteComment(req: Request, res: Response) {

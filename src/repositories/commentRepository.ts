@@ -1,5 +1,6 @@
-import {commentsCollection} from "../db";
+import {commentsCollection, likesCollection} from "../db";
 import {CommentDbType, CommentDtoType} from "../types/commentTypes";
+import {LikesTypes} from "../types/likesTypes";
 
 export const commentRepository = {
     async createComment(newComment: CommentDbType): Promise<CommentDtoType> {
@@ -18,14 +19,18 @@ export const commentRepository = {
         }
         return commentDto
     },
+    async createLikeStatus(newLikeStatus: LikesTypes): Promise<LikesTypes> {
+        await likesCollection.insertOne(newLikeStatus)
+        return newLikeStatus
+    },
     async updateComment(content: string, id: string): Promise<boolean> {
         const result = await commentsCollection.updateOne({id: id},
             { $set: {content: content}})
         return  result.matchedCount === 1
     },
-    async updateLikeStatusComment(id: string, likes: number, dislikes: number, likeStatus: string): Promise<boolean> {
-        const result = await commentsCollection.updateOne({id: id},
-            { $set: {"likesInfo.likesCount": likes, "likesInfo.dislikesCount": dislikes, "likesInfo.myStatus": likeStatus}})
+    async updateLikeStatusComment(commentId: string, userId: string, likeStatus: string): Promise<boolean> {
+        const result = await likesCollection.updateOne({userId: userId, parentId: commentId},
+            { $set: {type: likeStatus}})
         return  result.matchedCount === 1
     },
 

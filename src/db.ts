@@ -5,6 +5,7 @@ import {RefreshToken, UserAccountDBType} from "./types/userTypes";
 import {CommentDbType} from "./types/commentTypes";
 import * as dotenv from "dotenv";
 import {IpVerificationType, SessionDBType} from "./types/sessionTypes";
+import {LikesTypes} from "./types/likesTypes";
 dotenv.config()
 
 const mongoUri = process.env.MONGODB_URL || ""
@@ -19,6 +20,7 @@ export const ipVerificationCollection = db.collection<IpVerificationType>("ipVer
 export const blogsCollection = db.collection<BlogDbType>("blogs")
 export const postsCollection = db.collection<PostDbType>("posts")
 export const commentsCollection = db.collection<CommentDbType>("comments")
+export const likesCollection = db.collection<LikesTypes>("likes-dislikes")
 
 export async function runDb() {
     try {

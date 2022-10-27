@@ -4,6 +4,7 @@ import {postQueryRepository} from "../repositories/queryRep/postQueryRepository"
 import {CommentDbType, CommentDtoType} from "../types/commentTypes";
 import {UserAccountDBType} from "../types/userTypes";
 import {commentQueryRepository} from "../repositories/queryRep/commentQueryRepository";
+import {LikesTypes} from "../types/likesTypes";
 
 export const commentService = {
     async createComment(content: string, postId: string, user: UserAccountDBType): Promise<CommentDtoType | null> {
@@ -27,45 +28,20 @@ export const commentService = {
     async updateComment(commentId: string, content: string): Promise<boolean> {
         return await commentRepository.updateComment(commentId, content)
     },
-    async updateLikeStatusComment(likeStatus: string, commentId: string): Promise<boolean> {
-        const comment = await commentQueryRepository.findCommentById(commentId)
-        if(!comment) {
-            return false
+    async updateLikeStatusComment(likeStatus: string, commentId: string, userId: string): Promise<boolean> {
+        const likeDislikeStatus = await commentQueryRepository.findLikeDislikeById(commentId, userId)
+        if(!likeDislikeStatus) {
+            const newLikeStatus: LikesTypes = {
+                parentId: commentId,
+                userId: userId,
+                type: likeStatus
+            }
+            await commentRepository.createLikeStatus(newLikeStatus)
+            return true
         }
-        if(comment!.likesInfo.myStatus === "None") {
-                return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount + 1, comment!.likesInfo.dislikesCount, likeStatus)
-        }
-        if(comment!.likesInfo.myStatus === "Dislike") {
-                return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount + 1, comment!.likesInfo.dislikesCount - 1, likeStatus)
-        }
-        return false
+        return  await commentRepository.updateLikeStatusComment(commentId, userId, likeStatus)
     },
-    async updateDislikeStatusComment(likeStatus: string, commentId: string): Promise<boolean> {
-        const comment = await commentQueryRepository.findCommentById(commentId)
-        if(!comment) {
-            return false
-        }
-        if(comment!.likesInfo.myStatus === "None") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount, comment!.likesInfo.dislikesCount + 1, likeStatus)
-        }
-        if(comment!.likesInfo.myStatus === "Like") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount - 1, comment!.likesInfo.dislikesCount + 1, likeStatus)
-        }
-        return false
-    },
-    async updateNoneStatusComment(likeStatus: string, commentId: string): Promise<boolean> {
-        const comment = await commentQueryRepository.findCommentById(commentId)
-        if(!comment) {
-            return false
-        }
-        if(comment!.likesInfo.myStatus === "Dislike") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount, comment!.likesInfo.dislikesCount - 1, likeStatus)
-        }
-        if(comment!.likesInfo.myStatus === "Like") {
-            return await commentRepository.updateLikeStatusComment(commentId, comment!.likesInfo.likesCount - 1, comment!.likesInfo.dislikesCount, likeStatus)
-        }
-        return false
-    },
+
     async deleteComment(commentId: string) {
         return await commentRepository.deleteComment(commentId)
     },
