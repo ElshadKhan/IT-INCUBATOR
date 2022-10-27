@@ -23,7 +23,6 @@ export const commentControllers = {
     },
     async getCommentsByPostId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-
         if(!req.user){
             const commentForSpecificPost = await commentQueryRepository.findCommentsByPostId(req.params.postId, {pageNumber, pageSize, sortBy, sortDirection})
             if (commentForSpecificPost) {
