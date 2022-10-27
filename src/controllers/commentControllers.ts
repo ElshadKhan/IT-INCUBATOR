@@ -32,7 +32,7 @@ export const commentControllers = {
                 res.send(404)
             }
         } else {
-            const commentForSpecificPost = await commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, req.user!.id)
+            const commentForSpecificPost = await commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, {pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
             if (commentForSpecificPost) {
                 res.status(200).send(commentForSpecificPost)
             } else {
