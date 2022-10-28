@@ -29,16 +29,15 @@ export const authBearerMiddleware = async (req: Request, res: Response, next: Ne
        res.sendStatus(401)
 }
 export const findUserIdMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const refToken = req.cookies.refreshToken
-    if (!refToken) {
-        return  next()
-    }
-    const token = refToken.split(' ')[0]
-    const user = await jwtService.getUserIdByRefreshToken(token)
-    if (user) {
-        req.user = await usersCollection.findOne({id: user.userId})
+    if (!req.headers.authorization) {
         next()
         return
+    }
+    const token = req.headers.authorization.split(" ")[1]
+    const userId = await jwtService.getUserIdByAccessToken(token)
+    if (userId) {
+        req.user = await usersCollection.findOne({id: userId})
+        return  next()
     }
     next()
 }
