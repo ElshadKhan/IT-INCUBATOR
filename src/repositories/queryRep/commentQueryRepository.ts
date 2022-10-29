@@ -1,24 +1,17 @@
 import {commentsCollection, likesCollection} from "../../db";
 import {CommentDtoType, CommentsBusinessType, QueryCommentType} from "../../types/commentTypes";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
-import {LikesTypes} from "../../types/likesTypes";
 
 export const commentQueryRepository = {
-    async findLikeDislikeById(commentId: string, userId: string): Promise<LikesTypes | null> {
-        let status = await likesCollection.findOne({parentId: commentId, userId: userId})
-        if (!status) return  null
-        return status
-    },
     async findCommentByUserIdAndCommentId(id: string, userId: string): Promise<CommentDtoType | null> {
-        let comment = await commentsCollection.findOne({id: id})
+        const comment = await commentsCollection.findOne({id: id})
         if (!comment) return  null
 
         const likesCount = await likesCollection.countDocuments({parentId: id, type: 'Like'})
         const dislikesCount = await likesCollection.countDocuments({parentId: id, type: 'Dislike'})
-        let status = await likesCollection.findOne({parentId: id, userId: userId})
+        const myStatus = await likesCollection.findOne({parentId: id, userId: userId})
 
-        if(!status){
-             const commentDto: CommentDtoType = {
+        return  {
                 id: comment.id,
                 content: comment.content,
                 userId: comment.userId,
@@ -27,30 +20,13 @@ export const commentQueryRepository = {
                 likesInfo: {
                     likesCount: likesCount,
                     dislikesCount: dislikesCount,
-                    myStatus: "None"
+                    myStatus: myStatus ? myStatus.type : "None"
                 }
             }
-            return commentDto
-        }
-
-        const commentDto: CommentDtoType = {
-            id: comment.id,
-            content: comment.content,
-            userId: comment.userId,
-            userLogin: comment.userLogin,
-            createdAt: comment.createdAt,
-            likesInfo: {
-                likesCount: likesCount,
-                dislikesCount: dislikesCount,
-                myStatus: status!.type
-            }
-        }
-        return commentDto
-
     },
 
     async findCommentById(id: string): Promise<CommentDtoType | null> {
-        let comment = await commentsCollection.findOne({id: id})
+        const comment = await commentsCollection.findOne({id: id})
         if (!comment) return  null
 
         const likesCount = await likesCollection.countDocuments({parentId: id, type: 'Like'})
@@ -76,8 +52,7 @@ export const commentQueryRepository = {
         const findComments = await commentsCollection.find({postId: postId}).sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
         const totalCountComments = await commentsCollection.find({postId: postId}).sort(sortBy, sortDirection).count()
         if (comment) {
-            const promis = findComments.map( async (c) => {
-                // const myStatus = await likesCollection.findOne({parentId: c.id, userId: userId})
+            const promise = findComments.map( async (c) => {
                 const likesCount = await likesCollection.countDocuments({parentId: c.id, type: 'Like'})
                 const dislikesCount = await likesCollection.countDocuments({parentId: c.id, type: 'Dislike'})
                 return {
@@ -93,7 +68,7 @@ export const commentQueryRepository = {
                     }
                 }
             })
-            const items = await Promise.all(promis)
+            const items = await Promise.all(promise)
             return {
                 "pagesCount": getPagesCounts(totalCountComments, pageSize),
                 "page": pageNumber,

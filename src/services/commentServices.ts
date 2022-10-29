@@ -3,8 +3,9 @@ import {commentRepository} from "../repositories/commentRepository";
 import {postQueryRepository} from "../repositories/queryRep/postQueryRepository";
 import {CommentDbType, CommentDtoType} from "../types/commentTypes";
 import {UserAccountDBType} from "../types/userTypes";
-import {commentQueryRepository} from "../repositories/queryRep/commentQueryRepository";
 import {LikesTypes} from "../types/likesTypes";
+import {usersCollection} from "../db";
+import {likeStatusQueryRepository} from "../repositories/queryRep/likeStatusQueryRepository";
 
 export const commentService = {
     async createComment(content: string, postId: string, user: UserAccountDBType): Promise<CommentDtoType | null> {
@@ -29,12 +30,15 @@ export const commentService = {
         return await commentRepository.updateComment(commentId, content)
     },
     async updateLikeStatusComment(likeStatus: string, commentId: string, userId: string): Promise<boolean> {
-        const likeDislikeStatus = await commentQueryRepository.findLikeDislikeById(commentId, userId)
+        const likeDislikeStatus = await likeStatusQueryRepository.findLikeDislikeByCommentId(commentId, userId)
+        const userLogin = await usersCollection.findOne({id: userId})
         if(!likeDislikeStatus) {
             const newLikeStatus: LikesTypes = {
                 parentId: commentId,
                 userId: userId,
-                type: likeStatus
+                login: userLogin!.accountData.userName,
+                type: likeStatus,
+                createdAt: new Date().toISOString(),
             }
             await commentRepository.createLikeStatus(newLikeStatus)
             return true

@@ -30,7 +30,7 @@ export const commentRepository = {
     },
     async updateLikeStatusComment(commentId: string, userId: string, likeStatus: string): Promise<boolean> {
         const result = await likesCollection.updateOne({userId: userId, parentId: commentId},
-            { $set: {type: likeStatus}})
+            { $set: {type: likeStatus, createdAt: new Date().toISOString()}})
         return  result.matchedCount === 1
     },
 

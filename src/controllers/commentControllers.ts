@@ -55,19 +55,6 @@ export const commentControllers = {
             res.send(404)
         }
     },
-    async updateLikeStatusComment(req: Request, res: Response) {
-        const comment = await commentQueryRepository.findCommentByUserIdAndCommentId(req.params.commentId, req.user!.id)
-        console.log("comment", comment)
-        if (comment) {
-            await commentService.updateLikeStatusComment(req.body.likeStatus, req.params.commentId, req.user!.id);
-            res.send(204)
-        } else {
-            res.send(404)
-        }
-
-
-
-    },
     async deleteComment(req: Request, res: Response) {
         const comment = await commentService.deleteComment(req.params.commentId);
         if (comment) {
