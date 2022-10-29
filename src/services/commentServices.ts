@@ -30,7 +30,7 @@ export const commentService = {
         return await commentRepository.updateComment(commentId, content)
     },
     async updateLikeStatusComment(likeStatus: string, commentId: string, userId: string): Promise<boolean> {
-        const likeDislikeStatus = await likeStatusQueryRepository.findLikeDislikeByCommentId(commentId, userId)
+        const likeDislikeStatus = await likeStatusQueryRepository.findLikeDislikeById(commentId, userId)
         const userLogin = await usersCollection.findOne({id: userId})
         if(!likeDislikeStatus) {
             const newLikeStatus: LikesTypes = {

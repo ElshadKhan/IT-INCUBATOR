@@ -1,10 +1,10 @@
 import {postRepository} from "../repositories/postRepository";
-import {PostDbType} from "../types/postTypes";
+import {PostDbType, PostDtoType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
 
 export const postService = {
-    async createPost(title: string, shortDescription: string, content: string, blogId: string
+    async createPostByBlogId(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDbType | null> {
         const blog: BlogDbType | null = await blogQueryRepository.findBlogById(blogId);
         if (!blog) return null
@@ -18,6 +18,42 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
         return await postRepository.createPost(newPost)
+    },
+    async createPost(title: string, shortDescription: string, content: string, blogId: string
+    ): Promise<PostDtoType | null> {
+        const blog: BlogDbType | null = await blogQueryRepository.findBlogById(blogId);
+        if (!blog) return null
+        const newPost = {
+            id: String(+new Date()),
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: blogId,
+            blogName: blog!.name,
+            createdAt: new Date().toISOString()
+        }
+        await postRepository.createPost(newPost)
+        return {
+            id: String(+new Date()),
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: blogId,
+            blogName: blog!.name,
+            createdAt: new Date().toISOString(),
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+                newestLikes: [
+                    {
+                        addedAt: "2022-10-29T14:16:59.696Z",
+                        userId: "string",
+                        login: "string"
+                    }
+                ]
+            }
+        }
     },
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string
     ): Promise<boolean> {

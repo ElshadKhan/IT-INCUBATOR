@@ -6,8 +6,8 @@ export const likeStatusRepository = {
         await likesCollection.insertOne(newLikeStatus)
         return newLikeStatus
     },
-    async updateLikeStatusComment(commentId: string, userId: string, likeStatus: string): Promise<boolean> {
-        const result = await likesCollection.updateOne({userId: userId, parentId: commentId},
+    async updateLikeStatusComment(parentId: string, userId: string, likeStatus: string): Promise<boolean> {
+        const result = await likesCollection.updateOne({userId: userId, parentId: parentId},
             { $set: {type: likeStatus, createdAt: new Date().toISOString()}})
         return  result.matchedCount === 1
     }

@@ -6,7 +6,7 @@ import {queryValidation} from "../middleware/queryValidation";
 export const postControllers = {
     async getPosts(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection})
+        const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
         res.status(200).send(posts)
     },
     async getPostById(req: Request, res: Response) {
@@ -28,10 +28,11 @@ export const postControllers = {
     },
     async createPost(req: Request, res: Response) {
         const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+
         res.status(201).send(newPost)
     },
     async createPostByBlogId(req: Request, res: Response) {
-        const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
+        const newPost = await postService.createPostByBlogId(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
         if (newPost) {
             res.status(201).send(newPost)
         } else {

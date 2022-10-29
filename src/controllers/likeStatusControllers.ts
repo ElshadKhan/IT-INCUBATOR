@@ -4,7 +4,7 @@ import {likeStatusQueryRepository} from "../repositories/queryRep/likeStatusQuer
 
 export const likeStatusControllers = {
     async updateLikeStatusComment(req: Request, res: Response) {
-        const comment = await likeStatusQueryRepository.findLikeDislikeByCommentId(req.params.parentId, req.user!.id)
+        const comment = await likeStatusQueryRepository.findLikeDislikeById(req.params.parentId, req.user!.id)
         if (comment) {
             await likeStatusService.updateLikeStatusComment(req.body.likeStatus, req.params.parentId, req.user!.id);
             res.send(204)

@@ -9,11 +9,11 @@ import {likeStatusControllers} from "../controllers/likeStatusControllers";
 
 export const postRouter = Router({})
 
-postRouter.get('/', postControllers.getPosts)
-postRouter.get('/:id', postControllers.getPostById)
+postRouter.get('/', findUserIdMiddleware, postControllers.getPosts)
+postRouter.get('/:id', findUserIdMiddleware, postControllers.getPostById)
 postRouter.get('/:postId/comments', findUserIdMiddleware, postIdParamValidation,commentControllers.getCommentsByPostId)
 postRouter.post('/:postId/comments', authBearerMiddleware, commentValidations, commentControllers.createCommentByPostId)
-postRouter.post('/', authMiddleware, postBodyValidationsBlogId, postControllers.createPost)
+postRouter.post('/', findUserIdMiddleware, authMiddleware, postBodyValidationsBlogId, postControllers.createPost)
 postRouter.put('/:id', authMiddleware, postBodyValidationsBlogId, postControllers.updatePost)
 postRouter.put('/:postId/like-status', authBearerMiddleware, likeStatusValidations, likeStatusControllers.updateLikeStatusComment)
 postRouter.delete('/:id', authMiddleware, postControllers.deletePost)
