@@ -10,7 +10,7 @@ export const postControllers = {
         res.status(200).send(posts)
     },
     async getPostById(req: Request, res: Response) {
-        const post = await postQueryRepository.findPostById(req.params.id)
+        const post = await postQueryRepository.findPostById(req.params.id, req.user!.id)
         if (post) {
             res.status(200).send(post)
         } else {

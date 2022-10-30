@@ -1,4 +1,10 @@
-import {PostDbType, PostsBusinessType, QueryPostType} from "../../types/postTypes";
+import {
+    PostDbType,
+    PostDtoType,
+    PostsBusinessForBlogIdType,
+    PostsBusinessType,
+    QueryPostType
+} from "../../types/postTypes";
 import {blogQueryRepository} from "./blogQueryRepository";
 import {likesCollection, postsCollection} from "../../db";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
@@ -9,9 +15,10 @@ export const postQueryRepository = {
         const totalCountPosts = await postsCollection.find().count()
         if (posts) {
         const promise = posts.map( async (post) => {
-            const myStatus = await likesCollection.findOne({parentId: post.id, userId: userId})
+            const myLikeStatus = await likesCollection.findOne({parentId: post.id, userId: userId})
             const likesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Like'})
             const dislikesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Dislike'})
+            const lastLikes = await likesCollection.find({parentId: post.id, type: 'Like'}).sort("createdAt", -1).toArray()
             return {
                 id: post!.id,
                 title: post!.title,
@@ -23,17 +30,14 @@ export const postQueryRepository = {
                 extendedLikesInfo: {
                     likesCount: likesCount,
                     dislikesCount: dislikesCount,
-                    myStatus: myStatus ? myStatus.type : "None",
-                    newestLikes: [
-                        {
-                            addedAt: "2022-10-29T14:16:59.696Z",
-                            userId: "string",
-                            login: "string"
-                        }
-                    ]
-                }
+                    myStatus: myLikeStatus ? myLikeStatus.type : "None",
+                    newestLikes: lastLikes.slice(0,3).map(p => ({
+                            addedAt: p.createdAt,
+                            userId: p.userId,
+                            login: p.login
+                    }))
             }
-        })
+        }})
         const items = await Promise.all(promise)
         return {
             "pagesCount": getPagesCounts(totalCountPosts, pageSize),
@@ -42,30 +46,43 @@ export const postQueryRepository = {
             "totalCount": totalCountPosts,
             "items": items
         }
-        }
+    }
         return posts
     },
-    async findPostById(id: string): Promise<PostDbType | null> {
+    async findPostById(id: string, userId: string): Promise<PostDtoType | null> {
         const post: PostDbType | null = await postsCollection.findOne({id: id});
         if (post) {
-            const postDto: PostDbType = {
+            const myLikeStatus = await likesCollection.findOne({parentId: post.id, userId: userId})
+            const likesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Like'})
+            const dislikesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Dislike'})
+            const lastLikes = await likesCollection.find({parentId: post.id, type: 'Like'}).sort("createdAt", -1).toArray()
+            return {
                 id: post!.id,
                 title: post!.title,
                 shortDescription: post!.shortDescription,
                 content: post!.content,
                 blogId: post!.blogId,
                 blogName: post!.blogName,
-                createdAt: post!.createdAt
+                createdAt: post!.createdAt,
+                extendedLikesInfo: {
+                    likesCount: likesCount,
+                    dislikesCount: dislikesCount,
+                    myStatus: myLikeStatus ? myLikeStatus.type : "None",
+                    newestLikes: lastLikes.slice(0,3).map(p => ({
+                        addedAt: p.createdAt,
+                        userId: p.userId,
+                        login: p.login
+                    }))
+                }
             }
-            return postDto
         }
         return post
     },
-    async findPostsByBlogId(blogId: string, {pageNumber, pageSize, sortBy, sortDirection}: QueryPostType): Promise<PostsBusinessType | null> {
-        const post = await blogQueryRepository.findBlogById(blogId);
+    async findPostsByBlogId(blogId: string, {pageNumber, pageSize, sortBy, sortDirection}: QueryPostType): Promise<PostsBusinessForBlogIdType | null> {
+        const blog = await blogQueryRepository.findBlogById(blogId);
         const findPosts = await postsCollection.find({blogId: blogId}).sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
         const totalCountPosts = await postsCollection.find({blogId: blogId}).sort(sortBy, sortDirection).count()
-        if (post) {
+        if (blog) {
             const postDto = {
                 "pagesCount": getPagesCounts(totalCountPosts, pageSize),
                 "page": pageNumber,
@@ -85,6 +102,6 @@ export const postQueryRepository = {
             }
             return postDto
         }
-        return post
+        return blog
     }
 }

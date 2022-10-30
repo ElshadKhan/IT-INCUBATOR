@@ -9,7 +9,7 @@ import {likeStatusQueryRepository} from "../repositories/queryRep/likeStatusQuer
 
 export const commentService = {
     async createComment(content: string, postId: string, user: UserAccountDBType): Promise<CommentDtoType | null> {
-        const post: PostDbType | null = await postQueryRepository.findPostById(postId);
+        const post: PostDbType | null = await postQueryRepository.findPostById(postId, user.id);
         if (!post) return null
         const newComment: CommentDbType = {
             id: String(+new Date()),

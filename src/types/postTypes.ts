@@ -42,5 +42,13 @@ export type PostsBusinessType = {
     page: number
     pageSize: number
     totalCount: number
+    items: Array<PostDtoType>
+}
+
+export type PostsBusinessForBlogIdType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
     items: Array<PostDbType>
 }
