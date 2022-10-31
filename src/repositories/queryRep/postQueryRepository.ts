@@ -14,7 +14,7 @@ export const postQueryRepository = {
         const posts = await postsCollection.find().sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
         const totalCountPosts = await postsCollection.find().count()
         if (posts) {
-        const promise = posts.map( async (post) => {
+        const promise = posts.map( async (post: PostDbType) => {
             const myLikeStatus = await likesCollection.findOne({parentId: post.id, userId: userId})
             const likesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Like'})
             const dislikesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Dislike'})
@@ -50,12 +50,16 @@ export const postQueryRepository = {
         return posts
     },
     async findPostById(id: string, userId: string): Promise<PostDtoType | null> {
+        console.log(id)
         const post: PostDbType | null = await postsCollection.findOne({id: id});
+        console.log(post)
+
         if (post) {
             const myLikeStatus = await likesCollection.findOne({parentId: post.id, userId: userId})
             const likesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Like'})
             const dislikesCount = await likesCollection.countDocuments({parentId: post.id, type: 'Dislike'})
             const lastLikes = await likesCollection.find({parentId: post.id, type: 'Like'}).sort("createdAt", -1).toArray()
+            console.log("lastLikes", lastLikes)
             return {
                 id: post!.id,
                 title: post!.title,

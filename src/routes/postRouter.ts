@@ -15,5 +15,5 @@ postRouter.get('/:postId/comments', findUserIdMiddleware, postIdParamValidation,
 postRouter.post('/:postId/comments', authBearerMiddleware, commentValidations, commentControllers.createCommentByPostId)
 postRouter.post('/', findUserIdMiddleware, authMiddleware, postBodyValidationsBlogId, postControllers.createPost)
 postRouter.put('/:id', authMiddleware, postBodyValidationsBlogId, postControllers.updatePost)
-postRouter.put('/:postId/like-status', authBearerMiddleware, likeStatusValidations, likeStatusControllers.updateLikeStatusComment)
+postRouter.put('/:postId/like-status', authBearerMiddleware, likeStatusValidations, likeStatusControllers.updateLikeStatusPost)
 postRouter.delete('/:id', authMiddleware, postControllers.deletePost)

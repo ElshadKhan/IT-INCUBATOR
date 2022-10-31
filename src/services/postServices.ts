@@ -32,13 +32,13 @@ export const postService = {
             blogName: blog!.name,
             createdAt: new Date().toISOString()
         }
-        await postRepository.createPost(newPost)
+        const newPostDto = await postRepository.createPost(newPost)
         return {
-            id: String(+new Date()),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            blogId: blogId,
+            id: newPostDto.id,
+            title: newPostDto.title,
+            shortDescription: newPostDto.shortDescription,
+            content: newPostDto.content,
+            blogId: newPostDto.blogId,
             blogName: blog!.name,
             createdAt: new Date().toISOString(),
             extendedLikesInfo: {

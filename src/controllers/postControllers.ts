@@ -5,16 +5,32 @@ import {queryValidation} from "../middleware/queryValidation";
 
 export const postControllers = {
     async getPosts(req: Request, res: Response) {
-        const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
-        res.status(200).send(posts)
+        if(!req.user) {
+            const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
+            const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, "")
+            res.status(200).send(posts)
+        } else {
+            const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
+            const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
+            res.status(200).send(posts)
+        }
+
     },
     async getPostById(req: Request, res: Response) {
-        const post = await postQueryRepository.findPostById(req.params.id, req.user!.id)
-        if (post) {
-            res.status(200).send(post)
+        if (!req.user){
+            const post = await postQueryRepository.findPostById(req.params.id, "None")
+            if (post) {
+                res.status(200).send(post)
+            } else {
+                res.send(404)
+            }
         } else {
-            res.send(404)
+            const post = await postQueryRepository.findPostById(req.params.id, req.user!.id)
+            if (post) {
+                res.status(200).send(post)
+            } else {
+                res.send(404)
+            }
         }
     },
     async getPostsByBlogId(req: Request, res: Response) {
