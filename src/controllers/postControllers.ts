@@ -36,6 +36,7 @@ export const postControllers = {
     async getPostsByBlogId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
         const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {pageNumber, pageSize, sortBy, sortDirection})
+        console.log(postsForSpecificBlog)
         if (postsForSpecificBlog) {
             res.status(200).send(postsForSpecificBlog)
         } else {
