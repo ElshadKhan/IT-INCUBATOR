@@ -2,6 +2,7 @@ import {postRepository} from "../repositories/postRepository";
 import {PostDbType, PostDtoType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
+import {likesCollection} from "../db";
 
 export const postService = {
     async createPostByBlogId(title: string, shortDescription: string, content: string, blogId: string
@@ -33,6 +34,7 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
         const newPostDto = await postRepository.createPost(newPost)
+        const lastLikes = await likesCollection.find({parentId: newPostDto.id, type: 'Like'}).sort("createdAt", -1).toArray()
         return {
             id: newPostDto.id,
             title: newPostDto.title,
@@ -40,18 +42,16 @@ export const postService = {
             content: newPostDto.content,
             blogId: newPostDto.blogId,
             blogName: blog!.name,
-            createdAt: new Date().toISOString(),
+            createdAt: newPostDto.createdAt,
             extendedLikesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
                 myStatus: "None",
-                newestLikes: [
-                    {
-                        addedAt: "2022-10-29T14:16:59.696Z",
-                        userId: "string",
-                        login: "string"
-                    }
-                ]
+                newestLikes: lastLikes.slice(0,3).map(p => ({
+                    addedAt: p.createdAt,
+                    userId: p.userId,
+                    login: p.login
+                }))
             }
         }
     },
