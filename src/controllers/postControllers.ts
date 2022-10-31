@@ -5,12 +5,11 @@ import {queryValidation} from "../middleware/queryValidation";
 
 export const postControllers = {
     async getPosts(req: Request, res: Response) {
+        const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
         if(!req.user) {
-            const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
             const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, "")
             res.status(200).send(posts)
         } else {
-            const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
             const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
             res.status(200).send(posts)
         }
@@ -35,12 +34,25 @@ export const postControllers = {
     },
     async getPostsByBlogId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {pageNumber, pageSize, sortBy, sortDirection})
-        console.log(postsForSpecificBlog)
-        if (postsForSpecificBlog) {
-            res.status(200).send(postsForSpecificBlog)
+        if(!req.user){
+            const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {pageNumber, pageSize, sortBy, sortDirection}, "None")
+            if (postsForSpecificBlog) {
+                res.status(200).send(postsForSpecificBlog)
+            } else {
+                res.send(404)
+            }
         } else {
-            res.send(404)
+            const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {
+                pageNumber,
+                pageSize,
+                sortBy,
+                sortDirection
+            }, req.user!.id)
+            if (postsForSpecificBlog) {
+                res.status(200).send(postsForSpecificBlog)
+            } else {
+                res.send(404)
+            }
         }
     },
     async createPost(req: Request, res: Response) {
