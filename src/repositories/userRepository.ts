@@ -1,53 +1,51 @@
 import {tokensCollection, usersCollection} from "../db";
+import {UserModel} from "../dbMongoose";
 import {UserAccountDBType} from "../types/userTypes";
 
 export const userRepository = {
     async createUser(newUser: UserAccountDBType): Promise<UserAccountDBType> {
-        await usersCollection.insertOne(newUser)
+        await UserModel.create(newUser)
         return newUser
     },
+    async addRefreshTokenToBlackList(token: string): Promise<string> {
+        await UserModel.create( {refreshToken: token})
+        return token
+    },
     async updateEmailConfirmation(id: string) {
-        let result = await usersCollection.updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        let result = await UserModel.updateOne({id: id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return  result.modifiedCount === 1
     },
     async updatePasswordConfirmation(id: string) {
-        let result = await usersCollection.updateOne({id: id}, {$set: {'passwordConfirmation.isConfirmed': true}})
+        let result = await UserModel.updateOne({id: id}, {$set: {'passwordConfirmation.isConfirmed': true}})
         return  result.modifiedCount === 1
     },
-    async addRefreshTokenToBlackList(token: string): Promise<string> {
-        await tokensCollection.insertOne( {refreshToken: token})
-        return token
-    },
     async updateEmailResendingCode(id: string ,code: string) {
-        let result = await usersCollection.updateOne({id: id}, {$set: {'emailConfirmation.confirmationCode': code}})
+        let result = await UserModel.updateOne({id: id}, {$set: {'emailConfirmation.confirmationCode': code}})
         return  result.modifiedCount === 1
     },
     async updatePasswordResendingCode(id: string ,code: string) {
-        let result = await usersCollection.updateOne({id: id}, {$set: {'passwordConfirmation.confirmationCode': code}})
+        let result = await UserModel.updateOne({id: id}, {$set: {'passwordConfirmation.confirmationCode': code}})
         return  result.modifiedCount === 1
     },
     async updatePassword(id: string ,passwordHash: string) {
-        let result = await usersCollection.updateOne({id: id}, {$set: {"accountData.passwordHash": passwordHash}})
+        let result = await UserModel.updateOne({id: id}, {$set: {"accountData.passwordHash": passwordHash}})
         return  result.modifiedCount === 1
     },
     async findUserByLoginOrEmail(loginOrEmail: string, ): Promise<UserAccountDBType | null> {
-        const result = await usersCollection.findOne({$or: [{'accountData.userName': loginOrEmail}, {'accountData.email': loginOrEmail}]})
-        return  result
+        return UserModel.findOne({$or: [{'accountData.userName': loginOrEmail}, {'accountData.email': loginOrEmail}]}).lean()
     },
     async findUserByEmailConfirmationCode(code: string, ): Promise<UserAccountDBType | null> {
-        const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': code})
-        return  user
+        return UserModel.findOne({'emailConfirmation.confirmationCode': code}).lean()
     },
     async findUserByPasswordConfirmationCode(code: string, ): Promise<UserAccountDBType | null> {
-        const user = await usersCollection.findOne({'passwordConfirmation.confirmationCode': code})
-        return  user
+        return UserModel.findOne({'passwordConfirmation.confirmationCode': code}).lean()
     },
     async deleteUser(id: string) {
-        const result = await usersCollection.deleteOne({id:id})
+        const result = await UserModel.deleteOne({id:id})
         return  result.deletedCount === 1
     },
     async deleteAllUsers() {
-        await usersCollection.deleteMany({})
+        await UserModel.deleteMany({})
         return
     }
 }

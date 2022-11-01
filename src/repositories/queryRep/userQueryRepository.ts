@@ -1,11 +1,14 @@
 import {QueryUserType, UsersBusinessType} from "../../types/userTypes";
 import {usersCollection} from "../../db";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
+import {UserModel} from "../../dbMongoose";
 
 export const userQueryRepository = {
     async findUsers({searchLoginTerm, searchEmailTerm, pageNumber, pageSize, sortBy, sortDirection}: QueryUserType): Promise<UsersBusinessType> {
-        const users = await usersCollection.find({$or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
-        const totalCountUsers = await usersCollection.find( {$or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).count()
+        //const users = await UserModel.find({$or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).lean()
+        const users = await UserModel.find().lean()
+        //const totalCountUsers = await UserModel.find( {$or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}}, {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]}).count()
+        const totalCountUsers = await UserModel.find().count()
         const userDto = {
             "pagesCount": getPagesCounts(totalCountUsers, pageSize),
             "page": pageNumber,

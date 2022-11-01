@@ -4,7 +4,7 @@ import {router} from "./routes/IndexRoutes";
 import  cors from 'cors'
 import * as dotenv from "dotenv";
 dotenv.config()
-import {runDb} from "./db";
+import {runDb} from "./dbMongoose";
 
 const app = express()
 

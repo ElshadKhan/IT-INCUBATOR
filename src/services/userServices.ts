@@ -29,8 +29,7 @@ export const userService = {
                 isConfirmed: false
             }
         }
-        await userRepository.createUser(newUser)
-        return newUser
+        return  await userRepository.createUser(newUser)
     },
     async deleteUser(id: string) {
         return await userRepository.deleteUser(id)
