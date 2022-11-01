@@ -1,12 +1,12 @@
-import {blogsCollection} from "../../db";
 import {BlogDbType, BlogsBusinessType, QueryBlogType} from "../../types/blogTypes";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
+import {BlogModel} from "../../db/Schema/blogSchema";
 
 export const blogQueryRepository = {
     async findBlogs({searchNameTerm, pageNumber, pageSize, sortBy, sortDirection}: QueryBlogType): Promise<BlogsBusinessType> {
-        const blogs = await blogsCollection.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}})
-            .sort(sortBy, sortDirection).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).toArray()
-        const totalCountBlogs = await blogsCollection.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}}).count()
+        const blogs = await BlogModel.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}})
+            .sort([[sortBy, sortDirection]]).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).lean()
+        const totalCountBlogs = await BlogModel.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}}).count()
         const blogDto = {
             "pagesCount": getPagesCounts(totalCountBlogs, pageSize),
             "page": pageNumber,
@@ -23,7 +23,7 @@ export const blogQueryRepository = {
         return blogDto
     },
     async findBlogById(id: string): Promise<BlogDbType | null> {
-            const findBlog = await blogsCollection.findOne({id:id});
+            const findBlog = await BlogModel.findOne({id:id});
             if(findBlog){
                     const blog: BlogDbType = {
                     id: findBlog.id,

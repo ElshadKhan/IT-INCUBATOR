@@ -16,6 +16,7 @@ export type QueryValidationResult = {
 const defaultPageSize = 10
 const defaultPageNumber = 1
 
+
 export const queryValidation  = (query: any): QueryValidationResult => {
     let pageNumber = query.pageNumber
     const parsedPageNumber = parseInt(pageNumber, 10)

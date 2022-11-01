@@ -1,6 +1,6 @@
 import {tokensCollection, usersCollection} from "../db";
-import {UserModel} from "../dbMongoose";
 import {UserAccountDBType} from "../types/userTypes";
+import {UserModel} from "../db/Schema/userSchema";
 
 export const userRepository = {
     async createUser(newUser: UserAccountDBType): Promise<UserAccountDBType> {
