@@ -1,5 +1,5 @@
 import {postRepository} from "../repositories/postRepository";
-import {PostDbType, PostDtoType} from "../types/postTypes";
+import {PostDtoType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
 import {likesCollection} from "../db";

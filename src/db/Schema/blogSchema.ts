@@ -8,4 +8,4 @@ const blogSchema = new mongoose.Schema<BlogDbType>({
     createdAt: String,
 });
 
-export const BlogModel = mongoose.model("users", blogSchema)
+export const BlogModel = mongoose.model("blogs", blogSchema)

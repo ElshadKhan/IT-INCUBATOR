@@ -1,11 +1,11 @@
 import {body} from "express-validator";
-import {inputPasswordValidation, inputValidation} from "../inputValidation";
-import {userRepository} from "../../repositories/userRepository";
+import {inputValidation} from "../inputValidation";
+import {userQueryRepository} from "../../repositories/queryRep/userQueryRepository";
 
 export const emailConfirmationCodeInputValidation = body('code')
     .isString().withMessage("Field 'code' is not a string.")
     .custom( async (value) => {
-        const user = await userRepository.findUserByEmailConfirmationCode(value);
+        const user = await userQueryRepository.findUserByEmailConfirmationCode(value);
         if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.confirmationCode !== value || user.emailConfirmation.expirationDate < new Date()) {
             throw new Error("Field 'code' is not correct.");
         }
@@ -14,7 +14,7 @@ export const emailConfirmationCodeInputValidation = body('code')
 export const passwordConfirmationCodeInputValidation = body('recoveryCode')
     .isString().withMessage("Field 'recoveryCode' is not a string.")
     .custom( async (value) => {
-        const user = await userRepository.findUserByPasswordConfirmationCode(value);
+        const user = await userQueryRepository.findUserByPasswordConfirmationCode(value);
         if (!user || user.passwordConfirmation.isConfirmed || user.passwordConfirmation.confirmationCode !== value || user.passwordConfirmation.expirationDate < new Date()) {
             throw new Error("Field 'recoveryCode' is not correct.");
         }
@@ -32,7 +32,7 @@ export const emailResendingInputValidation = body('email')
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
     .isEmail().withMessage("Field 'email' is invalid.")
     .custom( async (value) => {
-        const user = await userRepository.findUserByLoginOrEmail(value);
+        const user = await userQueryRepository.findUserByLoginOrEmail(value);
         if (!user || user.emailConfirmation.isConfirmed || user.emailConfirmation.expirationDate < new Date()) {
             throw new Error("Field 'email' is not correct.");
         }
@@ -44,7 +44,7 @@ export const emailRegistrationInputValidation = body('email')
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'email' cannot be empty.")
     .isEmail().withMessage("Field 'email' is invalid.")
     .custom( async (value) => {
-        const user = await userRepository.findUserByLoginOrEmail(value);
+        const user = await userQueryRepository.findUserByLoginOrEmail(value);
         if (user) {
             throw new Error("Field 'email' is not correct.");
         }
@@ -55,7 +55,7 @@ export const loginRegistrationInputValidation = body('login')
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'login' cannot be empty.")
     .isLength({min: 3, max: 10}).withMessage("Min length of field 'login' 3 max 10.")
     .custom( async (value) => {
-        const user = await userRepository.findUserByLoginOrEmail(value);
+        const user = await userQueryRepository.findUserByLoginOrEmail(value);
         if (user) {
             throw new Error("Field 'login' is not correct.");
         }

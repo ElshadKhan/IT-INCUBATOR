@@ -23,16 +23,16 @@ export const blogQueryRepository = {
         return blogDto
     },
     async findBlogById(id: string): Promise<BlogDbType | null> {
-            const findBlog = await BlogModel.findOne({id:id});
-            if(findBlog){
-                    const blog: BlogDbType = {
-                    id: findBlog.id,
-                    name: findBlog.name,
-                    youtubeUrl: findBlog.youtubeUrl,
-                    createdAt: findBlog.createdAt
-                    }
-                    return blog
-            }
-            return findBlog
+        const findBlog = await BlogModel.findOne({id:id});
+        if(findBlog){
+                const blog: BlogDbType = {
+                id: findBlog.id,
+                name: findBlog.name,
+                youtubeUrl: findBlog.youtubeUrl,
+                createdAt: findBlog.createdAt
+                }
+                return blog
+        }
+        return findBlog
     }
 }

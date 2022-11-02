@@ -1,4 +1,3 @@
-import {tokensCollection, usersCollection} from "../db";
 import {UserAccountDBType} from "../types/userTypes";
 import {UserModel} from "../db/Schema/userSchema";
 
@@ -31,21 +30,12 @@ export const userRepository = {
         let result = await UserModel.updateOne({id: id}, {$set: {"accountData.passwordHash": passwordHash}})
         return  result.modifiedCount === 1
     },
-    async findUserByLoginOrEmail(loginOrEmail: string, ): Promise<UserAccountDBType | null> {
-        return UserModel.findOne({$or: [{'accountData.userName': loginOrEmail}, {'accountData.email': loginOrEmail}]}).lean()
-    },
-    async findUserByEmailConfirmationCode(code: string, ): Promise<UserAccountDBType | null> {
-        return UserModel.findOne({'emailConfirmation.confirmationCode': code}).lean()
-    },
-    async findUserByPasswordConfirmationCode(code: string, ): Promise<UserAccountDBType | null> {
-        return UserModel.findOne({'passwordConfirmation.confirmationCode': code}).lean()
-    },
     async deleteUser(id: string) {
         const result = await UserModel.deleteOne({id:id})
         return  result.deletedCount === 1
     },
     async deleteAllUsers() {
-        await UserModel.deleteMany({})
-        return
+        const result = await UserModel.deleteMany({})
+        return result.deletedCount === 1
     }
 }

@@ -16,7 +16,7 @@ export const blogRepository = {
         return  result.deletedCount === 1
     },
     async deleteAllBlogs() {
-        await BlogModel.deleteMany({})
-        return true
+        const result = await BlogModel.deleteMany({})
+        return result.deletedCount === 1
     }
 }

@@ -4,6 +4,7 @@ import {emailManager} from "../managers/emailManagers";
 import {v4 as uuidv4} from "uuid"
 import {userService} from "./userServices";
 import {passwordManager} from "../managers/passwordManagers";
+import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 
 export const authService = {
     async createUser(login: string, password: string, email: string) {
@@ -12,7 +13,7 @@ export const authService = {
         return result
     },
     async emailResending(email: string) {
-        const user = await userRepository.findUserByLoginOrEmail(email)
+        const user = await userQueryRepository.findUserByLoginOrEmail(email)
         if(!user) return null
         const code = uuidv4()
         await userRepository.updateEmailResendingCode(user.id, code)
@@ -20,7 +21,7 @@ export const authService = {
         return user
     },
     async passwordResending(email: string) {
-        const user = await userRepository.findUserByLoginOrEmail(email)
+        const user = await userQueryRepository.findUserByLoginOrEmail(email)
         if(!user) return null
         const code = uuidv4()
         await userRepository.updatePasswordResendingCode(user.id, code)
@@ -28,7 +29,7 @@ export const authService = {
         return user
     },
     async confirmationEmail (code: string): Promise<boolean> {
-        let user = await userRepository.findUserByEmailConfirmationCode(code)
+        let user = await userQueryRepository.findUserByEmailConfirmationCode(code)
         if(!user) return false
         if(user.emailConfirmation.isConfirmed) return false
         if(user.emailConfirmation.confirmationCode !== code) return false
@@ -38,7 +39,7 @@ export const authService = {
         return result
     },
     async confirmationPassword (newPassword: string, recoveryCode: string): Promise<boolean> {
-        let user = await userRepository.findUserByPasswordConfirmationCode(recoveryCode)
+        let user = await userQueryRepository.findUserByPasswordConfirmationCode(recoveryCode)
         if(!user) return false
         if(user.passwordConfirmation.isConfirmed) return false
         if(user.passwordConfirmation.confirmationCode !== recoveryCode) return false
@@ -52,7 +53,7 @@ export const authService = {
         return true
     },
     async checkCredentials(login: string, password: string) {
-        const user = await userRepository.findUserByLoginOrEmail(login)
+        const user = await userQueryRepository.findUserByLoginOrEmail(login)
         if(!user) return false
         const passwordHash = await _generateHash(password, user.accountData.passwordSalt)
         if(user.accountData.passwordHash !== passwordHash) {return false}

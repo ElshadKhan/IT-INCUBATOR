@@ -1,12 +1,11 @@
 import {LikesTypes} from "../types/likesTypes";
-import {usersCollection} from "../db";
 import {likeStatusRepository} from "../repositories/likeStatusRepository";
-import {likeStatusQueryRepository} from "../repositories/queryRep/likeStatusQueryRepository";
+import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 
 export const likeStatusService = {
     async updateLikeStatusComment(likeStatus: string, parentId: string, userId: string): Promise<boolean> {
-        const likeDislikeStatus = await likeStatusQueryRepository.findLikeDislikeById(parentId, userId)
-        const user = await usersCollection.findOne({id: userId})
+        const likeDislikeStatus = await likeStatusRepository.getLikeStatus(parentId, userId)
+        const user = await userQueryRepository.findOneUser(userId)
         if(!likeDislikeStatus) {
             const newLikeStatus: LikesTypes = {
                 parentId: parentId,
