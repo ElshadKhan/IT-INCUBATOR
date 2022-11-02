@@ -1,5 +1,5 @@
 
-export type LikesTypes = {
+export type LikesDbTypes = {
     parentId: string
     userId: string
     login: string

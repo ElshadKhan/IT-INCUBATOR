@@ -1,4 +1,4 @@
-import {LikesTypes} from "../types/likesTypes";
+import {LikesDbTypes} from "../types/likesTypes";
 import {likeStatusRepository} from "../repositories/likeStatusRepository";
 import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 
@@ -7,7 +7,7 @@ export const likeStatusService = {
         const likeDislikeStatus = await likeStatusRepository.getLikeStatus(parentId, userId)
         const user = await userQueryRepository.findOneUser(userId)
         if(!likeDislikeStatus) {
-            const newLikeStatus: LikesTypes = {
+            const newLikeStatus: LikesDbTypes = {
                 parentId: parentId,
                 userId: userId,
                 login: user!.accountData.userName,

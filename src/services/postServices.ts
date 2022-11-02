@@ -2,7 +2,7 @@ import {postRepository} from "../repositories/postRepository";
 import {PostDtoType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
-import {likesCollection} from "../db";
+import {likeStatusRepository} from "../repositories/likeStatusRepository";
 
 export const postService = {
     async createPostByBlogId(title: string, shortDescription: string, content: string, blogId: string
@@ -19,7 +19,7 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
         const newPostDto = await postRepository.createPost(newPost)
-        const lastLikes = await likesCollection.find({parentId: newPostDto.id, type: 'Like'}).sort("createdAt", -1).toArray()
+        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, 'Like')
         return {
             id: newPostDto.id,
             title: newPostDto.title,
@@ -54,7 +54,7 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
         const newPostDto = await postRepository.createPost(newPost)
-        const lastLikes = await likesCollection.find({parentId: newPostDto.id, type: 'Like'}).sort("createdAt", -1).toArray()
+        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, 'Like')
         return {
             id: newPostDto.id,
             title: newPostDto.title,
