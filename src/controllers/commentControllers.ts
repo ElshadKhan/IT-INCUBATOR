@@ -5,39 +5,22 @@ import {queryValidation} from "../middleware/queryValidation";
 
 export const commentControllers = {
     async getCommentById(req: Request, res: Response) {
-        if(!req.user){
-            const comment = await commentQueryRepository.findCommentById(req.params.id)
-            if (comment) {
-                res.status(200).send(comment)
-            } else {
-                res.send(404)
-            }
+        const comment = await commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!.id)
+        if (comment) {
+            res.status(200).send(comment)
         } else {
-            const comment = await commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!.id)
-            if (comment) {
-                res.status(200).send(comment)
-            } else {
-                res.send(404)
-            }
+            res.send(404)
         }
     },
     async getCommentsByPostId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        if(!req.user){
-            const commentForSpecificPost = await commentQueryRepository.findCommentsByPostId(req.params.postId, {pageNumber, pageSize, sortBy, sortDirection})
-            if (commentForSpecificPost) {
-                res.status(200).send(commentForSpecificPost)
-            } else {
-                res.send(404)
-            }
+        const commentForSpecificPost = await commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, {pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
+        if (commentForSpecificPost) {
+            res.status(200).send(commentForSpecificPost)
         } else {
-            const commentForSpecificPost = await commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, {pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
-            if (commentForSpecificPost) {
-                res.status(200).send(commentForSpecificPost)
-            } else {
-                res.send(404)
-            }
+            res.send(404)
         }
+
     },
     async createCommentByPostId(req: Request, res: Response) {
         const newComment = await commentService.createComment(req.body.content, req.params.postId, req.user!)

@@ -3,6 +3,7 @@ import {PostDtoType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
 import {likeStatusRepository} from "../repositories/likeStatusRepository";
+import {LikeStatusEnam} from "../middleware/commentMiddleware/commentInputMiddlewares";
 
 export const postService = {
     async createPostByBlogId(title: string, shortDescription: string, content: string, blogId: string
@@ -19,7 +20,7 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
         const newPostDto = await postRepository.createPost(newPost)
-        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, 'Like')
+        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, LikeStatusEnam.Like)
         return {
             id: newPostDto.id,
             title: newPostDto.title,
@@ -31,7 +32,7 @@ export const postService = {
             extendedLikesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
-                myStatus: "None",
+                myStatus: LikeStatusEnam.None,
                 newestLikes: lastLikes.slice(0,3).map(p => ({
                     addedAt: p.createdAt,
                     userId: p.userId,
@@ -54,7 +55,7 @@ export const postService = {
             createdAt: new Date().toISOString()
         }
         const newPostDto = await postRepository.createPost(newPost)
-        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, 'Like')
+        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, LikeStatusEnam.Like)
         return {
             id: newPostDto.id,
             title: newPostDto.title,
@@ -66,7 +67,7 @@ export const postService = {
             extendedLikesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
-                myStatus: "None",
+                myStatus: LikeStatusEnam.None,
                 newestLikes: lastLikes.slice(0,3).map(p => ({
                     addedAt: p.createdAt,
                     userId: p.userId,

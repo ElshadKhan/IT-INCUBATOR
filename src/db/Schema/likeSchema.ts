@@ -9,4 +9,4 @@ const likeSchema = new mongoose.Schema<LikesDbTypes>({
     createdAt: String
 });
 
-export const LikeModel = mongoose.model("likes-dislikes", likeSchema)
+export const LikeModelClass = mongoose.model("likes-dislikes", likeSchema)

@@ -1,9 +1,11 @@
 import {LikesDbTypes} from "../types/likesTypes";
 import {likeStatusRepository} from "../repositories/likeStatusRepository";
 import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
+import {LikeStatusEnam} from "../middleware/commentMiddleware/commentInputMiddlewares";
 
 export const likeStatusService = {
-    async updateLikeStatusComment(likeStatus: string, parentId: string, userId: string): Promise<boolean> {
+    async updateLikeStatusComment(likeStatus: LikeStatusEnam, parentId: string, userId: string): Promise<boolean> {
+        if(!userId) return false
         const likeDislikeStatus = await likeStatusRepository.getLikeStatus(parentId, userId)
         const user = await userQueryRepository.findOneUser(userId)
         if(!likeDislikeStatus) {

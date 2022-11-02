@@ -3,9 +3,9 @@ import {BlogDbType} from "../../types/blogTypes";
 
 const blogSchema = new mongoose.Schema<BlogDbType>({
     id: String,
-    name: String,
-    youtubeUrl: String,
+    name: {type: String, required: true},
+    youtubeUrl: {type: String, required: true},
     createdAt: String,
 });
 
-export const BlogModel = mongoose.model("blogs", blogSchema)
+export const BlogModelClass = mongoose.model("blogs", blogSchema)

@@ -10,4 +10,4 @@ const sessionSchema = new mongoose.Schema<SessionDBType>({
     userId: String,
 });
 
-export const SessionModel = mongoose.model("sessions", sessionSchema)
+export const SessionModelClass = mongoose.model("sessions", sessionSchema)

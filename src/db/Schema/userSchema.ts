@@ -4,7 +4,7 @@ import {UserAccountDBType} from "../../types/userTypes";
 const userSchema = new mongoose.Schema<UserAccountDBType>({
     id: String,
     accountData: {
-        userName: String,
+        userName: {type: String, required: true},
         email: String,
         passwordHash: String,
         passwordSalt: String,
@@ -22,4 +22,4 @@ const userSchema = new mongoose.Schema<UserAccountDBType>({
     }
 });
 
-export const UserModel = mongoose.model("users", userSchema)
+export const UserModelClass = mongoose.model("users", userSchema)

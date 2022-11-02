@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
-import {UserModel} from "../db/Schema/userSchema";
-import {tokenFromBlackListModel} from "../db/Schema/tokenFromBlackListSchema";
+import {UserModelClass} from "../db/Schema/userSchema";
+import {sessionsRepository} from "../repositories/sessionsRepository";
 
 export const refreshTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const refToken = req.cookies.refreshToken
@@ -9,17 +9,19 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
         res.send(401)
         return
     }
-    const findRefToken = await tokenFromBlackListModel.findOne({refreshToken: refToken})
-    if(findRefToken) {
+    const token = refToken.split(' ')[0]
+    const user = await jwtService.getUserIdByRefreshToken(token)
+    if(!user) {
         res.sendStatus(401)
         return
     }
-    const token = refToken.split(' ')[0]
-    const user = await jwtService.getUserIdByRefreshToken(token)
-    if (user) {
-        req.user = await UserModel.findOne({id: user.userId})
-        next()
+    const findRefToken = await sessionsRepository.getSession(user.deviceId)
+    if(!findRefToken || findRefToken.lastActiveDate !== new Date(user.iat * 1000).toISOString()) {
+        res.sendStatus(401)
         return
     }
-    res.sendStatus(401)
+        req.user = await UserModelClass.findOne({id: user.userId})
+        return next()
+
+
 }

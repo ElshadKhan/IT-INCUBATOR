@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {IpVerificationModel} from "../db/Schema/ipVerificationSchema";
+import {IpVerificationModelClass} from "../db/Schema/ipVerificationSchema";
 
 export const ipMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const blockedInterval = 10000
@@ -7,16 +7,16 @@ export const ipMiddleware = async (req: Request, res: Response, next: NextFuncti
     const ip = req.ip
     const endpoint = req.url
 
-    const isBlocked = await IpVerificationModel.findOne({ip, endpoint, isBlocked: true, blockedDate: {$gte: (connectionAt - blockedInterval)}})
+    const isBlocked = await IpVerificationModelClass.findOne({ip, endpoint, isBlocked: true, blockedDate: {$gte: (connectionAt - blockedInterval)}})
     if (isBlocked) return res.sendStatus(429)
-    const connectionsCount = await IpVerificationModel.countDocuments({ip, endpoint, connectionAt: {$gte: (connectionAt - blockedInterval)}})
+    const connectionsCount = await IpVerificationModelClass.countDocuments({ip, endpoint, connectionAt: {$gte: (connectionAt - blockedInterval)}})
 
     if (connectionsCount + 1> 5) {
-        await IpVerificationModel.updateOne({ip, endpoint}, {$set: {isBlocked: true, blockedDate: connectionAt}})
+        await IpVerificationModelClass.updateOne({ip, endpoint}, {$set: {isBlocked: true, blockedDate: connectionAt}})
         return res.sendStatus(429)
     }
 
-    await IpVerificationModel.create({ip, endpoint, connectionAt, isBlocked: false, blockedDate: null})
+    await IpVerificationModelClass.create({ip, endpoint, connectionAt, isBlocked: false, blockedDate: null})
 
     return next()
 

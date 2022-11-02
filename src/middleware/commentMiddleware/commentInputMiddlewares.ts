@@ -4,6 +4,10 @@ import {postIdParamValidation} from "../postMiddleware/postInputMiddlewares";
 import {commentQueryRepository} from "../../repositories/queryRep/commentQueryRepository";
 import {NextFunction, Response} from "express";
 
+export enum LikeStatusEnam  {
+    None = "None", Like = "Like", Dislike = "Dislike"
+}
+
 const bodyCommentValidation = body("content")
     .isString().withMessage("Field 'content' is not a string.")
     .notEmpty({ignore_whitespace: true}).withMessage("Field 'content' cannot be empty.")
@@ -21,16 +25,14 @@ export const commentIdInputValidation = async (req: any, res: Response, next: Ne
 export const likeStatusInputValidation = body('likeStatus')
     .isString().withMessage("Field 'likeStatus' is not a string.")
     .custom( async (value) => {
-        enum Resolutions {
-            None = "None", Like = "Like", Dislike = "Dislike"
-        }
-        const arrayResolutions  = Object.values(Resolutions)
+        const arrayResolutions  = Object.values(LikeStatusEnam)
         const result =  arrayResolutions.filter((element) => element === value)
         const likeStatus = result[0]
 
         if (!likeStatus) {
             throw new Error("Field 'likeStatus' is not correct.");
         }
+
         return true;
     })
 

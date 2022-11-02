@@ -9,4 +9,4 @@ const ipVerificationSchema = new mongoose.Schema<IpVerificationType>({
     blockedDate: Number || null
 });
 
-export const IpVerificationModel = mongoose.model("ipVerification", ipVerificationSchema)
+export const IpVerificationModelClass = mongoose.model("ipVerification", ipVerificationSchema)
