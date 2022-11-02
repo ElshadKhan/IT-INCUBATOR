@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
-import {usersCollection} from "../db";
+import {UserModel} from "../db/Schema/userSchema";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const template = 'admin:qwerty'
@@ -9,7 +9,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     let base64String = base64Data.toString('base64');
     const validAuthHeader = `Basic ${base64String}`
 
-    if (!authHeader || typeof authHeader !== "string" || authHeader !== validAuthHeader) {
+    if (!authHeader || authHeader !== validAuthHeader) {
         res.sendStatus(401);
     } else {
         next()
@@ -23,7 +23,7 @@ export const authBearerMiddleware = async (req: Request, res: Response, next: Ne
        const token = req.headers.authorization.split(" ")[1]
        const userId = await jwtService.getUserIdByAccessToken(token)
        if (userId) {
-           req.user = await usersCollection.findOne({id: userId})
+           req.user = await UserModel.findOne({id: userId})
            return  next()
        }
        res.sendStatus(401)
@@ -36,7 +36,7 @@ export const findUserIdMiddleware = async (req: Request, res: Response, next: Ne
     const token = req.headers.authorization.split(" ")[1]
     const userId = await jwtService.getUserIdByAccessToken(token)
     if (userId) {
-        req.user = await usersCollection.findOne({id: userId})
+        req.user = await UserModel.findOne({id: userId})
         return  next()
     }
     next()
