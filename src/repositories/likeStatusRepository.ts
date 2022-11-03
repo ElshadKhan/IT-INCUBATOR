@@ -12,7 +12,7 @@ export const likeStatusRepository = {
         return LikeModelClass.countDocuments({parentId: id, type: dislike})
     },
     async getLastLikes(id: string, like: string): Promise<LikesDbTypes[]> {
-        return LikeModelClass.find({parentId: id, type: like}).sort([["createdAt", -1]]).projection({"_id": 0}).toArray()
+        return LikeModelClass.find({parentId: id, type: like}).sort([["createdAt", -1]])
     },
     async createLikeStatus(newLikeStatus: LikesDbTypes): Promise<LikesDbTypes> {
         await LikeModelClass.create(newLikeStatus)

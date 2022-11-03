@@ -16,8 +16,8 @@ export const commentQueryRepository = {
                 myStatus = result?.type || LikeStatusEnam.None
         }
 
-        const likesCount = await likeStatusRepository.getLikesCount(id, 'Like')
-        const dislikesCount = await likeStatusRepository.getDislikesCount(id, 'Dislike')
+        const likesCount = await likeStatusRepository.getLikesCount(id, LikeStatusEnam.Like)
+        const dislikesCount = await likeStatusRepository.getDislikesCount(id, LikeStatusEnam.Dislike)
 
         return  {
                 id: comment.id,
