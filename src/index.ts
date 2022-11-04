@@ -7,7 +7,7 @@ dotenv.config()
 import {runDb} from "./db/dbMongoose";
 
 const app = express()
-
+console.log("hi")
 const PORT = process.env.PORT || 5000
 
 app.use(cors())
