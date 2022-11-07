@@ -15,14 +15,12 @@ class PostControllers {
             pageSize,
             sortBy,
             sortDirection
-        }, req.user!.id)
+        }, req.user!)
         res.status(200).send(posts)
-
     }
 
     async getPostById(req: Request, res: Response) {
-
-        const post = await this.postQueryRepository.findPostById(req.params.id, req.user!.id)
+        const post = await this.postQueryRepository.findPostById(req.params.id, req.user!)
         if (post) {
             res.status(200).send(post)
         } else {
@@ -38,7 +36,7 @@ class PostControllers {
             pageSize,
             sortBy,
             sortDirection
-        }, req.user!.id)
+        }, req.user!)
         if (postsForSpecificBlog) {
             res.status(200).send(postsForSpecificBlog)
         } else {

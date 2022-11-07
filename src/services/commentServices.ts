@@ -9,7 +9,7 @@ export class CommentServices {
                 private postQueryRepository = new PostQueryRepository()) {
     }
     async createComment(content: string, postId: string, user: UserAccountDBType): Promise<CommentDtoType | null> {
-        const post: PostDbType | null = await this.postQueryRepository.findPostById(postId, user.id);
+        const post: PostDbType | null = await this.postQueryRepository.findPostById(postId, user);
         if (!post) return null
         const comment: CommentDbType = {
             id: String(+new Date()),

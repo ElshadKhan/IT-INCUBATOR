@@ -8,7 +8,7 @@ class CommentControllers {
                 private commentQueryRepository= new CommentQueryRepository()) {
     }
     async getCommentById(req: Request, res: Response) {
-        const comment = await this.commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!.id)
+        const comment = await this.commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!)
         if (comment) {
             res.status(200).send(comment)
         } else {
@@ -23,7 +23,7 @@ class CommentControllers {
             pageSize,
             sortBy,
             sortDirection
-        }, req.user!.id)
+        }, req.user!)
         if (commentForSpecificPost) {
             res.status(200).send(commentForSpecificPost)
         } else {
