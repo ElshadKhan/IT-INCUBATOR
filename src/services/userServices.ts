@@ -5,36 +5,34 @@ import {_generateHash} from "../helpers/helpFunctions";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
-export const userService = {
+class UserServices {
     async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(4)
         const passwordHash = await _generateHash(password, passwordSalt)
-        const newUser: UserAccountDBType = {
-            id: String(+new Date()),
-            accountData: {
+        const newUser = new UserAccountDBType(
+            String(+new Date()),
+            {
                 userName: login,
                 email: email,
                 passwordHash,
                 passwordSalt,
                 createdAt: new Date().toISOString()
-            },
-            emailConfirmation: {
+            }, {
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {hours: 1, minutes: 1}),
                 isConfirmed: false
-            },
-            passwordConfirmation: {
+            }, {
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {hours: 2, minutes: 2}),
                 isConfirmed: false
-            }
-        }
+            })
         return  await userRepository.createUser(newUser)
-    },
+    }
     async deleteUser(id: string) {
         return await userRepository.deleteUser(id)
-    },
+    }
     async deleteAllUsers() {
         return await userRepository.deleteAllUsers()
     }
 }
+export const userService = new UserServices()

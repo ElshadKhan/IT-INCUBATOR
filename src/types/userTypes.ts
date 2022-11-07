@@ -1,10 +1,12 @@
 import {SortDirection} from "../middleware/queryValidation";
 
-export type UserAccountDBType = {
-    id: string
-    accountData: UsersAccountDataType
-    emailConfirmation: EmailConfirmationType
-    passwordConfirmation: PasswordConfirmationType
+export class UserAccountDBType  {
+    constructor(public id: string,
+                public accountData: UsersAccountDataType,
+                public emailConfirmation: EmailConfirmationType,
+                public passwordConfirmation: PasswordConfirmationType,) {
+    }
+
 }
 export type UsersAccountDataType = {
     userName: string
@@ -12,9 +14,6 @@ export type UsersAccountDataType = {
     passwordHash: string
     passwordSalt: string
     createdAt: string
-}
-export type RefreshToken = {
-    refreshToken: string
 }
 export type EmailConfirmationType = {
     confirmationCode: string
@@ -40,10 +39,12 @@ export type QueryUserType = {
     sortBy: string
     sortDirection: SortDirection
 }
-export type UsersBusinessType = {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: Array<UserDto>
+export class UsersBusinessType  {
+    constructor(public pagesCount: number,
+                public page: number,
+                public pageSize: number,
+                public totalCount: number,
+                public items: Array<UserDto>) {
+    }
+
 }
