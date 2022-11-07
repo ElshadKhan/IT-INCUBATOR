@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-class PasswordAdapter {
+export class PasswordAdapter {
     async sendPassword(email: string, code: string) {
         const transport = await nodemailer.createTransport({
             service: "gmail",
@@ -22,4 +22,3 @@ class PasswordAdapter {
     }
 }
 
-export const passwordAdapter = new PasswordAdapter()

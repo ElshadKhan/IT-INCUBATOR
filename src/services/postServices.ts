@@ -1,14 +1,18 @@
 import {postRepository} from "../repositories/postRepository";
 import {PostDtoType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
-import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
+import {BlogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
 import {likeStatusRepository} from "../repositories/likeStatusRepository";
 import {LikeStatusEnam} from "../middleware/commentMiddleware/commentInputMiddlewares";
 
 class PostServices {
+    private blogQueryRepository: BlogQueryRepository
+    constructor() {
+        this.blogQueryRepository = new BlogQueryRepository()
+    }
     async createPostByBlogId(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDtoType | null> {
-        const blog: BlogDbType | null = await blogQueryRepository.findBlogById(blogId);
+        const blog: BlogDbType | null = await this.blogQueryRepository.findBlogById(blogId);
         if (!blog) return null
         const newPost = {
             id: String(+new Date()),
@@ -44,7 +48,7 @@ class PostServices {
 
     async createPost(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDtoType | null> {
-        const blog: BlogDbType | null = await blogQueryRepository.findBlogById(blogId);
+        const blog: BlogDbType | null = await this.blogQueryRepository.findBlogById(blogId);
         if (!blog) return null
         const newPost = {
             id: String(+new Date()),

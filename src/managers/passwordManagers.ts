@@ -1,10 +1,13 @@
-import {passwordAdapter} from "../adapters/passwordAdapter";
+import {PasswordAdapter} from "../adapters/passwordAdapter";
 
-class PasswordManagers {
+export class PasswordManagers {
+    private passwordAdapter: PasswordAdapter
+    constructor() {
+        this.passwordAdapter = new PasswordAdapter()
+    }
     async passwordResendingConfirmationMessage(email: string, code: string) {
-        const userMessage = await passwordAdapter.sendPassword(email, code)
+        const userMessage = await this.passwordAdapter.sendPassword(email, code)
         return userMessage
     }
 }
 
-export const passwordManager = new PasswordManagers()

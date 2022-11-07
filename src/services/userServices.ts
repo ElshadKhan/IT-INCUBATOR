@@ -5,7 +5,7 @@ import {_generateHash} from "../helpers/helpFunctions";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
-class UserServices {
+export class UserServices {
     async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(4)
         const passwordHash = await _generateHash(password, passwordSalt)

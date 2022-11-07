@@ -1,7 +1,7 @@
 import {BlogDbType} from "../types/blogTypes";
 import {BlogModelClass} from "../db/Schema/blogSchema";
 
-class BlogRepository {
+export class BlogRepository {
     async createBlog(newBlog: BlogDbType): Promise<BlogDbType> {
         await BlogModelClass.create(newBlog)
         return newBlog
@@ -25,4 +25,3 @@ class BlogRepository {
     }
 }
 
-export const blogRepository = new BlogRepository()

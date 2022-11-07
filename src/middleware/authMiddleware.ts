@@ -1,6 +1,8 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtService} from "../application/jwt-service";
+import {JwtService} from "../application/jwt-service";
 import {UserModelClass} from "../db/Schema/userSchema";
+
+const jwtService = new JwtService()
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const template = 'admin:qwerty'

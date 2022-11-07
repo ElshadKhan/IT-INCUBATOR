@@ -1,6 +1,8 @@
 import {NextFunction, Response} from "express";
-import {jwtService} from "../../application/jwt-service";
+import {JwtService} from "../../application/jwt-service";
 import {SessionModelClass} from "../../db/Schema/sessionSchema";
+
+const jwtService = new JwtService()
 
 export const deviceIdInputValidation = async (req: any, res: Response, next: NextFunction) => {
     const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])

@@ -1,6 +1,8 @@
 import {body, param} from "express-validator";
 import {inputValidation} from "../inputValidation";
-import {blogQueryRepository} from "../../repositories/queryRep/blogQueryRepository";
+import {BlogQueryRepository} from "../../repositories/queryRep/blogQueryRepository";
+
+ const blogQueryRepository = new BlogQueryRepository()
 
 export const blogIdQueryValidation = param('blogId')
     .isString().withMessage("Field 'blogId' is not a string.")

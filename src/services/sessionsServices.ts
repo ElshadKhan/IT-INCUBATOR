@@ -1,10 +1,14 @@
 import {sessionsRepository} from "../repositories/sessionsRepository";
 import {UserAccountDBType} from "../types/userTypes";
 import {v4 as uuidv4} from "uuid";
-import {jwtService} from "../application/jwt-service";
+import {JwtService} from "../application/jwt-service";
 import {SessionDBType} from "../types/sessionTypes";
 
-class SessionsServices {
+export class SessionsServices {
+    private jwtService: JwtService
+    constructor() {
+        this.jwtService = new JwtService()
+    }
     async getAllActiveSessions(userId: string) {
         return await sessionsRepository.getAllActiveSessions(userId)
     }
@@ -12,8 +16,8 @@ class SessionsServices {
     async createSession(user: UserAccountDBType, ip: string, deviceName: string) {
         const userId = user.id
         const deviceId = uuidv4()
-        const tokens = await jwtService.createJWTTokens(user, deviceId);
-        const payload = await jwtService.getUserIdByRefreshToken(tokens.refreshToken.split(' ')[0])
+        const tokens = await this.jwtService.createJWTTokens(user, deviceId);
+        const payload = await this.jwtService.getUserIdByRefreshToken(tokens.refreshToken.split(' ')[0])
         const session: SessionDBType = {
             ip: ip,
             title: deviceName,

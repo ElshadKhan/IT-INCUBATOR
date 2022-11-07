@@ -2,7 +2,7 @@ import {BlogDbType, BlogsBusinessType, QueryBlogType} from "../../types/blogType
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 import {BlogModelClass} from "../../db/Schema/blogSchema";
 
-class BlogQueryRepository {
+export class BlogQueryRepository {
     async findBlogs({
                         searchNameTerm,
                         pageNumber,
@@ -40,4 +40,3 @@ class BlogQueryRepository {
     }
 }
 
-export const blogQueryRepository = new BlogQueryRepository()

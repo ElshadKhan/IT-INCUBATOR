@@ -1,13 +1,17 @@
 import {Request, Response} from "express";
 import {userService} from "../services/userServices";
 import {postService} from "../services/postServices";
-import {blogService} from "../services/blogServises";
+import {BlogServices} from "../services/blogServices";
 import {commentService} from "../services/commentServices";
 import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {queryValidation} from "../middleware/queryValidation";
 import {sessionsService} from "../services/sessionsServices";
 
 class UserControllers {
+    private blogService: BlogServices
+    constructor() {
+        this.blogService = new BlogServices()
+    }
     async getUsers(req: Request, res: Response) {
         const {
             searchLoginTerm,
@@ -50,7 +54,7 @@ class UserControllers {
 
     async deleteAllCollections(req: Request, res: Response) {
         await userService.deleteAllUsers()
-        await blogService.deleteAllBlogs();
+        await this.blogService.deleteAllBlogs();
         await postService.deleteAllPosts()
         await commentService.deleteAllComments()
         await sessionsService.deleteAllSessions()

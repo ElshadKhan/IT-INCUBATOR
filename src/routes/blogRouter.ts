@@ -7,10 +7,10 @@ import {postQueryValidationsBlogId} from "../middleware/postMiddleware/postInput
 
 export const blogRouter = Router({})
 
-blogRouter.get('/', blogControllers.getBlogs)
-blogRouter.get('/:id', blogControllers.getBlogById)
-blogRouter.get('/:blogId/posts', findUserIdMiddleware, blogIdQueryValidation, postControllers.getPostsByBlogId)
-blogRouter.post('/:blogId/posts', authMiddleware, postQueryValidationsBlogId, postControllers.createPostByBlogId)
-blogRouter.post('/', authMiddleware, blogValidations, blogControllers.createBlog)
-blogRouter.put('/:id', authMiddleware, blogValidations, blogControllers.updateBlog)
-blogRouter.delete('/:id', authMiddleware, blogControllers.deleteBlog)
+blogRouter.get('/', blogControllers.getBlogs.bind(blogControllers))
+blogRouter.get('/:id', blogControllers.getBlogById.bind(blogControllers))
+blogRouter.get('/:blogId/posts', findUserIdMiddleware, blogIdQueryValidation, postControllers.getPostsByBlogId.bind(blogControllers))
+blogRouter.post('/:blogId/posts', authMiddleware, postQueryValidationsBlogId, postControllers.createPostByBlogId.bind(blogControllers))
+blogRouter.post('/', authMiddleware, blogValidations, blogControllers.createBlog.bind(blogControllers))
+blogRouter.put('/:id', authMiddleware, blogValidations, blogControllers.updateBlog.bind(blogControllers))
+blogRouter.delete('/:id', authMiddleware, blogControllers.deleteBlog.bind(blogControllers))

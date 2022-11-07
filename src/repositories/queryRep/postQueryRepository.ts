@@ -5,13 +5,17 @@ import {
     PostsBusinessType,
     QueryPostType
 } from "../../types/postTypes";
-import {blogQueryRepository} from "./blogQueryRepository";
+import {BlogQueryRepository} from "./blogQueryRepository";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 import {likeStatusRepository} from "../likeStatusRepository";
 import {PostModelClass} from "../../db/Schema/postSchema";
 import {LikeStatusEnam} from "../../middleware/commentMiddleware/commentInputMiddlewares";
 
-class PostQueryRepository {
+export class PostQueryRepository {
+    private blogQueryRepository: BlogQueryRepository
+    constructor() {
+        this.blogQueryRepository = new BlogQueryRepository()
+    }
     async findPosts({
                         pageNumber,
                         pageSize,
@@ -94,7 +98,7 @@ class PostQueryRepository {
         sortBy,
         sortDirection
     }: QueryPostType, userId: string): Promise<PostsBusinessForBlogIdType | null> {
-        const blog = await blogQueryRepository.findBlogById(blogId);
+        const blog = await this.blogQueryRepository.findBlogById(blogId);
         const findPosts = await PostModelClass.find({blogId: blogId}).sort([[sortBy, sortDirection]]).skip(getSkipNumber(pageNumber, pageSize)).limit(pageSize).lean()
         const totalCountPosts = await PostModelClass.find({blogId: blogId}).sort([[sortBy, sortDirection]]).count()
         if (blog) {

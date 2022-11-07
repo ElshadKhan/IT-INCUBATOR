@@ -1,7 +1,7 @@
 import {UserAccountDBType} from "../types/userTypes";
 import {UserModelClass} from "../db/Schema/userSchema";
 
-class UserRepository {
+export class UserRepository {
     async createUser(newUser: UserAccountDBType): Promise<UserAccountDBType> {
         await UserModelClass.create(newUser)
         return newUser

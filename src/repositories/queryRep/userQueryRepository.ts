@@ -2,7 +2,7 @@ import {QueryUserType, UserAccountDBType, UsersBusinessType} from "../../types/u
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 import {UserModelClass} from "../../db/Schema/userSchema";
 
-class UserQueryRepository {
+export class UserQueryRepository {
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
         return UserModelClass.findOne({$or: [{'accountData.userName': loginOrEmail}, {'accountData.email': loginOrEmail}]}).lean()
     }

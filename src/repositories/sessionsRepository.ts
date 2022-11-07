@@ -1,7 +1,7 @@
 import {SessionDBType, SessionType} from "../types/sessionTypes";
 import {SessionModelClass} from "../db/Schema/sessionSchema";
 
-class SessionsRepository {
+export class SessionsRepository {
     async getSession(deviceId: string): Promise<SessionDBType | null> {
         return await SessionModelClass.findOne({deviceId: deviceId})
     }

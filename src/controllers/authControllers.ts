@@ -1,11 +1,23 @@
 import {Request, Response} from "express";
-import {authService} from "../services/authServices";
-import {jwtService} from "../application/jwt-service";
-import {userRepository} from "../repositories/userRepository";
-import {sessionsService} from "../services/sessionsServices";
-import {sessionsRepository} from "../repositories/sessionsRepository";
+import {AuthServices} from "../services/authServices";
+import {JwtService} from "../application/jwt-service";
+import {UserRepository} from "../repositories/userRepository";
+import {SessionsServices} from "../services/sessionsServices";
+import {SessionsRepository} from "../repositories/sessionsRepository";
 
-class AuthControllers {
+export class AuthControllers {
+    private authService: AuthServices
+    private jwtService: JwtService
+    private sessionsService: SessionsServices
+    private sessionsRepository: SessionsRepository
+    private userRepository: UserRepository
+    constructor() {
+        this.authService = new AuthServices()
+        this.jwtService = new JwtService()
+        this.sessionsService = new SessionsServices()
+        this.sessionsRepository = new SessionsRepository()
+        this.userRepository = new UserRepository()
+    }
     async getAuthUser(req: Request, res: Response) {
         const user = {
             email: req.user!.accountData.email,
@@ -16,13 +28,13 @@ class AuthControllers {
     }
 
     async loginUser(req: Request, res: Response) {
-        const user = await authService.checkCredentials(req.body.login, req.body.password)
+        const user = await this.authService.checkCredentials(req.body.login, req.body.password)
         if (!user) {
             res.sendStatus(401)
             return
         }
 
-        const session = await sessionsService.createSession(user, req.ip, req.headers["user-agent"]!)
+        const session = await this.sessionsService.createSession(user, req.ip, req.headers["user-agent"]!)
 
         res.cookie("refreshToken", session.refreshToken, {
             maxAge: 200000000,
@@ -34,14 +46,14 @@ class AuthControllers {
     }
 
     async resendingRefreshTokens(req: Request, res: Response) {
-        const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
+        const payload = await this.jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
 
-        const tokens = await jwtService.createJWTTokens(req.user!, payload.deviceId);
-        const newLastActiveDate = await jwtService.getUserIdByRefreshToken(tokens.refreshToken.split(' ')[0])
+        const tokens = await this.jwtService.createJWTTokens(req.user!, payload.deviceId);
+        const newLastActiveDate = await this.jwtService.getUserIdByRefreshToken(tokens.refreshToken.split(' ')[0])
         const lastActiveDate = new Date(newLastActiveDate.iat * 1000).toISOString()
-        await sessionsService.updateSession(payload.userId, payload.deviceId, lastActiveDate)
+        await this.sessionsService.updateSession(payload.userId, payload.deviceId, lastActiveDate)
 
-        await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
+        await this.userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
         res.cookie("refreshToken", tokens.refreshToken, {
             maxAge: 2000000,
             httpOnly: true,
@@ -52,34 +64,34 @@ class AuthControllers {
     }
 
     async logoutUser(req: Request, res: Response) {
-        const payload = await jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
-        await sessionsRepository.deleteSessionsByDeviceId(payload.userId, payload.deviceId)
-        await userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
+        const payload = await this.jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
+        await this.sessionsRepository.deleteSessionsByDeviceId(payload.userId, payload.deviceId)
+        await this.userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
         res.sendStatus(204)
     }
 
     async createUser(req: Request, res: Response) {
-        const user = await authService.createUser(req.body.login, req.body.password, req.body.email)
+        const user = await this.authService.createUser(req.body.login, req.body.password, req.body.email)
         res.status(204).send(user)
     }
 
     async confirmationEmail(req: Request, res: Response) {
-        await authService.confirmationEmail(req.body.code)
+        await this.authService.confirmationEmail(req.body.code)
         res.send(204)
     }
 
     async confirmationPassword(req: Request, res: Response) {
-        await authService.confirmationPassword(req.body.newPassword, req.body.recoveryCode)
+        await this.authService.confirmationPassword(req.body.newPassword, req.body.recoveryCode)
         res.send(204)
     }
 
     async emailResending(req: Request, res: Response) {
-        await authService.emailResending(req.body.email)
+        await this.authService.emailResending(req.body.email)
         res.send(204)
     }
 
     async passwordResending(req: Request, res: Response) {
-        await authService.passwordResending(req.body.email)
+        await this.authService.passwordResending(req.body.email)
         res.send(204)
     }
 }
