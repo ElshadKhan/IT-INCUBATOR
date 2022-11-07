@@ -9,21 +9,20 @@ class PostControllers {
     }
 
     async getPosts(req: Request, res: Response) {
-        if (!req.user) return null
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
         const posts = await this.postQueryRepository.findPosts({
             pageNumber,
             pageSize,
             sortBy,
             sortDirection
-        }, req.user.id)
+        }, req.user!.id)
         res.status(200).send(posts)
 
     }
 
     async getPostById(req: Request, res: Response) {
-        if (!req.user) return null
-        const post = await this.postQueryRepository.findPostById(req.params.id, req.user.id)
+
+        const post = await this.postQueryRepository.findPostById(req.params.id, req.user!.id)
         if (post) {
             res.status(200).send(post)
         } else {
@@ -33,14 +32,13 @@ class PostControllers {
     }
 
     async getPostsByBlogId(req: Request, res: Response) {
-        if (!req.user) return null
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
         const postsForSpecificBlog = await this.postQueryRepository.findPostsByBlogId(req.params.blogId, {
             pageNumber,
             pageSize,
             sortBy,
             sortDirection
-        }, req.user.id)
+        }, req.user!.id)
         if (postsForSpecificBlog) {
             res.status(200).send(postsForSpecificBlog)
         } else {
