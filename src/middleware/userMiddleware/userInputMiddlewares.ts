@@ -1,6 +1,8 @@
 import {body} from "express-validator";
 import {inputValidation} from "../inputValidation";
-import {userQueryRepository} from "../../repositories/queryRep/userQueryRepository";
+import {UserQueryRepository} from "../../repositories/queryRep/userQueryRepository";
+
+const userQueryRepository = new UserQueryRepository()
 
 export const emailConfirmationCodeInputValidation = body('code')
     .isString().withMessage("Field 'code' is not a string.")

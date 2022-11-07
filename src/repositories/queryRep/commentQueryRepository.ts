@@ -1,10 +1,12 @@
 import {CommentDtoType, CommentsBusinessType, QueryCommentType} from "../../types/commentTypes";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 import {CommentModelClass} from "../../db/Schema/commentSchema";
-import {likeStatusRepository} from "../likeStatusRepository";
+import {LikeStatusRepository} from "../likeStatusRepository";
 import {LikeStatusEnam} from "../../middleware/commentMiddleware/commentInputMiddlewares";
 
 export class CommentQueryRepository {
+    constructor(private likeStatusRepository = new LikeStatusRepository()) {
+    }
     async findCommentByUserIdAndCommentId(id: string, userId?: string): Promise<CommentDtoType | null> {
         const comment = await CommentModelClass.findOne({id: id})
         if (!comment) return null
@@ -12,12 +14,12 @@ export class CommentQueryRepository {
         let myStatus = LikeStatusEnam.None
 
         if (userId) {
-            const result = await likeStatusRepository.getLikeStatus(id, userId)
+            const result = await this.likeStatusRepository.getLikeStatus(id, userId)
             myStatus = result?.type || LikeStatusEnam.None
         }
 
-        const likesCount = await likeStatusRepository.getLikesCount(id, LikeStatusEnam.Like)
-        const dislikesCount = await likeStatusRepository.getDislikesCount(id, LikeStatusEnam.Dislike)
+        const likesCount = await this.likeStatusRepository.getLikesCount(id, LikeStatusEnam.Like)
+        const dislikesCount = await this.likeStatusRepository.getDislikesCount(id, LikeStatusEnam.Dislike)
 
         return {
             id: comment.id,
@@ -51,11 +53,11 @@ export class CommentQueryRepository {
                 let myStatus = LikeStatusEnam.None
 
                 if (userId) {
-                    const result = await likeStatusRepository.getLikeStatus(c.id, userId)
+                    const result = await this.likeStatusRepository.getLikeStatus(c.id, userId)
                     myStatus = result?.type || LikeStatusEnam.None
                 }
-                const likesCount = await likeStatusRepository.getLikesCount(c.id, LikeStatusEnam.Like)
-                const dislikesCount = await likeStatusRepository.getDislikesCount(c.id, LikeStatusEnam.Dislike)
+                const likesCount = await this.likeStatusRepository.getLikesCount(c.id, LikeStatusEnam.Like)
+                const dislikesCount = await this.likeStatusRepository.getDislikesCount(c.id, LikeStatusEnam.Dislike)
                 return {
                     id: c.id,
                     content: c.content,
@@ -83,4 +85,3 @@ export class CommentQueryRepository {
     }
 }
 
-export const commentQueryRepository = new CommentQueryRepository()

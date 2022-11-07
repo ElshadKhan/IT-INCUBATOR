@@ -7,29 +7,36 @@ import {
 } from "../../types/postTypes";
 import {BlogQueryRepository} from "./blogQueryRepository";
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
-import {likeStatusRepository} from "../likeStatusRepository";
+import {LikeStatusRepository} from "../likeStatusRepository";
 import {PostModelClass} from "../../db/Schema/postSchema";
 import {LikeStatusEnam} from "../../middleware/commentMiddleware/commentInputMiddlewares";
 
 export class PostQueryRepository {
     private blogQueryRepository: BlogQueryRepository
+    private likeStatusRepository: LikeStatusRepository
     constructor() {
         this.blogQueryRepository = new BlogQueryRepository()
+        this.likeStatusRepository = new LikeStatusRepository()
     }
     async findPosts({
                         pageNumber,
                         pageSize,
                         sortBy,
                         sortDirection
-                    }: QueryPostType, userId: string): Promise<PostsBusinessType> {
+                    }: QueryPostType, userId?: string): Promise<PostsBusinessType> {
         const posts = await PostModelClass.find().sort([[sortBy, sortDirection]]).skip(getSkipNumber(pageNumber, pageSize)).limit(pageSize).lean()
         const totalCountPosts = await PostModelClass.find().count()
         if (posts) {
             const promise = posts.map(async (post: PostDbType) => {
-                const myStatus = await likeStatusRepository.getLikeStatus(post.id, userId)
-                const likesCount = await likeStatusRepository.getLikesCount(post.id, LikeStatusEnam.Like)
-                const dislikesCount = await likeStatusRepository.getDislikesCount(post.id, LikeStatusEnam.Dislike)
-                const lastLikes = await likeStatusRepository.getLastLikes(post.id, LikeStatusEnam.Like)
+                let myStatus = LikeStatusEnam.None
+
+                if (userId) {
+                    const result = await this.likeStatusRepository.getLikeStatus(post.id, userId)
+                    myStatus = result?.type || LikeStatusEnam.None
+                }
+                const likesCount = await this.likeStatusRepository.getLikesCount(post.id, LikeStatusEnam.Like)
+                const dislikesCount = await this.likeStatusRepository.getDislikesCount(post.id, LikeStatusEnam.Dislike)
+                const lastLikes = await this.likeStatusRepository.getLastLikes(post.id, LikeStatusEnam.Like)
                 return {
                     id: post!.id,
                     title: post!.title,
@@ -41,7 +48,7 @@ export class PostQueryRepository {
                     extendedLikesInfo: {
                         likesCount: likesCount,
                         dislikesCount: dislikesCount,
-                        myStatus: myStatus ? myStatus.type : LikeStatusEnam.None,
+                        myStatus: myStatus,
                         newestLikes: lastLikes.slice(0, 3).map(p => ({
                             addedAt: p.createdAt,
                             userId: p.userId,
@@ -62,13 +69,18 @@ export class PostQueryRepository {
         return posts
     }
 
-    async findPostById(id: string, userId: string): Promise<PostDtoType | null> {
+    async findPostById(id: string, userId?: string): Promise<PostDtoType | null> {
         const post: PostDbType | null = await PostModelClass.findOne({id: id});
         if (post) {
-            const myStatus = await likeStatusRepository.getLikeStatus(post.id, userId)
-            const likesCount = await likeStatusRepository.getLikesCount(post.id, LikeStatusEnam.Like)
-            const dislikesCount = await likeStatusRepository.getDislikesCount(post.id, LikeStatusEnam.Dislike)
-            const lastLikes = await likeStatusRepository.getLastLikes(post.id, LikeStatusEnam.Like)
+            let myStatus = LikeStatusEnam.None
+
+            if (userId) {
+                const result = await this.likeStatusRepository.getLikeStatus(post.id, userId)
+                myStatus = result?.type || LikeStatusEnam.None
+            }
+            const likesCount = await this.likeStatusRepository.getLikesCount(post.id, LikeStatusEnam.Like)
+            const dislikesCount = await this.likeStatusRepository.getDislikesCount(post.id, LikeStatusEnam.Dislike)
+            const lastLikes = await this.likeStatusRepository.getLastLikes(post.id, LikeStatusEnam.Like)
             return {
                 id: post!.id,
                 title: post!.title,
@@ -80,7 +92,7 @@ export class PostQueryRepository {
                 extendedLikesInfo: {
                     likesCount: likesCount,
                     dislikesCount: dislikesCount,
-                    myStatus: myStatus ? myStatus.type : LikeStatusEnam.None,
+                    myStatus: myStatus,
                     newestLikes: lastLikes.slice(0, 3).map(p => ({
                         addedAt: p.createdAt,
                         userId: p.userId,
@@ -97,16 +109,21 @@ export class PostQueryRepository {
         pageSize,
         sortBy,
         sortDirection
-    }: QueryPostType, userId: string): Promise<PostsBusinessForBlogIdType | null> {
+    }: QueryPostType, userId?: string): Promise<PostsBusinessForBlogIdType | null> {
         const blog = await this.blogQueryRepository.findBlogById(blogId);
         const findPosts = await PostModelClass.find({blogId: blogId}).sort([[sortBy, sortDirection]]).skip(getSkipNumber(pageNumber, pageSize)).limit(pageSize).lean()
         const totalCountPosts = await PostModelClass.find({blogId: blogId}).sort([[sortBy, sortDirection]]).count()
         if (blog) {
             const promise = findPosts.map(async (post: PostDbType) => {
-                const myStatus = await likeStatusRepository.getLikeStatus(post.id, userId)
-                const likesCount = await likeStatusRepository.getLikesCount(post.id, LikeStatusEnam.Like)
-                const dislikesCount = await likeStatusRepository.getDislikesCount(post.id, LikeStatusEnam.Dislike)
-                const lastLikes = await likeStatusRepository.getLastLikes(post.id, LikeStatusEnam.Like)
+                let myStatus = LikeStatusEnam.None
+
+                if (userId) {
+                    const result = await this.likeStatusRepository.getLikeStatus(post.id, userId)
+                    myStatus = result?.type || LikeStatusEnam.None
+                }
+                const likesCount = await this.likeStatusRepository.getLikesCount(post.id, LikeStatusEnam.Like)
+                const dislikesCount = await this.likeStatusRepository.getDislikesCount(post.id, LikeStatusEnam.Dislike)
+                const lastLikes = await this.likeStatusRepository.getLastLikes(post.id, LikeStatusEnam.Like)
                 return {
                     id: post!.id,
                     title: post!.title,
@@ -118,7 +135,7 @@ export class PostQueryRepository {
                     extendedLikesInfo: {
                         likesCount: likesCount,
                         dislikesCount: dislikesCount,
-                        myStatus: myStatus ? myStatus.type : LikeStatusEnam.None,
+                        myStatus: myStatus,
                         newestLikes: lastLikes.slice(0, 3).map(p => ({
                             addedAt: p.createdAt,
                             userId: p.userId,

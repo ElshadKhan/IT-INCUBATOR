@@ -1,8 +1,10 @@
 import {body} from "express-validator";
 import {inputValidation} from "../inputValidation";
 import {postIdParamValidation} from "../postMiddleware/postInputMiddlewares";
-import {commentQueryRepository} from "../../repositories/queryRep/commentQueryRepository";
+import {CommentQueryRepository} from "../../repositories/queryRep/commentQueryRepository";
 import {NextFunction, Response} from "express";
+
+const commentQueryRepository = new CommentQueryRepository()
 
 export enum LikeStatusEnam  {
     None = "None", Like = "Like", Dislike = "Dislike"

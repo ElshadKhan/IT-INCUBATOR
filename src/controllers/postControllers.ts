@@ -7,73 +7,50 @@ class PostControllers {
     constructor(private postQueryRepository = new PostQueryRepository(),
                 private postService = new PostServices()) {
     }
+
     async getPosts(req: Request, res: Response) {
+        if (!req.user) return null
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        if (!req.user) {
-            const posts = await this.postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, "")
-            res.status(200).send(posts)
-        } else {
-            const posts = await this.postQueryRepository.findPosts({
-                pageNumber,
-                pageSize,
-                sortBy,
-                sortDirection
-            }, req.user!.id)
-            res.status(200).send(posts)
-        }
+        const posts = await this.postQueryRepository.findPosts({
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortDirection
+        }, req.user.id)
+        res.status(200).send(posts)
 
     }
 
     async getPostById(req: Request, res: Response) {
-        if (!req.user) {
-            const post = await this.postQueryRepository.findPostById(req.params.id, "None")
-            if (post) {
-                res.status(200).send(post)
-            } else {
-                res.send(404)
-            }
+        if (!req.user) return null
+        const post = await this.postQueryRepository.findPostById(req.params.id, req.user.id)
+        if (post) {
+            res.status(200).send(post)
         } else {
-            const post = await this.postQueryRepository.findPostById(req.params.id, req.user!.id)
-            if (post) {
-                res.status(200).send(post)
-            } else {
-                res.send(404)
-            }
+            res.send(404)
         }
+
     }
 
     async getPostsByBlogId(req: Request, res: Response) {
+        if (!req.user) return null
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        if (!req.user) {
-            const postsForSpecificBlog = await this.postQueryRepository.findPostsByBlogId(req.params.blogId, {
-                pageNumber,
-                pageSize,
-                sortBy,
-                sortDirection
-            }, "None")
-            if (postsForSpecificBlog) {
-                res.status(200).send(postsForSpecificBlog)
-            } else {
-                res.send(404)
-            }
+        const postsForSpecificBlog = await this.postQueryRepository.findPostsByBlogId(req.params.blogId, {
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortDirection
+        }, req.user.id)
+        if (postsForSpecificBlog) {
+            res.status(200).send(postsForSpecificBlog)
         } else {
-            const postsForSpecificBlog = await this.postQueryRepository.findPostsByBlogId(req.params.blogId, {
-                pageNumber,
-                pageSize,
-                sortBy,
-                sortDirection
-            }, req.user!.id)
-            if (postsForSpecificBlog) {
-                res.status(200).send(postsForSpecificBlog)
-            } else {
-                res.send(404)
-            }
+            res.send(404)
         }
+
     }
 
     async createPost(req: Request, res: Response) {
         const newPost = await this.postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
-
         res.status(201).send(newPost)
     }
 
