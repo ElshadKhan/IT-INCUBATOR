@@ -1,10 +1,13 @@
 import {SortDirection} from "../middleware/queryValidation";
 
-export type BlogDbType = {
-    id: string
-    name: string
-    youtubeUrl: string
-    createdAt: string
+export class BlogDbType {
+    constructor(public id: string,
+                public name: string,
+                public youtubeUrl: string,
+                public createdAt: string
+    ) {
+    }
+
 }
 
 export type QueryBlogType = {
@@ -15,10 +18,12 @@ export type QueryBlogType = {
     sortDirection: SortDirection
 }
 
-export type BlogsBusinessType = {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: Array<BlogDbType>
+export class BlogsBusinessType {
+    constructor(public pagesCount: number,
+                public page: number,
+                public pageSize: number,
+                public totalCount: number,
+                public items: Array<BlogDbType>) {
+    }
+
 }

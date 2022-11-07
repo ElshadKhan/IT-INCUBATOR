@@ -1,14 +1,17 @@
 import {SortDirection} from "../middleware/queryValidation";
 
-export type PostDbType = {
-    id: string
-    title: string
-    shortDescription: string
-    content: string
-    blogId: string
-    blogName: string | null
-    createdAt: string
+export class PostDbType {
+    constructor(public id: string,
+                public title: string,
+                public shortDescription: string,
+                public content: string,
+                public blogId: string,
+                public blogName: string | null,
+                public createdAt: string) {
+    }
+
 }
+
 export type PostDtoType = {
     id: string
     title: string

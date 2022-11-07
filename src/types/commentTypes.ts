@@ -1,27 +1,33 @@
 import {SortDirection} from "../middleware/queryValidation";
 
-export type CommentDbType = {
-    id: string
-    content: string
-    userId: string
-    userLogin: string
-    postId: string
-    createdAt: string
-    likesInfo: LikesInfoType
+export class CommentDbType {
+    constructor(public id: string,
+                public content: string,
+                public userId: string,
+                public userLogin: string,
+                public postId: string,
+                public createdAt: string,
+                public likesInfo: LikesInfoType) {
+    }
 }
-export type CommentDtoType = {
-    id: string
-    content: string
-    userId: string
-    userLogin: string
-    createdAt: string
-    likesInfo: LikesInfoType
+
+export class CommentDtoType {
+    constructor(public id: string,
+                public content: string,
+                public userId: string,
+                public userLogin: string,
+                public createdAt: string,
+                public likesInfo: LikesInfoType) {
+    }
+
 }
+
 export type LikesInfoType = {
     likesCount: number
     dislikesCount: number
     myStatus: string
 }
+
 export type QueryCommentType = {
     pageNumber: number
     pageSize: number

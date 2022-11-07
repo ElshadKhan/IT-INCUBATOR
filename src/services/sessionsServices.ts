@@ -4,10 +4,11 @@ import {v4 as uuidv4} from "uuid";
 import {jwtService} from "../application/jwt-service";
 import {SessionDBType} from "../types/sessionTypes";
 
-export const sessionsService = {
+class SessionsServices {
     async getAllActiveSessions(userId: string) {
         return await sessionsRepository.getAllActiveSessions(userId)
-    },
+    }
+
     async createSession(user: UserAccountDBType, ip: string, deviceName: string) {
         const userId = user.id
         const deviceId = uuidv4()
@@ -26,17 +27,23 @@ export const sessionsService = {
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken
         }
-    },
+    }
+
     async updateSession(userId: string, deviceId: string, lastActiveDate: string) {
         return await sessionsRepository.updateSessions(userId, deviceId, lastActiveDate)
-    },
+    }
+
     async deleteAllSessions() {
         return await sessionsRepository.deleteAllSessions()
-    },
+    }
+
     async deleteSessionsByDeviceId(userId: string, deviceId: string) {
         return await sessionsRepository.deleteSessionsByDeviceId(userId, deviceId)
-    },
+    }
+
     async deleteAllSessionsExceptOne(userId: string, deviceId: string) {
         return await sessionsRepository.deleteAllSessionsExceptOne(userId, deviceId)
     }
 }
+
+export const sessionsService = new SessionsServices()

@@ -3,7 +3,7 @@ import {commentQueryRepository} from "../repositories/queryRep/commentQueryRepos
 import {commentService} from "../services/commentServices";
 import {queryValidation} from "../middleware/queryValidation";
 
-export const commentControllers = {
+class CommentControllers {
     async getCommentById(req: Request, res: Response) {
         const comment = await commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!.id)
         if (comment) {
@@ -11,17 +11,24 @@ export const commentControllers = {
         } else {
             res.send(404)
         }
-    },
+    }
+
     async getCommentsByPostId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const commentForSpecificPost = await commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, {pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
+        const commentForSpecificPost = await commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, {
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortDirection
+        }, req.user!.id)
         if (commentForSpecificPost) {
             res.status(200).send(commentForSpecificPost)
         } else {
             res.send(404)
         }
 
-    },
+    }
+
     async createCommentByPostId(req: Request, res: Response) {
         const newComment = await commentService.createComment(req.body.content, req.params.postId, req.user!)
         if (newComment) {
@@ -29,7 +36,8 @@ export const commentControllers = {
         } else {
             res.send(404)
         }
-    },
+    }
+
     async updateComment(req: Request, res: Response) {
         const comment = await commentService.updateComment(req.body.content, req.params.commentId);
         if (comment) {
@@ -37,7 +45,8 @@ export const commentControllers = {
         } else {
             res.send(404)
         }
-    },
+    }
+
     async deleteComment(req: Request, res: Response) {
         const comment = await commentService.deleteComment(req.params.commentId);
         if (comment) {
@@ -47,3 +56,5 @@ export const commentControllers = {
         }
     }
 }
+
+export const commentControllers = new CommentControllers()

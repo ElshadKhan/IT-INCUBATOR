@@ -3,20 +3,26 @@ import {postService} from "../services/postServices";
 import {postQueryRepository} from "../repositories/queryRep/postQueryRepository";
 import {queryValidation} from "../middleware/queryValidation";
 
-export const postControllers = {
+class PostControllers {
     async getPosts(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        if(!req.user) {
+        if (!req.user) {
             const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, "")
             res.status(200).send(posts)
         } else {
-            const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, req.user!.id)
+            const posts = await postQueryRepository.findPosts({
+                pageNumber,
+                pageSize,
+                sortBy,
+                sortDirection
+            }, req.user!.id)
             res.status(200).send(posts)
         }
 
-    },
+    }
+
     async getPostById(req: Request, res: Response) {
-        if (!req.user){
+        if (!req.user) {
             const post = await postQueryRepository.findPostById(req.params.id, "None")
             if (post) {
                 res.status(200).send(post)
@@ -31,11 +37,17 @@ export const postControllers = {
                 res.send(404)
             }
         }
-    },
+    }
+
     async getPostsByBlogId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        if(!req.user){
-            const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {pageNumber, pageSize, sortBy, sortDirection}, "None")
+        if (!req.user) {
+            const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {
+                pageNumber,
+                pageSize,
+                sortBy,
+                sortDirection
+            }, "None")
             if (postsForSpecificBlog) {
                 res.status(200).send(postsForSpecificBlog)
             } else {
@@ -54,12 +66,14 @@ export const postControllers = {
                 res.send(404)
             }
         }
-    },
+    }
+
     async createPost(req: Request, res: Response) {
         const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
 
         res.status(201).send(newPost)
-    },
+    }
+
     async createPostByBlogId(req: Request, res: Response) {
         const newPost = await postService.createPostByBlogId(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
         if (newPost) {
@@ -67,7 +81,8 @@ export const postControllers = {
         } else {
             res.send(404)
         }
-    },
+    }
+
     async updatePost(req: Request, res: Response) {
         const post = await postService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
         if (post) {
@@ -75,7 +90,8 @@ export const postControllers = {
         } else {
             res.send(404)
         }
-    },
+    }
+
     async deletePost(req: Request, res: Response) {
         const post = await postService.deletePost(req.params.id);
         if (post) {
@@ -85,3 +101,5 @@ export const postControllers = {
         }
     }
 }
+
+export const postControllers = new PostControllers()

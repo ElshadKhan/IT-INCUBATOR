@@ -6,26 +6,41 @@ class UserQueryRepository {
     async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserAccountDBType | null> {
         return UserModelClass.findOne({$or: [{'accountData.userName': loginOrEmail}, {'accountData.email': loginOrEmail}]}).lean()
     }
+
     async findUserByEmailConfirmationCode(code: string): Promise<UserAccountDBType | null> {
         return UserModelClass.findOne({'emailConfirmation.confirmationCode': code}).lean()
     }
+
     async findUserByPasswordConfirmationCode(code: string): Promise<UserAccountDBType | null> {
         return UserModelClass.findOne({'passwordConfirmation.confirmationCode': code}).lean()
     }
-    async findOneUser(id: string ): Promise<UserAccountDBType | null> {
+
+    async findOneUser(id: string): Promise<UserAccountDBType | null> {
         return UserModelClass.findOne({id: id}).lean()
     }
-    async findUsers({searchLoginTerm, searchEmailTerm, pageNumber, pageSize, sortBy, sortDirection}: QueryUserType): Promise<UsersBusinessType> {
+
+    async findUsers({
+                        searchLoginTerm,
+                        searchEmailTerm,
+                        pageNumber,
+                        pageSize,
+                        sortBy,
+                        sortDirection
+                    }: QueryUserType): Promise<UsersBusinessType> {
         const users = await UserModelClass.find(
-            {$or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}},
-            {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]})
-            .sort([[ sortBy, sortDirection]])
-            .skip(getSkipNumber(pageNumber,pageSize))
+            {
+                $or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}},
+                    {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]
+            })
+            .sort([[sortBy, sortDirection]])
+            .skip(getSkipNumber(pageNumber, pageSize))
             .limit(pageSize)
             .lean()
         const totalCountUsers = await UserModelClass.find(
-            {$or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}},
-            {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]})
+            {
+                $or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}},
+                    {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]
+            })
             .count()
         const items = users.map(u => (
             {
@@ -35,7 +50,7 @@ class UserQueryRepository {
                 createdAt: u.accountData.createdAt
             }
         ))
-        const userDto = new UsersBusinessType(getPagesCounts(totalCountUsers, pageSize),  pageNumber, pageSize, totalCountUsers, items)
+        const userDto = new UsersBusinessType(getPagesCounts(totalCountUsers, pageSize), pageNumber, pageSize, totalCountUsers, items)
         return userDto
     }
 }

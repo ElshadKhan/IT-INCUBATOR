@@ -11,7 +11,7 @@ import {ipMiddleware} from "../middleware/ipAdresValidation";
 
 export const authRouter = Router({})
 
-authRouter.post('/login', ipMiddleware, userAuthValidations,  authControllers.loginUser)
+authRouter.post('/login', ipMiddleware, userAuthValidations, authControllers.loginUser)
 authRouter.post('/logout', refreshTokenMiddleware, authControllers.logoutUser)
 authRouter.post('/refresh-token', refreshTokenMiddleware, authControllers.resendingRefreshTokens)
 authRouter.post('/registration-confirmation', ipMiddleware, codeEmailAuthValidations, authControllers.confirmationEmail)

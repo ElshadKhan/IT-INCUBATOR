@@ -2,37 +2,42 @@ import {BlogDbType, BlogsBusinessType, QueryBlogType} from "../../types/blogType
 import {getPagesCounts, getSkipNumber} from "../../helpers/helpFunctions";
 import {BlogModelClass} from "../../db/Schema/blogSchema";
 
-export const blogQueryRepository = {
-    async findBlogs({searchNameTerm, pageNumber, pageSize, sortBy, sortDirection}: QueryBlogType): Promise<BlogsBusinessType> {
+class BlogQueryRepository {
+    async findBlogs({
+                        searchNameTerm,
+                        pageNumber,
+                        pageSize,
+                        sortBy,
+                        sortDirection
+                    }: QueryBlogType): Promise<BlogsBusinessType> {
         const blogs = await BlogModelClass.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}})
-            .sort([[sortBy, sortDirection]]).skip(getSkipNumber(pageNumber,pageSize)).limit(pageSize).lean()
-        const totalCountBlogs = await BlogModelClass.find({name: {$regex: searchNameTerm, $options: "(?i)a(?-i)cme"}}).count()
-        const blogDto = {
-            "pagesCount": getPagesCounts(totalCountBlogs, pageSize),
-            "page": pageNumber,
-            "pageSize": pageSize,
-            "totalCount": totalCountBlogs,
-            "items": blogs.map(b => (
-                {
-                    id: b.id,
-                    name: b.name,
-                    youtubeUrl: b.youtubeUrl,
-                    createdAt: b.createdAt
-                }
-            ))}
+            .sort([[sortBy, sortDirection]]).skip(getSkipNumber(pageNumber, pageSize)).limit(pageSize).lean()
+        const totalCountBlogs = await BlogModelClass.find({
+            name: {
+                $regex: searchNameTerm,
+                $options: "(?i)a(?-i)cme"
+            }
+        }).count()
+        const blogDto = new BlogsBusinessType(getPagesCounts(totalCountBlogs, pageSize), pageNumber, pageSize, totalCountBlogs, blogs.map(b => (
+            {
+                id: b.id,
+                name: b.name,
+                youtubeUrl: b.youtubeUrl,
+                createdAt: b.createdAt
+            }
+        )))
+
         return blogDto
-    },
+    }
+
     async findBlogById(id: string): Promise<BlogDbType | null> {
-        const findBlog = await BlogModelClass.findOne({id:id});
-        if(findBlog){
-                const blog: BlogDbType = {
-                id: findBlog.id,
-                name: findBlog.name,
-                youtubeUrl: findBlog.youtubeUrl,
-                createdAt: findBlog.createdAt
-                }
-                return blog
+        const findBlog = await BlogModelClass.findOne({id: id});
+        if (findBlog) {
+            const blog = new BlogDbType(findBlog.id, findBlog.name, findBlog.youtubeUrl, findBlog.createdAt)
+            return blog
         }
         return findBlog
     }
 }
+
+export const blogQueryRepository = new BlogQueryRepository()

@@ -1,11 +1,14 @@
-export type SessionDBType = {
-    ip: string
-    title: string
-    lastActiveDate: string
-    expiredDate: string
-    deviceId: string
-    userId: string
+export class SessionDBType {
+    constructor(public ip: string,
+                public title: string,
+                public lastActiveDate: string,
+                public expiredDate: string,
+                public deviceId: string,
+                public userId: string) {
+    }
+
 }
+
 export type SessionType = {
     ip: string
     title: string

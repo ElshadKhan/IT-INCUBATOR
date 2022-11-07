@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-export const emailAdapter = {
+class EmailAdapter {
     async sendEmail(email: string, code: string) {
         const transport = await nodemailer.createTransport({
             service: "gmail",
@@ -14,10 +14,12 @@ export const emailAdapter = {
             to: email,
             subject: `Back-end`,
             html: " <h1>Thank for your registration</h1>\n" +
-            "       <p>To finish registration please follow the link below:\n" +
-            `<a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>\n` +
-            "      </p>"
+                "       <p>To finish registration please follow the link below:\n" +
+                `<a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>\n` +
+                "      </p>"
         });
         return info.messageId
     }
 }
+
+export const emailAdapter = new EmailAdapter()

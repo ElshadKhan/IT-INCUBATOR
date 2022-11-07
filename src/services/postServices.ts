@@ -5,7 +5,7 @@ import {blogQueryRepository} from "../repositories/queryRep/blogQueryRepository"
 import {likeStatusRepository} from "../repositories/likeStatusRepository";
 import {LikeStatusEnam} from "../middleware/commentMiddleware/commentInputMiddlewares";
 
-export const postService = {
+class PostServices {
     async createPostByBlogId(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDtoType | null> {
         const blog: BlogDbType | null = await blogQueryRepository.findBlogById(blogId);
@@ -33,14 +33,15 @@ export const postService = {
                 likesCount: 0,
                 dislikesCount: 0,
                 myStatus: LikeStatusEnam.None,
-                newestLikes: lastLikes.slice(0,3).map(p => ({
+                newestLikes: lastLikes.slice(0, 3).map(p => ({
                     addedAt: p.createdAt,
                     userId: p.userId,
                     login: p.login
                 }))
             }
         }
-    },
+    }
+
     async createPost(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDtoType | null> {
         const blog: BlogDbType | null = await blogQueryRepository.findBlogById(blogId);
@@ -68,22 +69,27 @@ export const postService = {
                 likesCount: 0,
                 dislikesCount: 0,
                 myStatus: LikeStatusEnam.None,
-                newestLikes: lastLikes.slice(0,3).map(p => ({
+                newestLikes: lastLikes.slice(0, 3).map(p => ({
                     addedAt: p.createdAt,
                     userId: p.userId,
                     login: p.login
                 }))
             }
         }
-    },
+    }
+
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string
     ): Promise<boolean> {
         return await postRepository.updatePost(id, title, shortDescription, content, blogId)
-    },
+    }
+
     async deletePost(id: string) {
         return await postRepository.deletePost(id)
-    },
+    }
+
     async deleteAllPosts() {
         return await postRepository.deleteAllPosts()
     }
 }
+
+export const postService = new PostServices()

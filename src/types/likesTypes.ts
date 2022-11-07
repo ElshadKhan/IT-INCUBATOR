@@ -1,15 +1,11 @@
 import {LikeStatusEnam} from "../middleware/commentMiddleware/commentInputMiddlewares";
 
-export type LikesDbTypes = {
-    parentId: string
-    userId: string
-    login: string
-    type: LikeStatusEnam
-    createdAt: string
-}
+export class LikesDbTypes {
+    constructor(public parentId: string,
+                public userId: string,
+                public login: string,
+                public type: LikeStatusEnam,
+                public createdAt: string) {
+    }
 
-export type LikeStatusEnamType = {
-    None: string
-    Like: string
-    Dislike:string
 }

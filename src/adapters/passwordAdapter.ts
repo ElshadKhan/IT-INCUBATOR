@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-export const passwordAdapter = {
+class PasswordAdapter {
     async sendPassword(email: string, code: string) {
         const transport = await nodemailer.createTransport({
             service: "gmail",
@@ -14,10 +14,12 @@ export const passwordAdapter = {
             to: email,
             subject: `Back-end`,
             html: " <h1>Password recovery</h1>\n" +
-            "       <p>To finish password recovery please follow the link below:\n" +
-            `<a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>\n` +
-            "      </p>"
+                "       <p>To finish password recovery please follow the link below:\n" +
+                `<a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>\n` +
+                "      </p>"
         });
         return info.messageId
     }
 }
+
+export const passwordAdapter = new PasswordAdapter()
