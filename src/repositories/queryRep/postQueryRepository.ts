@@ -140,4 +140,3 @@ export class PostQueryRepository {
     }
 }
 
-export const postQueryRepository = new PostQueryRepository()

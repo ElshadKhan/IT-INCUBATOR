@@ -1,7 +1,7 @@
 import {CommentDbType, CommentDtoType} from "../types/commentTypes";
 import {CommentModelClass} from "../db/Schema/commentSchema";
 
-class CommentRepository {
+export class CommentRepository {
     async createComment(newComment: CommentDbType): Promise<CommentDtoType> {
         await CommentModelClass.create(newComment)
         return newComment
@@ -23,4 +23,3 @@ class CommentRepository {
     }
 }
 
-export const commentRepository = new CommentRepository()

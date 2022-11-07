@@ -1,11 +1,14 @@
 import {Request, Response} from "express";
-import {commentQueryRepository} from "../repositories/queryRep/commentQueryRepository";
-import {commentService} from "../services/commentServices";
+import {CommentQueryRepository} from "../repositories/queryRep/commentQueryRepository";
+import {CommentServices} from "../services/commentServices";
 import {queryValidation} from "../middleware/queryValidation";
 
 class CommentControllers {
+    constructor(private commentService= new CommentServices(),
+                private commentQueryRepository= new CommentQueryRepository()) {
+    }
     async getCommentById(req: Request, res: Response) {
-        const comment = await commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!.id)
+        const comment = await this.commentQueryRepository.findCommentByUserIdAndCommentId(req.params.id, req.user!.id)
         if (comment) {
             res.status(200).send(comment)
         } else {
@@ -15,7 +18,7 @@ class CommentControllers {
 
     async getCommentsByPostId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
-        const commentForSpecificPost = await commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, {
+        const commentForSpecificPost = await this.commentQueryRepository.findCommentsByPostIdAndUserId(req.params.postId, {
             pageNumber,
             pageSize,
             sortBy,
@@ -30,7 +33,7 @@ class CommentControllers {
     }
 
     async createCommentByPostId(req: Request, res: Response) {
-        const newComment = await commentService.createComment(req.body.content, req.params.postId, req.user!)
+        const newComment = await this.commentService.createComment(req.body.content, req.params.postId, req.user!)
         if (newComment) {
             res.status(201).send(newComment)
         } else {
@@ -39,7 +42,7 @@ class CommentControllers {
     }
 
     async updateComment(req: Request, res: Response) {
-        const comment = await commentService.updateComment(req.body.content, req.params.commentId);
+        const comment = await this.commentService.updateComment(req.body.content, req.params.commentId);
         if (comment) {
             res.send(204)
         } else {
@@ -48,7 +51,7 @@ class CommentControllers {
     }
 
     async deleteComment(req: Request, res: Response) {
-        const comment = await commentService.deleteComment(req.params.commentId);
+        const comment = await this.commentService.deleteComment(req.params.commentId);
         if (comment) {
             res.send(204)
         } else {

@@ -4,7 +4,7 @@ import {CommentModelClass} from "../../db/Schema/commentSchema";
 import {likeStatusRepository} from "../likeStatusRepository";
 import {LikeStatusEnam} from "../../middleware/commentMiddleware/commentInputMiddlewares";
 
-class CommentQueryRepository {
+export class CommentQueryRepository {
     async findCommentByUserIdAndCommentId(id: string, userId?: string): Promise<CommentDtoType | null> {
         const comment = await CommentModelClass.findOne({id: id})
         if (!comment) return null

@@ -1,7 +1,7 @@
 import {PostDbType} from "../types/postTypes";
 import {PostModelClass} from "../db/Schema/postSchema";
 
-class PostRepository {
+export class PostRepository {
     async createPost(newPost: PostDbType): Promise<PostDbType> {
         await PostModelClass.create(newPost)
         return newPost
@@ -25,4 +25,3 @@ class PostRepository {
     }
 }
 
-export const postRepository = new PostRepository()

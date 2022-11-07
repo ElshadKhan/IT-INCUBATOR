@@ -1,4 +1,4 @@
-import {sessionsRepository} from "../repositories/sessionsRepository";
+import {SessionsRepository} from "../repositories/sessionsRepository";
 import {UserAccountDBType} from "../types/userTypes";
 import {v4 as uuidv4} from "uuid";
 import {JwtService} from "../application/jwt-service";
@@ -6,11 +6,13 @@ import {SessionDBType} from "../types/sessionTypes";
 
 export class SessionsServices {
     private jwtService: JwtService
+    private sessionsRepository: SessionsRepository
     constructor() {
         this.jwtService = new JwtService()
+        this.sessionsRepository = new SessionsRepository()
     }
     async getAllActiveSessions(userId: string) {
-        return await sessionsRepository.getAllActiveSessions(userId)
+        return await this.sessionsRepository.getAllActiveSessions(userId)
     }
 
     async createSession(user: UserAccountDBType, ip: string, deviceName: string) {
@@ -26,7 +28,7 @@ export class SessionsServices {
             deviceId: deviceId,
             userId: userId
         }
-        await sessionsRepository.createSession(session)
+        await this.sessionsRepository.createSession(session)
         return {
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken
@@ -34,20 +36,19 @@ export class SessionsServices {
     }
 
     async updateSession(userId: string, deviceId: string, lastActiveDate: string) {
-        return await sessionsRepository.updateSessions(userId, deviceId, lastActiveDate)
+        return await this.sessionsRepository.updateSessions(userId, deviceId, lastActiveDate)
     }
 
     async deleteAllSessions() {
-        return await sessionsRepository.deleteAllSessions()
+        return await this.sessionsRepository.deleteAllSessions()
     }
 
     async deleteSessionsByDeviceId(userId: string, deviceId: string) {
-        return await sessionsRepository.deleteSessionsByDeviceId(userId, deviceId)
+        return await this.sessionsRepository.deleteSessionsByDeviceId(userId, deviceId)
     }
 
     async deleteAllSessionsExceptOne(userId: string, deviceId: string) {
-        return await sessionsRepository.deleteAllSessionsExceptOne(userId, deviceId)
+        return await this.sessionsRepository.deleteAllSessionsExceptOne(userId, deviceId)
     }
 }
 
-export const sessionsService = new SessionsServices()

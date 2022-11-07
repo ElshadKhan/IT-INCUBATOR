@@ -1,4 +1,4 @@
-import {userRepository} from "../repositories/userRepository";
+import {UserRepository} from "../repositories/userRepository";
 import {UserAccountDBType} from "../types/userTypes";
 import  bcrypt from "bcrypt"
 import {_generateHash} from "../helpers/helpFunctions";
@@ -6,6 +6,8 @@ import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
 export class UserServices {
+    constructor(private userRepository = new UserRepository()) {
+    }
     async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(4)
         const passwordHash = await _generateHash(password, passwordSalt)
@@ -26,13 +28,12 @@ export class UserServices {
                 expirationDate: add(new Date(), {hours: 2, minutes: 2}),
                 isConfirmed: false
             })
-        return  await userRepository.createUser(newUser)
+        return  await this.userRepository.createUser(newUser)
     }
     async deleteUser(id: string) {
-        return await userRepository.deleteUser(id)
+        return await this.userRepository.deleteUser(id)
     }
     async deleteAllUsers() {
-        return await userRepository.deleteAllUsers()
+        return await this.userRepository.deleteAllUsers()
     }
 }
-export const userService = new UserServices()

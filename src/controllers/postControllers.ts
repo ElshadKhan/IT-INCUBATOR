@@ -1,16 +1,19 @@
 import {Request, Response} from "express";
-import {postService} from "../services/postServices";
-import {postQueryRepository} from "../repositories/queryRep/postQueryRepository";
+import {PostServices} from "../services/postServices";
+import {PostQueryRepository} from "../repositories/queryRep/postQueryRepository";
 import {queryValidation} from "../middleware/queryValidation";
 
 class PostControllers {
+    constructor(private postQueryRepository = new PostQueryRepository(),
+                private postService = new PostServices()) {
+    }
     async getPosts(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
         if (!req.user) {
-            const posts = await postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, "")
+            const posts = await this.postQueryRepository.findPosts({pageNumber, pageSize, sortBy, sortDirection}, "")
             res.status(200).send(posts)
         } else {
-            const posts = await postQueryRepository.findPosts({
+            const posts = await this.postQueryRepository.findPosts({
                 pageNumber,
                 pageSize,
                 sortBy,
@@ -23,14 +26,14 @@ class PostControllers {
 
     async getPostById(req: Request, res: Response) {
         if (!req.user) {
-            const post = await postQueryRepository.findPostById(req.params.id, "None")
+            const post = await this.postQueryRepository.findPostById(req.params.id, "None")
             if (post) {
                 res.status(200).send(post)
             } else {
                 res.send(404)
             }
         } else {
-            const post = await postQueryRepository.findPostById(req.params.id, req.user!.id)
+            const post = await this.postQueryRepository.findPostById(req.params.id, req.user!.id)
             if (post) {
                 res.status(200).send(post)
             } else {
@@ -42,7 +45,7 @@ class PostControllers {
     async getPostsByBlogId(req: Request, res: Response) {
         const {pageNumber, pageSize, sortBy, sortDirection} = queryValidation(req.query)
         if (!req.user) {
-            const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {
+            const postsForSpecificBlog = await this.postQueryRepository.findPostsByBlogId(req.params.blogId, {
                 pageNumber,
                 pageSize,
                 sortBy,
@@ -54,7 +57,7 @@ class PostControllers {
                 res.send(404)
             }
         } else {
-            const postsForSpecificBlog = await postQueryRepository.findPostsByBlogId(req.params.blogId, {
+            const postsForSpecificBlog = await this.postQueryRepository.findPostsByBlogId(req.params.blogId, {
                 pageNumber,
                 pageSize,
                 sortBy,
@@ -69,13 +72,13 @@ class PostControllers {
     }
 
     async createPost(req: Request, res: Response) {
-        const newPost = await postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
+        const newPost = await this.postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
 
         res.status(201).send(newPost)
     }
 
     async createPostByBlogId(req: Request, res: Response) {
-        const newPost = await postService.createPostByBlogId(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
+        const newPost = await this.postService.createPostByBlogId(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
         if (newPost) {
             res.status(201).send(newPost)
         } else {
@@ -84,7 +87,7 @@ class PostControllers {
     }
 
     async updatePost(req: Request, res: Response) {
-        const post = await postService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
+        const post = await this.postService.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
         if (post) {
             res.send(204)
         } else {
@@ -93,7 +96,7 @@ class PostControllers {
     }
 
     async deletePost(req: Request, res: Response) {
-        const post = await postService.deletePost(req.params.id);
+        const post = await this.postService.deletePost(req.params.id);
         if (post) {
             res.send(204)
         } else {

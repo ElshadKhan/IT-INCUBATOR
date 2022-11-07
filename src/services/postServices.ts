@@ -1,14 +1,18 @@
-import {postRepository} from "../repositories/postRepository";
+import {PostRepository} from "../repositories/postRepository";
 import {PostDtoType} from "../types/postTypes";
 import {BlogDbType} from "../types/blogTypes";
 import {BlogQueryRepository} from "../repositories/queryRep/blogQueryRepository";
-import {likeStatusRepository} from "../repositories/likeStatusRepository";
+import {LikeStatusRepository} from "../repositories/likeStatusRepository";
 import {LikeStatusEnam} from "../middleware/commentMiddleware/commentInputMiddlewares";
 
-class PostServices {
+export class PostServices {
     private blogQueryRepository: BlogQueryRepository
+    private likeStatusRepository: LikeStatusRepository
+    private postRepository: PostRepository
     constructor() {
         this.blogQueryRepository = new BlogQueryRepository()
+        this.likeStatusRepository = new LikeStatusRepository()
+        this.postRepository = new PostRepository()
     }
     async createPostByBlogId(title: string, shortDescription: string, content: string, blogId: string
     ): Promise<PostDtoType | null> {
@@ -23,8 +27,8 @@ class PostServices {
             blogName: blog!.name,
             createdAt: new Date().toISOString()
         }
-        const newPostDto = await postRepository.createPost(newPost)
-        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, LikeStatusEnam.Like)
+        const newPostDto = await this.postRepository.createPost(newPost)
+        const lastLikes = await this.likeStatusRepository.getLastLikes(newPostDto.id, LikeStatusEnam.Like)
         return {
             id: newPostDto.id,
             title: newPostDto.title,
@@ -59,8 +63,8 @@ class PostServices {
             blogName: blog!.name,
             createdAt: new Date().toISOString()
         }
-        const newPostDto = await postRepository.createPost(newPost)
-        const lastLikes = await likeStatusRepository.getLastLikes(newPostDto.id, LikeStatusEnam.Like)
+        const newPostDto = await this.postRepository.createPost(newPost)
+        const lastLikes = await this.likeStatusRepository.getLastLikes(newPostDto.id, LikeStatusEnam.Like)
         return {
             id: newPostDto.id,
             title: newPostDto.title,
@@ -84,16 +88,15 @@ class PostServices {
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string
     ): Promise<boolean> {
-        return await postRepository.updatePost(id, title, shortDescription, content, blogId)
+        return await this.postRepository.updatePost(id, title, shortDescription, content, blogId)
     }
 
     async deletePost(id: string) {
-        return await postRepository.deletePost(id)
+        return await this.postRepository.deletePost(id)
     }
 
     async deleteAllPosts() {
-        return await postRepository.deleteAllPosts()
+        return await this.postRepository.deleteAllPosts()
     }
 }
 
-export const postService = new PostServices()

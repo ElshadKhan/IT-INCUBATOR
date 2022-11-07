@@ -1,16 +1,26 @@
 import {Request, Response} from "express";
-import {userService} from "../services/userServices";
-import {postService} from "../services/postServices";
+import {UserServices} from "../services/userServices";
+import {PostServices} from "../services/postServices";
 import {BlogServices} from "../services/blogServices";
-import {commentService} from "../services/commentServices";
-import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
+import {CommentServices} from "../services/commentServices";
+import {UserQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {queryValidation} from "../middleware/queryValidation";
-import {sessionsService} from "../services/sessionsServices";
+import {SessionsServices} from "../services/sessionsServices";
 
 class UserControllers {
     private blogService: BlogServices
+    private postService: PostServices
+    private userQueryRepository: UserQueryRepository
+    private userService: UserServices
+    private sessionsService: SessionsServices
+    private commentService: CommentServices
     constructor() {
         this.blogService = new BlogServices()
+        this.postService = new PostServices()
+        this.userQueryRepository = new UserQueryRepository()
+        this.userService = new UserServices()
+        this.sessionsService = new SessionsServices()
+        this.commentService = new CommentServices()
     }
     async getUsers(req: Request, res: Response) {
         const {
@@ -21,7 +31,7 @@ class UserControllers {
             sortBy,
             sortDirection
         } = queryValidation(req.query)
-        const users = await userQueryRepository.findUsers({
+        const users = await this.userQueryRepository.findUsers({
             searchLoginTerm,
             searchEmailTerm,
             pageNumber,
@@ -33,7 +43,7 @@ class UserControllers {
     }
 
     async createUser(req: Request, res: Response) {
-        const newUser = await userService.createUser(req.body.login, req.body.password, req.body.email)
+        const newUser = await this.userService.createUser(req.body.login, req.body.password, req.body.email)
         const userDto = {
             id: newUser.id,
             login: newUser.accountData.userName,
@@ -44,7 +54,7 @@ class UserControllers {
     }
 
     async deleteUser(req: Request, res: Response) {
-        const user = await userService.deleteUser(req.params.id);
+        const user = await this.userService.deleteUser(req.params.id);
         if (user) {
             res.send(204)
         } else {
@@ -53,11 +63,11 @@ class UserControllers {
     }
 
     async deleteAllCollections(req: Request, res: Response) {
-        await userService.deleteAllUsers()
+        await this.userService.deleteAllUsers()
         await this.blogService.deleteAllBlogs();
-        await postService.deleteAllPosts()
-        await commentService.deleteAllComments()
-        await sessionsService.deleteAllSessions()
+        await this.postService.deleteAllPosts()
+        await this.commentService.deleteAllComments()
+        await this.sessionsService.deleteAllSessions()
         res.send(204)
     }
 }

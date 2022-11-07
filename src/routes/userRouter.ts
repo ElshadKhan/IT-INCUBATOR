@@ -5,6 +5,6 @@ import {userLoginValidations} from "../middleware/userMiddleware/userInputMiddle
 
 export const userRouter = Router({})
 
-userRouter.get('/', userControllers.getUsers)
-userRouter.post('/', authMiddleware, userLoginValidations, userControllers.createUser)
-userRouter.delete('/:id', authMiddleware, userControllers.deleteUser)
+userRouter.get('/', userControllers.getUsers.bind(userControllers))
+userRouter.post('/', authMiddleware, userLoginValidations, userControllers.createUser.bind(userControllers))
+userRouter.delete('/:id', authMiddleware, userControllers.deleteUser.bind(userControllers))

@@ -1,13 +1,16 @@
 import {LikesDbTypes} from "../types/likesTypes";
-import {likeStatusRepository} from "../repositories/likeStatusRepository";
-import {userQueryRepository} from "../repositories/queryRep/userQueryRepository";
+import {LikeStatusRepository} from "../repositories/likeStatusRepository";
+import {UserQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {LikeStatusEnam} from "../middleware/commentMiddleware/commentInputMiddlewares";
 
-export const likeStatusService = {
+export class LikeStatusServices {
+    constructor(private likeStatusRepository = new LikeStatusRepository(),
+                private userQueryRepository = new UserQueryRepository()) {
+    }
     async updateLikeStatusComment(likeStatus: LikeStatusEnam, parentId: string, userId: string): Promise<boolean> {
         if(!userId) return false
-        const likeDislikeStatus = await likeStatusRepository.getLikeStatus(parentId, userId)
-        const user = await userQueryRepository.findOneUser(userId)
+        const likeDislikeStatus = await this.likeStatusRepository.getLikeStatus(parentId, userId)
+        const user = await this.userQueryRepository.findOneUser(userId)
         if(!likeDislikeStatus) {
             const newLikeStatus: LikesDbTypes = {
                 parentId: parentId,
@@ -16,9 +19,10 @@ export const likeStatusService = {
                 type: likeStatus,
                 createdAt: new Date().toISOString(),
             }
-            await likeStatusRepository.createLikeStatus(newLikeStatus)
+            await this.likeStatusRepository.createLikeStatus(newLikeStatus)
             return true
         }
-        return  await likeStatusRepository.updateLikeStatusComment(parentId, userId, likeStatus)
+        return  await this.likeStatusRepository.updateLikeStatusComment(parentId, userId, likeStatus)
     }
 }
+

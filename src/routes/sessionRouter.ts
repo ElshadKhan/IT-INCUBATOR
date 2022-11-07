@@ -5,6 +5,6 @@ import {deviceIdInputValidation} from "../middleware/deviceMiddleware/deviceMidd
 
 export const sessionRouter = Router({})
 
-sessionRouter.get('/devices', refreshTokenMiddleware, sessionControllers.getAllActiveSessions)
-sessionRouter.delete('/devices/:deviceId', refreshTokenMiddleware, deviceIdInputValidation, sessionControllers.deleteSessionsByDeviceId)
-sessionRouter.delete('/devices', refreshTokenMiddleware, sessionControllers.deleteAllSessionsExceptOne)
+sessionRouter.get('/devices', refreshTokenMiddleware, sessionControllers.getAllActiveSessions.bind(sessionControllers))
+sessionRouter.delete('/devices/:deviceId', refreshTokenMiddleware, deviceIdInputValidation, sessionControllers.deleteSessionsByDeviceId.bind(sessionControllers))
+sessionRouter.delete('/devices', refreshTokenMiddleware, sessionControllers.deleteAllSessionsExceptOne.bind(sessionControllers))
