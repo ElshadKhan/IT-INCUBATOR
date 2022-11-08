@@ -6,13 +6,11 @@ import {SessionsServices} from "../services/sessionsServices";
 import {SessionsRepository} from "../repositories/sessionsRepository";
 
 export class AuthControllers {
-    private authService: AuthServices
     private jwtService: JwtService
     private sessionsService: SessionsServices
     private sessionsRepository: SessionsRepository
     private userRepository: UserRepository
-    constructor() {
-        this.authService = new AuthServices()
+    constructor(protected authService = new AuthServices()) {
         this.jwtService = new JwtService()
         this.sessionsService = new SessionsServices()
         this.sessionsRepository = new SessionsRepository()

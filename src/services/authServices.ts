@@ -8,15 +8,11 @@ import {UserQueryRepository} from "../repositories/queryRep/userQueryRepository"
 
 export class AuthServices {
     private emailManager: EmailManagers
-    private userRepository: UserRepository
-    private userQueryRepository: UserQueryRepository
-    private userService: UserServices
     private passwordManager: PasswordManagers
-    constructor() {
+    constructor(protected userService = new UserServices(new UserRepository()),
+                protected userRepository = new UserRepository(),
+                protected userQueryRepository = new UserQueryRepository()) {
         this.emailManager = new EmailManagers()
-        this.userRepository = new UserRepository()
-        this.userQueryRepository = new UserQueryRepository()
-        this.userService = new UserServices()
         this.passwordManager = new PasswordManagers()
     }
     async createUser(login: string, password: string, email: string) {

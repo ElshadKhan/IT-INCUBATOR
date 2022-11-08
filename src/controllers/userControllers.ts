@@ -5,15 +5,17 @@ import {BlogServices} from "../services/blogServices";
 import {CommentServices} from "../services/commentServices";
 import {UserQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {queryValidation} from "../middleware/queryValidation";
+import {inject, injectable} from 'inversify';
 import {SessionsServices} from "../services/sessionsServices";
 
+@injectable()
 export class UserControllers {
     private blogService: BlogServices
     private postService: PostServices
     private userQueryRepository: UserQueryRepository
     private sessionsService: SessionsServices
     private commentService: CommentServices
-    constructor(protected userService: UserServices) {
+    constructor(@inject(UserServices)protected userService: UserServices) {
         this.blogService = new BlogServices()
         this.postService = new PostServices()
         this.userQueryRepository = new UserQueryRepository()

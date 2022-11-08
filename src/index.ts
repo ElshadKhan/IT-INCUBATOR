@@ -1,10 +1,10 @@
 import express from 'express'
 import cookieParser from "cookie-parser"
-import {router} from "./routes/IndexRoutes";
 import  cors from 'cors'
 import * as dotenv from "dotenv";
 dotenv.config()
 import {runDb} from "./db/dbMongoose";
+import {router} from "./routes/IndexRoutes";
 
 const app = express()
 

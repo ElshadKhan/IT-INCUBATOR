@@ -1,12 +1,14 @@
 import {UserRepository} from "../repositories/userRepository";
 import {UserAccountDBType} from "../types/userTypes";
+import {inject, injectable} from 'inversify';
 import  bcrypt from "bcrypt"
 import {_generateHash} from "../helpers/helpFunctions";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
+@injectable()
 export class UserServices {
-    constructor(protected userRepository: UserRepository) {
+    constructor(@inject(UserRepository)protected userRepository: UserRepository) {
     }
     async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(4)
