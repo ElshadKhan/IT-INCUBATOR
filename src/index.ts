@@ -23,7 +23,7 @@ app.use("/api", router)
 const startApp = async () => {
     await runDb()
     app.listen(PORT, () => {
-        console.log(`Server started on port: ${PORT}`)
+        console.log(`Server started on portt: ${PORT}`)
     })
 }
 
