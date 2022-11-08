@@ -5,7 +5,6 @@ import  bcrypt from "bcrypt"
 import {_generateHash} from "../helpers/helpFunctions";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {randomUUID} from "crypto";
 
 @injectable()
 export class UserServices {
@@ -23,7 +22,7 @@ export class UserServices {
                 passwordSalt,
                 createdAt: new Date().toISOString()
             }, {
-                confirmationCode: randomUUID(),
+                confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {hours: 1, minutes: 1}),
                 isConfirmed: false
             }, {
