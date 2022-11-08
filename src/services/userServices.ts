@@ -6,7 +6,7 @@ import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 
 export class UserServices {
-    constructor(private userRepository = new UserRepository()) {
+    constructor(protected userRepository: UserRepository) {
     }
     async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(4)

@@ -7,18 +7,16 @@ import {UserQueryRepository} from "../repositories/queryRep/userQueryRepository"
 import {queryValidation} from "../middleware/queryValidation";
 import {SessionsServices} from "../services/sessionsServices";
 
-class UserControllers {
+export class UserControllers {
     private blogService: BlogServices
     private postService: PostServices
     private userQueryRepository: UserQueryRepository
-    private userService: UserServices
     private sessionsService: SessionsServices
     private commentService: CommentServices
-    constructor() {
+    constructor(protected userService: UserServices) {
         this.blogService = new BlogServices()
         this.postService = new PostServices()
         this.userQueryRepository = new UserQueryRepository()
-        this.userService = new UserServices()
         this.sessionsService = new SessionsServices()
         this.commentService = new CommentServices()
     }
@@ -72,4 +70,3 @@ class UserControllers {
     }
 }
 
-export const userControllers = new UserControllers()

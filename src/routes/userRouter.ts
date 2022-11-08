@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {userControllers} from "../controllers/userControllers";
+import {userControllers} from "../composition-root";
 import {authMiddleware} from "../middleware/authMiddleware";
 import {userLoginValidations} from "../middleware/userMiddleware/userInputMiddlewares";
 
