@@ -5,6 +5,7 @@ import  bcrypt from "bcrypt"
 import {_generateHash} from "../helpers/helpFunctions";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
+import {randomUUID} from "crypto";
 
 @injectable()
 export class UserServices {
@@ -22,7 +23,7 @@ export class UserServices {
                 passwordSalt,
                 createdAt: new Date().toISOString()
             }, {
-                confirmationCode: uuidv4(),
+                confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), {hours: 1, minutes: 1}),
                 isConfirmed: false
             }, {
@@ -30,7 +31,13 @@ export class UserServices {
                 expirationDate: add(new Date(), {hours: 2, minutes: 2}),
                 isConfirmed: false
             })
-        return  await this.userRepository.createUser(newUser)
+        await this.userRepository.createUser(newUser)
+        return {
+            id: newUser.id,
+            login: newUser.accountData.userName,
+            email: newUser.accountData.email,
+            createdAt: newUser.accountData.createdAt
+        }
     }
     async deleteUser(id: string) {
         return await this.userRepository.deleteUser(id)
