@@ -31,6 +31,7 @@ export class PostQueryRepository {
             const promise = posts.map(async (post: PostDbType) => {
                 let myStatus = LikeStatusEnam.None
 
+
                 if (user) {
                     const result = await this.likeStatusRepository.getLikeStatus(post.id, user.id)
                     myStatus = result?.type || LikeStatusEnam.None
