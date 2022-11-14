@@ -44,7 +44,13 @@ export class UserControllers {
 
     async createUser(req: Request, res: Response) {
         const newUser = await this.userService.createUser(req.body.login, req.body.password, req.body.email)
-        res.status(201).send(newUser)
+        const user = {
+            id: newUser.id,
+            login: newUser.accountData.userName,
+            email: newUser.accountData.email,
+            createdAt: newUser.accountData.createdAt
+        }
+        res.status(201).send(user)
     }
 
     async deleteUser(req: Request, res: Response) {

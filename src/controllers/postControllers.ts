@@ -47,11 +47,15 @@ class PostControllers {
 
     async createPost(req: Request, res: Response) {
         const newPost = await this.postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
-        res.status(201).send(newPost)
+        if (newPost) {
+            res.status(201).send(newPost)
+        } else {
+            res.send(404)
+        }
     }
 
     async createPostByBlogId(req: Request, res: Response) {
-        const newPost = await this.postService.createPostByBlogId(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
+        const newPost = await this.postService.createPost(req.body.title, req.body.shortDescription, req.body.content, req.params.blogId)
         if (newPost) {
             res.status(201).send(newPost)
         } else {

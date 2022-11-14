@@ -32,12 +32,7 @@ export class UserServices {
                 isConfirmed: false
             })
         await this.userRepository.createUser(newUser)
-        return {
-            id: newUser.id,
-            login: newUser.accountData.userName,
-            email: newUser.accountData.email,
-            createdAt: newUser.accountData.createdAt
-        }
+        return newUser
     }
     async deleteUser(id: string) {
         return await this.userRepository.deleteUser(id)
