@@ -1,16 +1,10 @@
 import {UserAccountDBType} from "../types/userTypes";
 import {UserModelClass} from "../db/Schema/userSchema";
-import {injectable} from 'inversify';
 
-@injectable()
 export class UserRepository {
     async createUser(newUser: UserAccountDBType): Promise<UserAccountDBType> {
         await UserModelClass.create(newUser)
         return newUser
-    }
-    async addRefreshTokenToBlackList(token: string): Promise<string> {
-        await UserModelClass.create( {refreshToken: token})
-        return token
     }
     async updateEmailConfirmation(id: string) {
         let result = await UserModelClass.updateOne({id: id},

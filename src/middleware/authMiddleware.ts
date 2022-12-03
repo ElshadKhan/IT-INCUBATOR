@@ -7,7 +7,7 @@ const jwtService = new JwtService()
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const template = 'admin:qwerty'
     const authHeader = req.headers.authorization
-    const base64Data = new Buffer(template);
+    const base64Data = Buffer.from(template);
     let base64String = base64Data.toString('base64');
     const validAuthHeader = `Basic ${base64String}`
 

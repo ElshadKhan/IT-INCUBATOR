@@ -5,11 +5,12 @@ import {v4 as uuidv4} from "uuid"
 import {UserServices} from "./userServices";
 import {PasswordManagers} from "../managers/passwordManagers";
 import {UserQueryRepository} from "../repositories/queryRep/userQueryRepository";
+import bcrypt from "bcrypt";
 
 export class AuthServices {
     private emailManager: EmailManagers
     private passwordManager: PasswordManagers
-    constructor(protected userService = new UserServices(new UserRepository()),
+    constructor(protected userService = new UserServices(),
                 protected userRepository = new UserRepository(),
                 protected userQueryRepository = new UserQueryRepository()) {
         this.emailManager = new EmailManagers()
@@ -68,8 +69,8 @@ export class AuthServices {
     async checkCredentials(login: string, password: string) {
         const user = await this.userQueryRepository.findUserByLoginOrEmail(login)
         if (!user) return false
-        const passwordHash = await _generateHash(password, user.accountData.passwordSalt)
-        if (user.accountData.passwordHash !== passwordHash) {
+        const isValid = await bcrypt.compare(password,user.accountData.passwordHash)
+        if (!isValid) {
             return false
         }
         return user

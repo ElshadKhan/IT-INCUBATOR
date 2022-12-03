@@ -5,23 +5,27 @@ import {BlogServices} from "../services/blogServices";
 import {CommentServices} from "../services/commentServices";
 import {UserQueryRepository} from "../repositories/queryRep/userQueryRepository";
 import {queryValidation} from "../middleware/queryValidation";
-import {inject, injectable} from 'inversify';
 import {SessionsServices} from "../services/sessionsServices";
+import {UserRepository} from "../repositories/userRepository";
 
-@injectable()
-export class UserControllers {
+class UserControllers {
     private blogService: BlogServices
     private postService: PostServices
+    private userService: UserServices
     private userQueryRepository: UserQueryRepository
+    private userRepository: UserRepository
     private sessionsService: SessionsServices
     private commentService: CommentServices
-    constructor(@inject(UserServices)protected userService: UserServices) {
+    constructor() {
         this.blogService = new BlogServices()
         this.postService = new PostServices()
+        this.userService = new UserServices()
         this.userQueryRepository = new UserQueryRepository()
+        this.userRepository = new UserRepository()
         this.sessionsService = new SessionsServices()
         this.commentService = new CommentServices()
     }
+
     async getUsers(req: Request, res: Response) {
         const {
             searchLoginTerm,
@@ -71,4 +75,5 @@ export class UserControllers {
         res.send(204)
     }
 }
+export const userControllers = new UserControllers()
 

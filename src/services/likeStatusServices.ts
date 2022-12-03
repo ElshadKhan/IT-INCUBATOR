@@ -7,7 +7,7 @@ export class LikeStatusServices {
     constructor(private likeStatusRepository = new LikeStatusRepository(),
                 private userQueryRepository = new UserQueryRepository()) {
     }
-    async updateLikeStatusComment(likeStatus: LikeStatusEnam, parentId: string, userId: string): Promise<boolean> {
+    async updateLikeStatus(likeStatus: LikeStatusEnam, parentId: string, userId: string): Promise<boolean> {
         if(!userId) return false
         const likeDislikeStatus = await this.likeStatusRepository.getLikeStatus(parentId, userId)
         const user = await this.userQueryRepository.findOneUser(userId)

@@ -72,7 +72,7 @@ export class PostQueryRepository {
     }
 
     async findPostById(id: string, user?: UserAccountDBType): Promise<PostDtoType | null> {
-        const post: PostDbType | null = await PostModelClass.findOne({id: id});
+        const post: PostDbType | null = await PostModelClass.findOne({id});
         if (post) {
             let myStatus = LikeStatusEnam.None
 

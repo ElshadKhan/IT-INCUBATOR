@@ -10,7 +10,7 @@ export const deviceIdInputValidation = async (req: any, res: Response, next: Nex
     if (!comment) {
         return res.sendStatus(404)
     }
-    if (comment!.userId !== payload.userId) {
+    if (comment.userId !== payload.userId) {
         return res.sendStatus(403)
     }
     return next()

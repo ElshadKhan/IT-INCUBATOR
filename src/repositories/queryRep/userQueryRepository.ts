@@ -30,7 +30,7 @@ export class UserQueryRepository {
         const users = await UserModelClass.find(
             {
                 $or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}},
-                    {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]
+                    {'accountData.email': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]
             })
             .sort([[sortBy, sortDirection]])
             .skip(getSkipNumber(pageNumber, pageSize))
@@ -39,7 +39,7 @@ export class UserQueryRepository {
         const totalCountUsers = await UserModelClass.find(
             {
                 $or: [{'accountData.userName': {$regex: searchLoginTerm, $options: "(?i)a(?-i)cme"}},
-                    {'emailConfirmation.confirmationCode': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]
+                    {'accountData.email': {$regex: searchEmailTerm, $options: "(?i)a(?-i)cme"}}]
             })
             .count()
         const items = users.map(u => (

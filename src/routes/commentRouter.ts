@@ -8,7 +8,7 @@ import {likeStatusControllers} from "../controllers/likeStatusControllers";
 
 export const commentRouter = Router({})
 
-commentRouter.get('/:id', findUserIdMiddleware, commentControllers.getCommentById.bind(commentControllers))
-commentRouter.put('/:commentId', authBearerMiddleware, commentIdValidations, commentIdInputValidation, commentControllers.updateComment.bind(commentControllers))
-commentRouter.put('/:commentId/like-status', authBearerMiddleware, likeStatusValidations, likeStatusControllers.updateLikeStatusComment.bind(likeStatusControllers))
-commentRouter.delete('/:commentId', authBearerMiddleware, commentIdInputValidation, commentControllers.deleteComment.bind(commentControllers))
+commentRouter.get('/comments/:id', findUserIdMiddleware, commentControllers.getCommentById.bind(commentControllers))
+commentRouter.put('/comments/:commentId', authBearerMiddleware, commentIdValidations, commentIdInputValidation, commentControllers.updateComment.bind(commentControllers))
+commentRouter.put('/comments/:commentId/like-status', authBearerMiddleware, likeStatusValidations, likeStatusControllers.updateLikeStatusComment.bind(likeStatusControllers))
+commentRouter.delete('/comments/:commentId', authBearerMiddleware, commentIdInputValidation, commentControllers.deleteComment.bind(commentControllers))

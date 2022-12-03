@@ -8,7 +8,13 @@ export class BlogServices {
     }
     async createBlog(name: string, youtubeUrl: string): Promise<BlogDbType> {
         const newBlog = new BlogDbType(String(+new Date()), name, youtubeUrl, new Date().toISOString())
-        return await this.blogRepository.createBlog(newBlog)
+        const result = await this.blogRepository.createBlog(newBlog)
+        return {
+            id: result.id,
+            name: result.name,
+            youtubeUrl: result.youtubeUrl,
+            createdAt: result.createdAt
+        }
     }
 
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {

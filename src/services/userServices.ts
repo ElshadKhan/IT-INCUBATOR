@@ -1,15 +1,15 @@
 import {UserRepository} from "../repositories/userRepository";
 import {UserAccountDBType} from "../types/userTypes";
-import {inject, injectable} from 'inversify';
 import  bcrypt from "bcrypt"
 import {_generateHash} from "../helpers/helpFunctions";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {randomUUID} from "crypto";
 
-@injectable()
 export class UserServices {
-    constructor(@inject(UserRepository)protected userRepository: UserRepository) {
+    private userRepository: UserRepository
+    constructor() {
+        this.userRepository = new UserRepository()
     }
     async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(4)

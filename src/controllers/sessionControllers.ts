@@ -14,17 +14,17 @@ class SessionControllers {
         res.status(200).send(allSessions)
     }
 
+    async deleteAllSessionsExceptOne(req: Request, res: Response) {
+        const payload = await this.jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
+        await this.sessionsService.deleteAllSessionsExceptOne(payload.userId, payload.deviceId);
+        res.send(204)
+    }
+
     async deleteSessionsByDeviceId(req: Request, res: Response) {
         const payload = await this.jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
         const sessions = await this.sessionsService.deleteSessionsByDeviceId(payload.userId, req.params.deviceId);
         res.send(204)
 
-    }
-
-    async deleteAllSessionsExceptOne(req: Request, res: Response) {
-        const payload = await this.jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
-        await this.sessionsService.deleteAllSessionsExceptOne(payload.userId, payload.deviceId);
-        res.send(204)
     }
 }
 

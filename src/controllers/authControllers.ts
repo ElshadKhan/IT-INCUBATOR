@@ -51,7 +51,6 @@ export class AuthControllers {
         const lastActiveDate = new Date(newLastActiveDate.iat * 1000).toISOString()
         await this.sessionsService.updateSession(payload.userId, payload.deviceId, lastActiveDate)
 
-        await this.userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
         res.cookie("refreshToken", tokens.refreshToken, {
             maxAge: 2000000,
             httpOnly: true,
@@ -64,7 +63,6 @@ export class AuthControllers {
     async logoutUser(req: Request, res: Response) {
         const payload = await this.jwtService.getUserIdByRefreshToken(req.cookies.refreshToken.split(' ')[0])
         await this.sessionsRepository.deleteSessionsByDeviceId(payload.userId, payload.deviceId)
-        await this.userRepository.addRefreshTokenToBlackList(req.cookies.refreshToken)
         res.sendStatus(204)
     }
 
